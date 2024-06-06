@@ -71,7 +71,6 @@ function normalizeObj(obj) {
   }
   return null;
 }
-
 export const utils = {
   confirm(title, message, icon) {
     Dialog.create({
@@ -447,10 +446,6 @@ export const utils = {
     }
   },
 
-  identity() {
-    return "U2FsdGVkX18vxXcCPZ+0V1pa9raHIWfBbStp7uf9MBd9vvcB78P6Ja2F7VTcUH8Ve7SsAgI/apJ4T1arASAlHHjp7b0/KD+ONR2T++SSxL39CjZCxonovQi+o2WpAMLI4tsxP8O28hvicXUVlNa3LBJ1a4hJMrT1ePwfqEb1BuM/tZUeqoVTH1MNU4JpEBoW";
-  },
-
   saveToStorage(key, value) {
     let data = "";
     if (
@@ -476,10 +471,32 @@ export const utils = {
     }
     return data;
   },
-
-  credentials() {
-    return this.decrypt(this.identity());
+  saveToSession(key, value) {
+    let data = "";
+    if (
+      process.env.NODE_ENV?.toString() === "production" ||
+      process.env.STORAGE_CIPHER.toString() === "true"
+    ) {
+      data = this.encrypt(value);
+    } else {
+      data = JSON.stringify(value);
+    }
+    sessionStorage.setItem(key, data);
   },
+  readFromSession(key) {
+    const predata = sessionStorage.getItem(key);
+    let data = null;
+    if (
+      process.env.NODE_ENV?.toString() === "production" ||
+      process.env.STORAGE_CIPHER.toString() === "true"
+    ) {
+      data = this.decrypt(predata);
+    } else {
+      data = JSON.parse(predata);
+    }
+    return data;
+  },
+
   appId() {
     return process.env.APP_ID;
   },
@@ -619,12 +636,7 @@ export const utils = {
       speaker.onboundary = function (event) {
         // console.log("Speech reached a boundary:", event.name);
       };
-      speaker.onpause = function (event) {
-        //  console.log(
-        //   "Speech paused:",
-        //   event.utterance.text.substring(event.charIndex)
-        // );
-      };
+      speaker.onpause = function (event) {};
       // console.log("voices: ", window.speechSynthesis.getVoices());
       window.speechSynthesis.speak(speaker);
     } else {
