@@ -24,6 +24,24 @@ const routes = [
       },
     ],
   },
+  {
+    name: "crud",
+    path: "/crud",
+    component: () => import("layouts/MainLayout.vue"),
+    children: [
+      //{ path: "", component: () => import("pages/IndexPage.vue") },
+      {
+        name: "users",
+        path: "users",
+        component: () => import("pages/users/ListPage.vue"),
+      },
+      {
+        name: "groups",
+        path: "groups",
+        component: () => import("pages/groups/ListPage.vue"),
+      },
+    ],
+  },
 
   {
     path: "/dev",
