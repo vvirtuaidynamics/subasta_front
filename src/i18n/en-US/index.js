@@ -67,8 +67,21 @@ export default {
     root: "Administrator",
     seller: "Seller",
   },
+  model: {
+    user: "user",
+    users: "users",
+    group: "user",
+    groups: "users",
+  },
+  field: {
+    name: "name",
+    last_name: "name",
+    dni: "dni",
+    email: "email",
+    username: "username",
+  },
 
-  labels: {
+  label: {
     add: "Add",
     actions: "Actions",
     exit: "Exit",
