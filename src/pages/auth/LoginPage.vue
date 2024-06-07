@@ -10,7 +10,11 @@ import DarkSwitcher from "src/components/base/DarkSwitcher.vue";
 import LangSwitcher from "src/components/base/LangSwitcher.vue";
 import { createRouter as $router } from "vue-router";
 import { utils } from "src/helpers/utils";
-import { formsStyle } from "src/config/formStyle";
+import { forms } from "src/config/theme/forms";
+import { texts } from "src/config/theme/texts";
+import images from "src/config/theme/images";
+import appConfig from "src/config/app";
+
 
 const year = new Date().getFullYear();
 const $app = useApp();
@@ -108,10 +112,17 @@ onBeforeMount(() => {
 
 <template>
   <q-page>
-    <div id="login" class="full-width no-padding no-margin flex flex-center">
-      <div class="div-index-content no-margin no-padding">
-        <q-card bordered class="shadow-5 absolute-center login-card">
-          <q-card-section class="q-mb-lg">
+    <div id="login" class="page row gradient-bg-blue">
+        <div
+          id="form"
+          :class="
+            $q.screen.gt.sm
+              ? 'form-div col-6 flex flex-center'
+              : 'form-div col-12 flex flex-center'
+          "
+        >
+        <q-card bordered class="shadow-5  login-card q-pb-md">
+          <q-card-section class="q-mb-xs">
             <q-avatar
               :style="`${'background: #2c2c2c99'}`"
               class="absolute-center shadow-2"
@@ -159,10 +170,10 @@ onBeforeMount(() => {
               <q-input
                 ref="fInputUsername"
                 v-model="formData.username"
-                :label="$t('labels.user')"
+                :label="$t('fields.username',null,'first')"
                 :rules="UsernameRule"
                 lazy-rules
-                v-bind="formsStyle.text"
+                v-bind="forms.text"
                 @change="(user) => Avatar(user)"
               >
                 <template v-slot:prepend>
@@ -172,22 +183,21 @@ onBeforeMount(() => {
               <q-input
                 ref="fInputPassword"
                 v-model="formData.password"
-                :label="$t('labels.password')"
+                :label="$t('fields.password',null,'first')"
                 :rules="PasswordRule"
                 lazy-rules
                 type="password"
-                v-bind="formsStyle.text"
+                v-bind="forms.text"
                 @keyup.enter="onSubmit()"
               >
                 <template v-slot:prepend>
                   <q-icon name="mdi-lock" />
                 </template>
               </q-input>
-              <div class="q-py-xs"></div>
 
-              <div class="flex bg-image flex-center q-mt-lg"></div>
             </q-form>
           </q-card-section>
+
           <q-card-section>
             <q-toggle
               v-model="formData.rememberMe"
@@ -197,7 +207,8 @@ onBeforeMount(() => {
               unchecked-icon="clear"
             />
           </q-card-section>
-          <q-card-actions class="justify-around items-center q-pb-lg">
+
+          <q-card-actions class="justify-around items-center">
             <q-button-component
               icon="mdi-login"
               :label="$t('login')"
@@ -214,10 +225,43 @@ onBeforeMount(() => {
             ></q-button-component>
           </q-card-actions>
         </q-card>
-      </div>
-      <q-bar class="login-footer absolute-bottom" dense style="height: 50px">
+        </div>
+
+        <transition
+          appear
+          enter-active-class="animated slideInRight"
+          leave-active-class="animated slideOutRight"
+        >
+        <div v-if="$q.screen.gt.sm" class="logo-div col-6">
+          <q-img
+            fit="fill"
+            class="login-cover-img"
+            :src="images.loginCover"
+            alt="logo"
+          />
+        </div>
+      </transition>
+
+
+      <q-bar class="login-footer absolute-bottom " :class="texts.footer" dense style="height: 50px">
+       <div class="row login-footer-header">
+          <q-btn flat  @click="navigateTo({path:'/'})" :title="$t('homeTip')">
+            <img
+              :src="images.appLogo"
+              alt="SUBASTA"
+              style=": 40px"
+            />
+
+
+            <div class="text-h6 text-uppercase">
+
+                {{ appConfig.name }}
+
+            </div>
+          </q-btn>
+        </div>
         <q-space />
-        <div class="text-weight-bold text-grey-5 text-caption q-mx-sm">
+        <div class="q-mx-sm" >
           {{ $q.platform.is.desktop ? $t("copyright") : "Copyright " }} &copy;
           {{ year }}
         </div>
@@ -231,15 +275,9 @@ onBeforeMount(() => {
 <style lang="scss" scoped>
 #login {
   min-width: 400px;
-
-  .div-index-content {
-    width: 100vw;
-    height: 100vh;
-    min-width: 400px;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-image: url($background1);
-  }
+  min-height: 100vh;
+  overflow: hidden;
+  background-image: linear-gradient(to bottom, #0e4b8a, #00c6ff);
 
   .login-card {
     width: 350px;
@@ -249,6 +287,51 @@ onBeforeMount(() => {
 
   .login-footer {
     background-color: #1976d29f;
+    margin: 0;
+    padding: 0;
+  }
+
+  .login-footer-header{
+    min-width: 250px;
+    transform: skewX(-10deg) translateX(-50px);
+    background-color: $dark;
+    margin: 0;
+    padding-left:50px;
+    border: solid 1px $dark;
+
+    img {
+      margin:0 10px 0 0;
+      max-height: 40px;
+    }
+
+  }
+
+  .form-div {
+    height: 100vh;
+  }
+
+  .logo-div {
+    height: 100vh;
+  }
+
+  .login-cover-img {
+    height: 100vh;
+    background-position: center;
+    background-size: cover;
+    transform: skewX(-10deg) translateX(90px);
+    border-left: solid 4px $dark;
+    border-top: solid 2px $dark;
+  }
+  .div-index-content {
+    width: 100vw;
+    height: 100vh;
+    min-width: 400px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url($background1);
+  }
+  .gradient-bg-blue {
+    background: linear-gradient(to bottom, #0e4b8a, #00c6ff);
   }
 }
 </style>

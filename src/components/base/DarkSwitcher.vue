@@ -1,8 +1,8 @@
 <template>
   <q-btn
-    :color="isDark ? 'yellow-6' : 'black'"
+    :color="isDark  ? colorLight : colorDark"
     :icon="isDark ? 'wb_sunny' : 'nights_stay'"
-    class="absolute-top-right"
+    :size="size"
     flat
     round
     @click="handleUpdate(!isDark)"
@@ -25,11 +25,21 @@ const props = defineProps({
     type: Boolean,
     require: true,
   },
+  overDark: {type: Boolean, default: false},
+  size: {type: String, default: 'sm'},
+  colorDark: {type: String, default: 'black'},
+  colorLight: {type: String, default: 'yellow-6'},
+
+
 });
 
 const emits = defineEmits(["update"]);
 
 const isDark = ref(props.modelValue);
+const isOverDark = ref(props.overDark);
+const size = ref(props.size);
+const colorLight = ref(props.colorLight);
+const colorDark = ref(props.colorDark);
 
 const handleUpdate = (val) => {
   isDark.value = val;

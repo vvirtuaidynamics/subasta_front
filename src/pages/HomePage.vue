@@ -1,44 +1,35 @@
 <template>
   <q-page>
-    <div id="Inicio">
+    <div id="Home" class="background-home">
       <q-header :class="'header'">
-        <q-bar class="faa-parent animated-hover" dense style="height: 50px">
-          <img
-            src="/images/default.png"
-            alt="LOGO"
-            class="absolute-top-left q-ma-xs z-max"
-            fit="scale-down"
-            style="height: 48px; width: auto"
-          />
-          <q-space />
-          <q-btn
-            class="no-padding no-margin faa-ring faa-slow"
-            flat
-            round
-            size="lg"
-          >
-            <q-icon
-              class="no-padding"
-              color="warning"
-              name="mdi-menu"
-              size="md"
-            />
+        <q-bar id="header-bar" class="faa-parent animated-hover absolute-top" dense style="height: 50px" >
+          <div class="row login-header">
+            <q-btn flat  @click="navigateTo({path:'/'})" :title="$t('homeTip')">
+              <img
+                :src="images.appLogo"
+                alt="SUBASTA"
+              />
 
-            <q-tooltip
+              <div class="text-h6 text-uppercase">
+                  {{ appConfig.name }}
+              </div>
+              <q-tooltip
               :model-value="menuTip"
-              :offset="[10, 10]"
+              :offset=[25,10]
               class="bg-amber text-black shadow-4 text-uppercase text-subtitle1 z-max"
-              self="center right"
-              anchor="center left"
+              self="center left"
+              anchor="center right"
             >
-              {{ $t("labels.options") }}
-              <q-icon name="mdi-arrow-right-bold-outline" size="sm" />
+            <q-icon name="mdi-arrow-left-bold-outline" size="sm" />
+              {{ $t("label.options") }}
             </q-tooltip>
+
             <q-menu
               class="z-max"
               style="border-radius: 15px"
               transition-hide="jump-up"
               transition-show="jump-down"
+              :offset=[0,10]
             >
               <q-list
                 class="text-black text-caption text-uppercase"
@@ -52,8 +43,8 @@
                   <q-item-section avatar>
                     <q-icon name="mdi-login" size="md" />
                   </q-item-section>
-                  <q-item-section class="text-body1"
-                    >{{ $t("login").toUpperCase() }}
+                  <q-item-section class="text-body1 text-uppercase"
+                    >{{ $t("login") }}
                   </q-item-section>
                 </q-item>
 
@@ -61,15 +52,33 @@
                   <q-item-section avatar>
                     <q-icon name="mdi-account-arrow-up-outline" size="md" />
                   </q-item-section>
-                  <q-item-section class="text-body1"
-                    >{{ $t("register").toUpperCase() }}
+                  <q-item-section class="text-body1 text-uppercase"
+                    >{{ $t("register") }}
                   </q-item-section>
                 </q-item>
               </q-list>
             </q-menu>
-          </q-btn>
-          <!-- <q-separator vertical /> -->
-          <!-- <LangSwitcher class="z-max" /> -->
+            </q-btn>
+          </div>
+
+
+          <q-space />
+          <div class="row login-header-right ">
+
+            <LangSwitcher class="z-max q-ml-sm" />
+            <DarkSwitcher
+            class="z-max"
+            size="md"
+            colorDark="blue-6"
+            colorLight="yellow-6"
+            :model-value="$q.dark.isActive"
+            @update="(val) => $q.dark.set(val)"
+
+          />
+
+          </div>
+
+
         </q-bar>
       </q-header>
 
@@ -77,18 +86,20 @@
         <q-carousel
           v-if="true"
           v-model="currentSlide"
-          :style="`height:${$q.screen.height - 50}px; background: transparent`"
+          :style="`height:${$q.screen.height}px; background: transparent`"
           autoplay
-          control-text-color="warning"
+          control-text-color="grey-1"
           control-type="unelevated"
+          animated
           infinite
           navigation
-          navigation-active-icon="mdi-truck-check-outline"
-          navigation-icon="mdi-truck-outline"
+          navigation-active-icon="check_circle"
+          navigation-icon="circle"
           navigation-position="bottom"
           swipeable
           transition-next="fade"
           transition-prev="fade"
+
         >
           <q-carousel-slide
             v-for="slide in carouselItems"
@@ -107,7 +118,7 @@
       <q-separator class="q-my-sm transparent" />
 
       <div
-        class="text-justify vertical-middle flex flex-center q-gutter q-gutter-md justify-around full-width"
+        class="text-justify vertical-middle flex flex-center q-gutter q-gutter-sm q-gutter-y-md justify-around full-width q-px-sm"
       >
         <div
           v-for="i in [1, 2, 3, 4, 5, 6, 7, 8, 9]"
@@ -136,7 +147,7 @@
             />
 
             <q-card-section class="col">
-              {{ lorem }}
+              {{ lorem }}{{ lorem }}{{ lorem }}
             </q-card-section>
           </q-card>
         </div>
@@ -144,11 +155,11 @@
 
       <div class="q-pa-md text-justify font-poppins">
         <p v-for="n in 5" :key="n" class="text-size-16">
-          {{ lorem }}
+          {{ lorem }} {{ lorem }} {{ lorem }}
         </p>
       </div>
 
-      <q-card class="q-mt-sm row page-footer bg-secondary">
+       <q-card class="q-mt-sm row page-footer bg-dark">
         <q-card-section class="col-12 row text-center q-pa-xs">
           <div class="col-xs-12 col-sm-12 col-md-6 col-lg-12 q-gutter-sm">
             <q-img
@@ -157,17 +168,23 @@
               style="height: 48px; width: 96px"
             />
             <q-btn
-              color="warning"
+              color="white"
               dense
               flat
-              icon="fab fa-github"
+              icon="email"
               round
+              disabled
+              :label="appConfig.email"
             ></q-btn>
             <q-btn
-              color="warning"
+              color="white"
               dense
               flat
-              icon="fab fa-facebook"
+              disabled
+
+              icon="phone"
+              :label="appConfig.phone"
+
               round
             ></q-btn>
           </div>
@@ -192,7 +209,7 @@
         />
       </q-page-scroller>
     </div>
-    <q-scroll-observer @scroll="(v) => scrollObserver(v)" />
+    <q-scroll-observer @scroll="scrollObserver" :debounce="1000" axis="vertical"/>
   </q-page>
 </template>
 
@@ -200,9 +217,12 @@
 import { ref, reactive, onBeforeMount, onMounted, watch, computed } from "vue";
 import { $t } from "src/services/i18n";
 import { useApp } from "src/composables/useApp";
-import DarkSwitcher from "components/base/DarkSwitcher.vue";
+import DarkSwitcher from "src/components/base/DarkSwitcher.vue";
+import LangSwitcher from "src/components/base/LangSwitcher.vue";
 import { useQuasar } from "quasar";
 import { homeCarouselData } from "src/config/homeCarouselData";
+import appConfig from "src/config/app.js"
+import images from "src/config/theme/images"
 
 const $q = useQuasar();
 const $app = useApp();
@@ -213,15 +233,15 @@ const slider = ref();
 const { navigateTo } = $app;
 const carouselItems = ref();
 
-const scrollTo = ref({ direction: "", top: 0, left: 0 });
 
-const isTop = computed(() => scrollTo.value.top === 0);
+const isTop = ref(true);
 
 const scrollObserver = ({ direction, position }) => {
   if (position.top === 0) {
-    console.log("top of screen", scrollTo.value);
-    scrollTo.value.direction = direction;
-    scrollTo.value.top = position.top;
+    isTop.value = true
+    showHide()
+  }else{
+    isTop.value = false
   }
   if (position.top === $q.screen.height) {
     console.log("1 screen height", scrollTo.value);
@@ -234,8 +254,8 @@ const scrollObserver = ({ direction, position }) => {
 const menuTip = ref(false);
 
 const showHide = () => {
-  setTimeout(() => (menuTip.value = true), 1000);
-  setTimeout(() => (menuTip.value = false), 4000);
+  setTimeout(() => (menuTip.value = !menuTip.value), 1000);
+  setTimeout(() => (menuTip.value = !menuTip.value), 5000);
 };
 
 const lorem =
@@ -260,17 +280,26 @@ onBeforeMount(() => {
 });
 
 onMounted(() => {
-  // console.log("carousel: ", carouselItems.value);
+  showHide()
+
 });
 </script>
 
 <style lang="scss" scoped>
-#Inicio {
+#Home {
   width: 100%;
+  background-image: linear-gradient(
+    180deg,
+    #f8f6f6dd,
+    #fafafa
+  ) !important;
+
+
+
 
   .q-header,
   .q-footer {
-    z-index: 2000;
+    z-index: 10;
   }
 
   .header {
@@ -279,11 +308,7 @@ onMounted(() => {
     backdrop-filter: blur(10px);
   }
 
-  background-image: linear-gradient(
-    180deg,
-    $secondary,
-    rgb(45, 206, 204)
-  ) !important;
+
 
   .custom-caption {
     height: calc(100vh * 0.3);
@@ -292,9 +317,7 @@ onMounted(() => {
     background-color: rgba(0, 0, 0, 0.6);
   }
 
-  .page-footer {
-    background-color: #1976d29f;
-  }
+
 
   .services-card {
     border-radius: 20px;
@@ -308,5 +331,12 @@ onMounted(() => {
     word-wrap: break-word;
     overflow: hidden;
   }
+
+  .logo-header-title {
+    max-width:250px;
+
+
+  }
+
 }
 </style>

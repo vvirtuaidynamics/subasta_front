@@ -1,9 +1,9 @@
 <template>
   <q-btn
-    :label="$t(`${props.label}`)"
+    :label="props.label"
     class="shadow-3 text-uppercase"
     :class="props.class"
-    v-bind="formsStyle.button"
+    v-bind="forms.button"
     type="button"
     :color="props.color"
     @click="onClick"
@@ -11,10 +11,10 @@
     :loading="props.loading"
     :icon="props.icon ? props.icon : ''"
   >
-    <q-tooltip v-if="props.title?.length"> {{ `${props.title}` }}</q-tooltip>
+    <q-tooltip v-if="props.title?.length"> {{ props.title }}</q-tooltip>
     <template #loading>
       <span class="text-caption text-uppercase q-gutter q-gutter-x-sm">{{
-        $t(`${loadingMsg}`)
+        loadingMsg
       }}</span>
       <q-spinner-facebook size="xs" class="q-ml-sm" color="secondary" />
     </template>
@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { formsStyle } from "src/config/formStyle";
+import { forms } from "src/config/theme/forms";
 
 defineOptions({
   name: "QButtonComponent",
