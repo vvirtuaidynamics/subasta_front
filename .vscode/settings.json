@@ -11,5 +11,15 @@
     "javascriptreact",
     "typescript",
     "vue"
+  ],
+  "cSpell.words": [
+    "borderless",
+    "carrusel",
+    "composables",
+    "pinia",
+    "puede",
+    "recibir",
+    "SUBASTA",
+    "succefull"
   ]
 }
