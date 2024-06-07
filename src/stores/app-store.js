@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
-
+import app from "src/config/app";
 export const useAppStore = defineStore(`${process.env.APP_NAME}_APP`, {
   state: () => ({
-    appName: "",
+    appName: app.name,
     locale: "",
     theme: "",
     dark: false,

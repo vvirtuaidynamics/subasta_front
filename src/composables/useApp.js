@@ -73,7 +73,7 @@ export function useApp() {
     }
     if (payload && typeof payload === "object") {
       const path = payload.path ?? false;
-      if (path && $route.path !== path) {
+      if (path && $router.path !== path) {
         $router.push(path);
       }
       if (payload.name) $router.push({ name: payload.name });

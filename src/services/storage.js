@@ -47,7 +47,7 @@ export const StorageService = {
     sessionStorage.removeItem(keyUserConfig);
     localStorage.removeItem(keyUserConfig);
   },
-  async setLocale(locale) {
+  setLocale(locale) {
     localStorage.setItem(LOCALE_KEY, locale);
   },
   getLocale() {

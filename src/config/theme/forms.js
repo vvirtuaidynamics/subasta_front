@@ -1,4 +1,4 @@
-export const formsStyle = {
+export const forms = {
   text: {
     filled: false,
     standout: false, //puede recibir un bg-[color] y text-[color]

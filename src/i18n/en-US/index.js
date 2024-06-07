@@ -1,4 +1,8 @@
 export default {
+  app: {
+    name: 'auction',
+    description: '',
+  },
   welcome: "Welcome ",
   language: "Language",
   logout: "Logout",
@@ -50,6 +54,8 @@ export default {
 
   login: "Login",
   loginTip: "Click on the button for login",
+  home: "Go to home",
+  homeTip: "Click on the button to go home",
   copyright: "Copyright",
   darkActivateTip: "Activate dark mode",
   darkDeactivateTip: "Deactivate dark mode",
@@ -67,21 +73,54 @@ export default {
     root: "Administrator",
     seller: "Seller",
   },
-  model: {
+  models: {
     user: "user",
     users: "users",
     group: "user",
     groups: "users",
+    client: "client",
+    clients: "clients",
+    carrier: "carrier",
+    carriers: "carriers",
+    administration: "administration",
   },
-  field: {
+  fields: {
+    id: "id",
     name: "name",
     last_name: "name",
     dni: "dni",
     email: "email",
     username: "username",
+
+    role: "role",
+    roles: "roles",
+    permission: "permission",
+    permissions: "permissions",
+    phone: "phone",
+    action: "action",
+    active: "active",
+    status: "status",
+    created: "created",
+    updated: "updated",
+    deleted: "deleted",
+    address: "address",
+    company: "company",
+    industry: "industry",
+    about_me: "about_me",
+    profile: "profile",
+    birthday: "birthday",
+    gender: "gender",
+    note: "note",
+    photo: "photo",
+    avatar: "avatar",
+    validated: "validated",
+    password: "password",
+    password_new: "new password",
+    password_old: "previous password",
+    password_confirm: "confirm password",
   },
 
-  label: {
+  labels: {
     add: "Add",
     actions: "Actions",
     exit: "Exit",
@@ -148,29 +187,15 @@ export default {
     noFilterData: "There is no data to show from filter!",
     clearFilter: "Clear filters",
   },
+  loginMsg: {
+    wrongPassword: "Wrong password",
+    wrongPasswordOld: "Wrong old password",
+  },
   notifications: {
     saveWork: "The text have been save to your local storage",
   },
-  usuario: {
-    activo: "Active",
-    avatar: "Photo",
-    config: "Configuration",
-    email: "Email",
-    identid: "Identid Number",
-    name: "Full name",
-    password: "Pasword",
-    phone: "Phone",
-    username: "Username",
-  },
-  rol: {},
-  fields: {
-    password: {
-      old: "Old Password",
-      new: "New password",
-      wrong: "The password and confirm don't equals",
-      wrongOld: "Old password is wrong",
-    },
-  },
+
+
 
   validations: {
     exist: "Already exist on database",

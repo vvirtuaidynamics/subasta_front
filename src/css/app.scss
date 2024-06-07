@@ -1,6 +1,8 @@
 // app global css in SCSS form
 @import "font-awesome-animation/font-awesome-animation.scss";
 @import url("./fonts/poppins/Poppins.css");
+@import './quasar.variables.scss';
+
 :root {
   --q-transition-duration: 0.3s;
 }
@@ -134,4 +136,60 @@
   -moz-filter: blur(10px);
   -webkit-filter: blur(10px);
   background-color: rgba(255, 255, 255, 0.1);
+}
+.login-header{
+
+  min-width: 250px;
+  min-height: 50px;
+  transform: skewX(-10deg) translateX(-50px);
+  -webkit-transform: skewX(-10deg) translateX(-50px);
+  -moz-transform: skewX(-10deg) translateX(-50px);
+  -ms-transform: skewX(-10deg) translateX(-50px);
+  -o-transform: skewX(-10deg) translateX(-50px);
+  background-color: $dark;
+  margin: 0;
+  padding-left:50px;
+  border: solid 1px $dark;
+
+  img {
+    margin:0 10px 0 0;
+    max-height: 40px;
+  }
+
+}
+.login-header-right{
+  min-height: 50px;
+  transform: skewX(10deg) translateX(50px);
+  background-color: $dark;
+  margin: 0;
+  padding-right:50px;
+  border: solid 1px $dark;
+  -webkit-transform: skewX(10deg) translateX(50px);
+  -moz-transform: skewX(10deg) translateX(50px);
+  -ms-transform: skewX(10deg) translateX(50px);
+  -o-transform: skewX(10deg) translateX(50px);
+}
+
+.login-footer {
+  background-color: #1976d29f;
+  margin: 0;
+  padding: 0;
+}
+
+.login-footer-header{
+  min-width: 250px;
+  transform: skewX(-10deg) translateX(-50px);
+  background-color: $dark;
+  margin: 0;
+  padding-left:50px;
+  border: solid 1px $dark;
+
+  img {
+    margin:0 10px 0 0;
+    max-height: 40px;
+  }
+
+}
+.page-footer {
+  background-color: #1976d29f;
 }
