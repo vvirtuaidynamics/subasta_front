@@ -22,7 +22,7 @@ module.exports = configure(function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ["i18n", "axios", "apexcharts"],
+    boot: ["main","i18n", "axios", "apexcharts"],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ["app.scss"],
@@ -62,7 +62,7 @@ module.exports = configure(function (ctx) {
         APP_AUTOR: appContext.author || "",
         APP_DESC: appContext.description || "",
         APP_KEY: "94736d52-77c8-410b-8416-07787d4312db",
-        APP_NAME: appContext.name.toUpperCase() || "Subasta App",
+        APP_NAME: appContext.name.toUpperCase() || "Subasta",
         APP_VERSION: appContext.version || "1.0.0",
         NODE_ENV: "development", //development, production
         STORAGE_CIPHER: false,
