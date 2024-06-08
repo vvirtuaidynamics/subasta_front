@@ -3,11 +3,11 @@
     LangSwitch
     Componente para gestionar el idioma del sitio a través de el storage local y la configuracion del usuario.
    -->
-  <q-btn-dropdown class="q-pa-sm text-body2" color="accent" flat no-caps>
+  <q-btn-dropdown class="q-pa-sm text-body2" flat no-caps>
     <template #label>
       <q-img v-if="lang === 'es' || lang === 'en-US'" :src="lang === 'es' ? esSvg : lang === 'en-US' ? enSvg : ''"
         class="q-mr-sm" style="width: 24px; height: auto" />
-      <span class="text-body2 text-weight-bolder text-dark">{{
+      <span class="text-body2 text-weight-medium">{{
         lang === "es" ? "ES" : lang === "en-US" ? "EN" : langName
       }}</span>
     </template>
@@ -28,11 +28,13 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, onMounted } from "vue";
+import {ref, onBeforeMount, onMounted, getCurrentInstance} from "vue";
+import {useRouter} from "vue-router";
 import { useQuasar } from "quasar";
 import flags from "../../i18n/flags";
 import {locales} from "../../boot/i18n.js"
 import {StorageService} from "../../services/storage.js"
+
 
 defineOptions({
   name: "LangSwitcher",
@@ -44,14 +46,15 @@ const props = defineProps({
 const emits = defineEmits(['update']);
 
 const $q =  useQuasar();
+const $router = useRouter()
 
 const lang = ref($q.lang.isoName);
 const esSvg =  flags.es;
 const enSvg =  flags.en;
 
 const changeLocale = (locale)=>{
-
-  $q.lang.set(locale);
+  const Lang = locales[`${locale}`].locale
+  $q.lang.set(Lang);
   lang.value = locale;
   StorageService.setLocale(locale);
   //TODO SI HAY USUARIO AUTH LO GUARDO EN SU CONFIG
@@ -62,12 +65,13 @@ const changeLocale = (locale)=>{
 
 }
 const getLocale = (locale)=>{
+
   lang.value =  $q.lang.isoName
   return lang.value;
 }
 
 const reload = ()=>{
-  window.location.reload();
+  $router.go(0)
 }
 
 const handleChange = (locale) => {

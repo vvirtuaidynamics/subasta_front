@@ -130,7 +130,7 @@ onBeforeMount(() => {
               style="border: 2px solid #c0c0c0"
             >
               <q-img
-                :src="Auth?.avatar ?? 'src/assets/images/default.png'"
+                :src="Auth?.avatar ?? images.appLogo"
                 fit="contain"
                 style="width: 110px; height: 110px"
               />

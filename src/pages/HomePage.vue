@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <div id="Home" class="background-home">
+    <div id="Home" >
       <q-header :class="'header'">
         <q-bar id="header-bar" class="faa-parent animated-hover absolute-top" dense style="height: 50px" >
           <div class="row login-header">
@@ -107,6 +107,7 @@
             :img-src="slide.src"
             :name="slide.id"
             class="full-width"
+
           >
             <div class="absolute-bottom custom-caption">
               <div class="text-h3">{{ slide.title }}</div>
@@ -116,7 +117,6 @@
         </q-carousel>
       </q-card>
       <q-separator class="q-my-sm transparent" />
-
       <div
         class="text-justify vertical-middle flex flex-center q-gutter q-gutter-sm q-gutter-y-md justify-around full-width q-px-sm"
       >
@@ -288,15 +288,6 @@ onMounted(() => {
 <style lang="scss" scoped>
 #Home {
   width: 100%;
-  background-image: linear-gradient(
-    180deg,
-    #f8f6f6dd,
-    #fafafa
-  ) !important;
-
-
-
-
   .q-header,
   .q-footer {
     z-index: 10;

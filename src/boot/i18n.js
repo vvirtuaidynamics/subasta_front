@@ -8,9 +8,10 @@ import en from "src/lang/en-US";
 import messages from "src/i18n";
 
 export const locales = {
-  es: { en: "Spanish", es: "Español" },
-  "en-US": { en: "English", es: "Ingles" },
+  es: { en: "Spanish", es: "Español", locale: es },
+  "en-US": { en: "English", es: "Ingles",locale: en },
 };
+
 export default boot(({ app }) => {
   const locale = "es";
   const dark = false;
