@@ -81,7 +81,7 @@ module.exports = configure(function (ctx) {
           "@intlify/vite-plugin-vue-i18n",
           {
             // if you want to use Vue I18n Legacy API, you need to set `compositionOnly: false`
-            compositionOnly: false,
+            //compositionOnly: false,
 
             // if you want to use named tokens in your Vue I18n messages, such as 'Hello {name}',
             // you need to set `runtimeOnly: false`
