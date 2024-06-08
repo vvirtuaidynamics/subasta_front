@@ -9,7 +9,7 @@ export default {
   lostCxMsg: "Se ha perdido la conexión con la base de datos!",
   CxMsg: "Se ha restablecido la conexión con la base de datos!",
   newsNofifications: "Tienes notificaciones sin leer",
-  loginMsg: "Sesión iniciada correctamente! Bienvenido {nombre}",
+  loginSuccess: "Sesión iniciada correctamente! Bienvenido {nombre}",
   loginErrorMsg: "Error al iniciar sesión. Usuario o contraseña incorrecto",
   logoutMsg: "Sesión cerrada correctamente! Hasta pronto {nombre}",
   updateSuccessMsg: "Datos actualizados correctamente! ",
@@ -123,7 +123,7 @@ export default {
     wrongPassword: "Las contraseñas no coinciden",
     wrongPasswordOld: "Las contraseña anterior no es correcta",
   },
-  label: {
+  labels: {
     add: "Adicionar",
     actions: "Acciones",
     exit: "Salir",
@@ -146,6 +146,7 @@ export default {
     copy: "Copiar",
     create: "Crear",
     cut: "Cortar",
+    done: "Aceptar",
     delete: "Eliminar",
     deleteFile: "Eliminar el fichero",
     deleteFiles: "Eliminar el fichero(s)",
