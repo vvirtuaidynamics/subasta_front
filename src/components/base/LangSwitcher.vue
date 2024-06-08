@@ -65,7 +65,6 @@ const changeLocale = (locale)=>{
 
 }
 const getLocale = (locale)=>{
-
   lang.value =  $q.lang.isoName
   return lang.value;
 }
@@ -75,6 +74,7 @@ const reload = ()=>{
 }
 
 const handleChange = (locale) => {
+  if(locale===getLocale()) return false;
   changeLocale(locale);
   reload()
 }
