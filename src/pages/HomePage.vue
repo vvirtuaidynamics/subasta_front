@@ -21,7 +21,7 @@
               anchor="center right"
             >
             <q-icon name="mdi-arrow-left-bold-outline" size="sm" />
-              {{ $t("label.options") }}
+              {{ $t("labels.options") }}
             </q-tooltip>
 
             <q-menu
@@ -124,20 +124,20 @@
           v-for="i in [1, 2, 3, 4, 5, 6, 7, 8, 9]"
           :key="i"
           :style="
-            !$q.screen.gt.sm
+            !$q.screen.gt.xs
               ? `width: 100%`
-              : `max-width:   ${parseInt(($q.screen.width - 50) / 3)}px`
+              : `max-width:   ${parseInt(($q.screen.width - 70) / 3)}px`
           "
           class="justify-center items-center"
         >
           <q-card
-            :class="$q.screen.gt.sm ? 'column' : 'row'"
+            :class="$q.screen.gt.xs ? 'column' : 'row'"
             bordered
             class="services-card shadow-3"
           >
             <q-img
               :style="
-                $q.screen.gt.sm
+                $q.screen.gt.xs
                   ? 'border-radius: 20px 20px 0px 0px'
                   : 'border-radius: 20px 0px 0px 20px'
               "
@@ -203,13 +203,13 @@
       >
         <q-btn
           class="shadow-3"
-          color="secondary"
+          color="dark"
           icon="keyboard_arrow_up"
           round
         />
       </q-page-scroller>
     </div>
-    <q-scroll-observer @scroll="scrollObserver" :debounce="1000" axis="vertical"/>
+    <q-scroll-observer  @scroll="scrollObserver" :debounce="100" axis="vertical"/>
   </q-page>
 </template>
 
@@ -233,7 +233,7 @@ const slider = ref();
 const { navigateTo } = $app;
 const carouselItems = ref();
 
-
+const scrollRef = ref();
 const isTop = ref(true);
 
 const scrollObserver = ({ direction, position }) => {
