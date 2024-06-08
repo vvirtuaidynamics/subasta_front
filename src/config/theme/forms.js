@@ -5,7 +5,6 @@ export const forms = {
     borderless: false,
     rounded: false,
     square: false,
-    rounded: false,
     outlined: false,
   },
   editor: {
@@ -14,7 +13,6 @@ export const forms = {
     borderless: false,
     rounded: false,
     square: false,
-    rounded: false,
     outlined: false,
   },
   number: {
@@ -23,7 +21,6 @@ export const forms = {
     borderless: false,
     rounded: false,
     square: false,
-    rounded: false,
     outlined: false,
   },
   button: {
@@ -33,7 +30,6 @@ export const forms = {
     rounded: false,
     push: false,
     unelevated: false,
-    rounded: false,
     "no-caps": false,
     style: "border-radius: 10px;",
   },

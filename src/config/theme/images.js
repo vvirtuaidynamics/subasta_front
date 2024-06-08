@@ -1,4 +1,4 @@
 export default {
-  appLogo: "src/assets/images/default.png",
-  loginCover: "src/assets/images/backgrounds/default.jpeg",
+  appLogo: "/images/logo.png",
+  loginCover: "/images/backgrounds/default.jpeg",
 }

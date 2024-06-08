@@ -15,11 +15,17 @@
 </template>
 <script setup>
 import { onBeforeMount, onMounted, ref, watch } from "vue";
+import {useRouter} from "vue-router";
+
+const $router = useRouter();
 
 let breadcrumbs = ref();
-const refresh = () => window.location.reload();
+const refresh = () => $router.go(0);
 
-onBeforeMount(() => {});
+
+onBeforeMount(() => {
+
+});
 
 onMounted(() => {});
 </script>
