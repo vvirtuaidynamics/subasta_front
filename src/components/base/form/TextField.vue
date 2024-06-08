@@ -3,6 +3,10 @@ import {computed, onBeforeMount, onMounted, ref} from "vue";
 import {forms} from "src/config/theme/forms";
 import {maxLength, minLength, required} from "src/services/validators";
 
+defineOptions({
+  name: "TextField",
+});
+
 const props = defineProps({
   modelValue: {
     type: String,
@@ -29,8 +33,6 @@ let textValue = ref("")
 const rules = ref([])
 const fieldOptions = {...forms.text, ...props.options}
 const fieldRules = {...rules.value, ...props.options?.rules ?? []}
-// const bus = inject('bus');
-
 
 onBeforeMount(() => {
   if (props.field && props.field?.options) {

@@ -7,10 +7,10 @@
 	  data: {...}; //input all props
  -->
   <div id="numberInput" class="full-width">
-    <q-input :id="props.name" :name="props?.name" :label="getFormatValue()" ref="ctrl" reverse-fill-mask
+    <q-input :id="props.name" :name="props?.name" :label="getFormatValue()" :ref="refEl" reverse-fill-mask
              v-model.number="numValue" class="full-width" clearable @clear="reset" :rules="rules"
-             @click="() => showOnClick ? showNumpad() : ''" @keypress.prevent="(key) => KeyPress(key)" lazy-rules
-             :error="props.error ?? false" :error-message="props.errorMessage ?? ''" v-bind="props.options ?? null">
+             @click="() => showOnClick ? showNumpad() : ''" @keydown.prevent="(key) => KeyPress(key)" lazy-rules
+             :error="props.error ?? false" :error-message="props.errorMessage ?? ''" v-bind="fieldProps ?? null">
       <template #append>
         <q-btn v-if="numValue && hover" icon="mdi-delete-outline" @click="reset()"/>
         <q-btn icon="mdi-dialpad" flat class="cursor-pointer" round v-if="!isReadonly">
@@ -27,7 +27,7 @@
                       </q-btn>
                     </div>
                     <div class="col-12">
-                      <q-btn class=" full-width" color="positive" :label="$t('labels.acept')" v-close-popup></q-btn>
+                      <q-btn class=" full-width" color="positive" :label="$t('labels.done')" v-close-popup></q-btn>
                     </div>
                   </div>
                 </q-card-section>
@@ -39,18 +39,19 @@
       <template #prepend v-if="props.prependIcon || props.currency">
         <q-icon :name="props.currency ? 'attach_money' : props.prependIcon"/>
       </template>
-      <!-- <template #loading="props" v-if="props.data && props.data['loading']">
-                <q-spinner-facebook color="info" />
-            </template> -->
     </q-input>
   </div>
 </template>
 
 <script setup>
 import {computed, onBeforeMount, onMounted, ref, watch} from 'vue';
-// import  from 'src/boot/keyboards'
 import {uid} from 'quasar';
-import {$t} from 'src/services/i18n'
+import {$t} from 'src/services/i18n';
+import {forms} from "src/config/theme/forms";
+
+defineOptions({
+  name: "NumberField",
+});
 
 /**
  * Props
@@ -59,6 +60,10 @@ const props = defineProps({
   name: {
     type: String,
     required: true
+  },
+  label: {
+    type: String, //name, label, title
+    required: false
   },
   showOnClick: {
     type: Boolean,
@@ -104,11 +109,9 @@ const props = defineProps({
     default: false,
   },
   unidad: {
-    type: String, //CURRENCY CUP MLC USD EUR
+    type: String, //CURRENCY CUP MLC USD EUR uds
     default: 'uds',
   },
-
-
 });
 
 /**
@@ -120,12 +123,13 @@ let showDialog = ref(false)
 const botones = [7, 8, 9, 4, 5, 6, 1, 2, 3, '.', 0, '<'];
 const regexNum = /^[0-9.]+$/;
 let keypad = ref(false);
+const fieldProps = ref({...forms.number, ...props.options});
 
 const uuid = ref(uid());
 let numValue = ref('')
 let hover = ref(false)
 
-const isReadonly = computed(() => ctrl.value?.readonly ?? false)
+const isReadonly = computed(() => refEl.value?.readonly ?? false)
 let unidad = props.currency && !props.unidad ? '(CUP)' : props.unidad ? `(${props.unidad})` : '(uds.)';
 
 const showNumpad = () => showDialog.value = true
@@ -219,7 +223,6 @@ const update = (val) => {
 const KeyPress = (e) => {
   let key = null
   key = e ?? null
-  console.log("key", key);
   if (!numValue.value) numValue.value = ''
   if (!isNaN(e.key) || e.key === '.') {
     if (numValue.value.length > 0 && e.key === '.' && numValue.value.indexOf('.') === -1) {
@@ -250,9 +253,14 @@ function resetValidation() {
 }
 
 function getFormatValue() {
+  const label = ref(props.label || props.options?.label)
+
+  if(label.value?.length) return label.value
+
   if (props.currency) {
     return setCurrency(numValue.value, props.unidad ?? 'CUP', 2)
   } else {
+
     return `${numValue.value} ${props.unidad ?? 'uds.'}`;
   }
 }
