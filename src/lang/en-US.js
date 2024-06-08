@@ -95,4 +95,5 @@ module.exports = {
     noNodes: 'No nodes available',
     noResults: 'No matching nodes found'
   }
+
 }
