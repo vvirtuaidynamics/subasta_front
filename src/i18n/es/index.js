@@ -38,6 +38,7 @@ export default {
   width: "Ancho",
   height: "Alto",
   chart: "Gráfico",
+  "header-menu": "Menú",
 
   modelLabel: "Modelo",
   modelPlural: "Modelos",
@@ -69,6 +70,8 @@ export default {
   fullscreenBtn: "modo pantalla completa",
   enable: "Activar",
   disable: "Desactivar",
+  from: 'desde',
+  to: 'hasta',
 
   myaccount: "Mi cuenta",
   rols: {

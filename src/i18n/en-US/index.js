@@ -36,6 +36,8 @@ export default {
   width: "Width",
   height: "Height",
   chart: "Chart",
+  "header-menu": "Menu",
+
 
   modelLabel: "Model",
   modelPlural: "Models",
@@ -62,6 +64,9 @@ export default {
   fullscreenBtn: "fullscreen mode",
   enable: "Enable",
   disable: "Disable",
+  from: 'from',
+  to: 'to',
+
 
   labelUrlImage: "Image URL.",
   labelInsertImage: "Insert image",
