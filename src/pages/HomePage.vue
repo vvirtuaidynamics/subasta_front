@@ -2,15 +2,15 @@
   <q-page>
     <div id="Home" >
       <q-header :class="'header'">
-        <q-bar id="header-bar" class="faa-parent animated-hover absolute-top" dense style="height: 50px" >
+        <q-bar id="header-bar" class=" absolute-top" dense style="height: 50px" >
           <div class="row login-header">
-            <q-btn flat  @click="navigateTo({path:'/'})" :title="$t('homeTip')">
-              <img
+            <q-btn flat  @click="navigateTo({path:'/'})" :title="$t('homeTip')" >
+              <img class="z-top"
                 :src="images.appLogo"
-                alt="SUBASTA"
+                alt=""
               />
 
-              <div class="text-h6 text-uppercase">
+              <div class="text-h6 text-uppercase" >
                   {{ appConfig.name }}
               </div>
               <q-tooltip
@@ -232,7 +232,6 @@ const currentSlide = ref(0);
 const slider = ref();
 const { navigateTo } = $app;
 const carouselItems = ref();
-
 const scrollRef = ref();
 const isTop = ref(true);
 
@@ -244,7 +243,6 @@ const scrollObserver = ({ direction, position }) => {
     isTop.value = false
   }
   if (position.top === $q.screen.height) {
-    console.log("1 screen height", scrollTo.value);
     scrollTo.value.direction = direction;
     scrollTo.value.top = position.top;
   }
