@@ -242,7 +242,6 @@ onBeforeMount(() => {
         </div>
       </transition>
 
-
       <q-bar class="login-footer absolute-bottom " :class="texts.footer" dense style="height: 50px">
        <div class="row login-footer-header">
           <q-btn flat  @click="navigateTo({path:'/'})" :title="$t('homeTip')">
@@ -322,14 +321,7 @@ onBeforeMount(() => {
     border-left: solid 4px $dark;
     border-top: solid 2px $dark;
   }
-  .div-index-content {
-    width: 100vw;
-    height: 100vh;
-    min-width: 400px;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-image: url($background1);
-  }
+
   .gradient-bg-blue {
     background: linear-gradient(to bottom, #0e4b8a, #00c6ff);
   }
