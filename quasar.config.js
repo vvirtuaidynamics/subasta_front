@@ -58,14 +58,14 @@ module.exports = configure(function (ctx) {
       // publicPath: '/',
       // analyze: true,
       env: {
-        API_URL: "http://localhost:9010/api",
+        API_URL: "http://localhost/api",
+        APP_NAME: appContext.name.toUpperCase() || "Subasta",
         APP_AUTOR: appContext.author || "",
         APP_DESC: appContext.description || "",
         APP_KEY: "94736d52-77c8-410b-8416-07787d4312db",
-        APP_NAME: appContext.name.toUpperCase() || "Subasta",
         APP_VERSION: appContext.version || "1.0.0",
         NODE_ENV: "development", //development, production
-        STORAGE_CIPHER: false,
+        STORAGE_CIPHER: false,   //Cifrar el estado
       },
       // rawDefine: {}
       // ignorePublicFolder: true,
