@@ -1,23 +1,24 @@
 <template>
 
   <div id="QDateField" class="full-width">
-      <q-input :name="`${name}_input`" :ref="refInput" :v-bind="bindsProp"
+      <q-input :name="`${name}_input`" ref="refInput" :v-bind="bindsProp"
                v-model="qdate_input" @click="() => qdate_pop = !qdate_pop"
                :rules="setRules()" readonly lazy-rules
-               :label="props.label ?? '' + ' [dd/mm/yyyy]' ?? '[dd/mm/yyyy]'" class="cursor-pointer q-my-xs full-width"
+               :label="props.label" class="cursor-pointer q-my-xs full-width"
                :error="qdate_error">
         <template v-slot:append>
           <q-btn flat round icon="mdi-eraser" v-if="qdate_input" @click="() => reset()" />
           <q-icon name="event" class="cursor-pointer">
-            <q-popup-proxy cover transition-show="scale" transition-hide="scale" v-model="qdate_pop" :breakpoint="10000">
+            <q-popup-proxy transition-show="fade" transition-hide="scale" v-model="qdate_pop" :breakpoint="600">
               <q-date :name="`${props.name}_qdate`" :ref="refQDate" v-model="qdate_data" :locale="$q.lang.date" today-btn
                       :minimal="props.minimal" :multiple="props.multiple"
                       :landscape="props.landscape" :range="props.range" :error="qdate_error"
-                      @update:model-value="(val) => qdateUpdate(val)" :rules="props.rules">
-                <div class="row items-center justify-end">
-                  <q-btn v-close-popup label="Cerrar" color="primary" flat />
-                </div>
+                      @update:model-value="(val) => qdateUpdate(val)" :rules="props.rules" >
+<!--                <div class="row items-center justify-end">-->
+<!--                  <q-btn v-close-popup :label="$q.lang.label.close" color="primary" flat />-->
+<!--                </div>-->
               </q-date>
+
             </q-popup-proxy>
           </q-icon>
         </template>
@@ -48,14 +49,13 @@ const props = defineProps({
     type: String, //name, label, title
     required: true
   },
-  rules: ()=>[],
-  modelValue: ()=>{},
+  rules: Array,
+  modelValue: String,
   landscape: Boolean,
   minimal: Boolean,
   required: Boolean,
   range: Boolean,
   multiple: Boolean,
-
   options: {
     type: Object,
     default: () => ({})
@@ -69,8 +69,8 @@ const emits = defineEmits(["update", "error", "reset"]);
 const $q = useQuasar();
 const refEl = ref();
 const bindsProp = {...forms.text, ...props.options};
-const refQDate = ref()
-const refInput = ref()
+let refQDate = ref()
+let refInput = ref()
 const qdate_pop = ref(false)
 const qdate_error = ref(false)
 
@@ -80,7 +80,7 @@ const qdate_emit = ref('')
 const esLocale = $q.lang.date;
 
 const ValidateDateInputRule = (val) => date.isValid(val) || $t('validations.validDate');
-const requiredRule = (val) => (val !== undefined && val !== null && val.length !== 0) || $t('validations.required');
+const requiredRule = (val) => !!val || $t('validations.required');
 
 function validate() {
   refInput.value.validate()
@@ -113,6 +113,7 @@ function reset() {
 
 }
 function updateFromValue() {
+
   if (props.modelValue) {
 
     let dates = []
@@ -123,7 +124,6 @@ function updateFromValue() {
       if (props.range) {
         //con rango
         temp_dates = props.modelValue.split(';')
-        // console.log('dates string: ', temp_dates)
 
         temp_dates.forEach((dt) => {
           if (dt) {
@@ -131,7 +131,7 @@ function updateFromValue() {
             let from = DateTime.fromISO(dt.split('|')[0]).toUTC() //, 'yyyy-MM-dd'
             let to = DateTime.fromISO(dt.split('|')[1]).toUTC() //, 'yyyy-MM-dd'
 
-            let dif = Interval.fromDateTimes(from, to).length($q.lang.date.days)
+            let dif = Interval.fromDateTimes(from, to).length('days')
 
             if (dif === 0) {
               //SI LA DIFERENCIA ES MENOR A 1 DIA
@@ -173,7 +173,7 @@ function updateFromValue() {
         //con rango
         let from = DateTime.fromISO(props.modelValue.split('|')[0]).toUTC()
         let to = DateTime.fromISO(props.modelValue.split('|')[0]).toUTC()
-        let dif = Interval.fromDateTimes(from, to).length($q.lang.date.days||'days')
+        let dif = Interval.fromDateTimes(from, to).length('days')
         if (dif === 0) {
           //SI LA DIFERENCIA ES MENOR A 1 DIA
           dates.push(from.toFormat('yyyy/MM/dd'))
@@ -228,8 +228,6 @@ function qdateUpdate(val) {
         qdate_emit.value = `${date.formatDate(val.from ?? val, 'YYYY-MM-DD')}|${date.formatDate(val.to ?? val, 'YYYY-MM-DD')}`;
 
         let dif = date.getDateDiff(date.formatDate(val.from ?? val, 'YYYY/MM/DD'), date.formatDate(val.to ?? val, 'YYYY/MM/DD'), $q.lang.date.days||'days')
-        // console.table({ 'dif': dif, 'val': val });
-
         if (dif === 0) {
           if (qdate_input.value.length === 0) {
             qdate_input.value = `${desde}`
@@ -269,15 +267,16 @@ function qdateUpdate(val) {
         }
 
       } else {
+
         //CON RANGO
         qdate_input.value = ''
         qdate_emit.value = '';
         if (Array.isArray(val)) {
 
-          depureRangeDates(val);
+          const dep_val = depureRangeDates(val);
 
           let dtCount = 0
-          val.forEach((dt) => {
+          dep_val.forEach((dt) => {
             let dif = date.getDateDiff(date.formatDate(dt.from ?? dt, 'YYYY/MM/DD'), date.formatDate(dt.to ?? dt, 'YYYY/MM/DD'), 'days')
 
             if (dtCount === 0) {
@@ -318,7 +317,6 @@ function qdateUpdate(val) {
  * @return Array<{ from: string, to: string, Value: string }>
  */
 function depureRangeDates(dates) {
-  console.log(dates)
   let v_result = []
   let r_result= []
   let qt_val = []
@@ -369,10 +367,8 @@ function depureRangeDates(dates) {
     v_result.forEach((v) => qt_val.push(v))
     r_result.forEach((r) => qt_val.push(r))
 
-    console.table({ v_result, r_result }, ['values', 'ranges']);
-
-    // console.log('qt_val:', qt_val);
     qdate_data.value = qt_val
+
     return qt_val
   }
 
@@ -383,12 +379,10 @@ defineExpose({
 
 onBeforeMount(() => {
   if (props.modelValue) updateFromValue()
-  console.log('onBeforeMount')
 
 })
 
 onMounted(() => {
-  console.log('onMounted')
 })
 
 </script>

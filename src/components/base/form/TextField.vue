@@ -61,6 +61,7 @@ onMounted(() => {
 function reset() {
   textValue.value = ''
   emits('update', textValue.value)
+  resetValidation()
 }
 
 function update(val) {
@@ -86,7 +87,7 @@ defineExpose({
 </script>
 
 <template>
-  <q-input :ref="refEl" :name="props.name" :label="props.label" type="text" v-bind="fieldOptions" v-model="textValue" class="full-width"
+  <q-input :ref="refEl" :name="props.name" :label="props.label" v-bind="fieldOptions" v-model="textValue" class="full-width"
            @update:model-value="(val)=>update(val)" >
     <template #append v-if="props.options && props.options.appendIcon">
       <q-icon :name="props.options.appendIcon"/>

@@ -1,5 +1,5 @@
 <template>
-  <div id="QDateField" class="full-width">
+  <div id="QSelectField" class="full-width">
 
 
   </div>

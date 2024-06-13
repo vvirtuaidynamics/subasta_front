@@ -167,6 +167,7 @@ const setColor = (v) => {
 
 const reset = () => {
   numValue.value = '';
+  resetValidation()
   emits('update', numValue.value);
 }
 const setCurrency = (value, currency, fraction) => {
