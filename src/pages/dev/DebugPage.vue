@@ -1,57 +1,40 @@
 <template>
-  <q-page>
-    <div class="page row gradient-bg-blue">
-      <div
-        id="form"
-        :class="
-          $q.screen.gt.sm
-            ? 'form-div col-6 flex flex-center'
-            : 'form-div col-12 flex flex-center'
-        "
-      >
-        {{ "LOGIN" }}
-      </div>
+  <q-page padding>
+    <LoaderPage :show="false" :dark="false"></LoaderPage>
 
-      <div v-if="$q.screen.gt.sm" class="logo-div col-6">
-        <q-img
-          fit="fill"
-          class="login-cover-img"
-          src="/images/backgrounds/default.jpeg"
-          alt="logo"
-        />
-      </div>
+    <div class="flex flex-center">
+        <div style="width:500px;">
+          <q-date-field label="birthday" name="birthday" :model-value="data" required @update="(val)=>data=val" :options="{}" multiple range>
+
+          </q-date-field>
+          <picture-field avatar @change="(val)=>data=val"></picture-field>
+          {{data}}
+        </div>
+
+
     </div>
   </q-page>
 </template>
 
 <script setup>
 import { useQuasar } from "quasar";
+import { ref } from 'vue';
 import IconPickerField from "src/components/base/IconPickerField.vue";
+import LoaderPage from "components/base/LoaderPage.vue";
+import TextField from "components/base/form/TextField.vue";
+import NumberField from "components/base/form/NumberField.vue";
+import {$t} from "src/services/i18n";
+import QDateField from "components/base/form/QDateField.vue";
+import PictureField from "components/base/PictureField.vue";
+
 const $q = useQuasar();
-document.title = document.title + " - Iconos";
+document.title = document.title + " - Debug";
+
+const text = ref('')
+const data = ref("2024-06-05|2024-06-05;2024-06-06|2024-06-21;2024-06-29|2024-06-29")
+
 </script>
 
 <style scoped lang="css">
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: 0;
-}
-.page {
-  width: 100%;
-  min-height: 100%;
-  overflow: hidden;
-}
-.form-div {
-}
-.logo-div {
-}
-.login-cover-img {
-  background-position: center;
-  background-size: cover;
-  transform: skewX(-10deg) translateX(50px);
-}
-.gradient-bg-blue {
-  background: linear-gradient(to bottom, #0e4b8a, #00c6ff);
-}
+
 </style>
