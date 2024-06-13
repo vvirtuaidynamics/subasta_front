@@ -40,16 +40,27 @@
         </q-icon>
       </template>
       <template v-slot:after>
-        <q-btn flat dense color="secondary" icon="search" @click="search()">
-          <q-tooltip class="bg-brown">{{ $q.lang.label.search }}</q-tooltip>
-        </q-btn>
+        <q-btn-component
+          :round="false"
+          :tooltips="$q.lang.label.search"
+          flat
+          dense
+          size="md"
+          icon="search"
+          @click="search"
+        />
       </template>
     </q-input>
   </div>
   <q-btn-group v-else outline>
-    <q-btn color="secondary" icon="search" @click="config.show = true" outline>
-      <q-tooltip class="bg-brown">{{ $q.lang.label.search }}</q-tooltip>
-    </q-btn>
+    <q-btn-component
+      :round="false"
+      :tooltips="$q.lang.label.search"
+      outline
+      icon="search"
+      size="md"
+      @click="config.show = true"
+    />
     <q-btn color="brown" icon="close" v-if="searched" @click="resetSearch()">
       <q-tooltip class="bg-brown">{{ $q.lang.label.reset }}</q-tooltip>
     </q-btn>
@@ -115,6 +126,7 @@
 </template>
 
 <script setup>
+import QBtnComponent from "src/components/base/QBtnComponent.vue";
 defineOptions({
   name: "SearchComponent",
 });

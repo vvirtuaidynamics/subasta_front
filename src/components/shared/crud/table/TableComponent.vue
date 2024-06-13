@@ -19,7 +19,7 @@
       <template v-slot:top="props">
         <q-toolbar>
           <section class="q-my-xs q-mr-sm cursor-pointer text-subtitle1">
-            <div class="doc-card-title">
+            <div class="doc-card-title bg-primary text-white">
               <q-icon :name="icon" size="22px" /> {{ title }}
             </div>
           </section>
@@ -35,17 +35,11 @@
               @change="(vc) => (visibleColumns = vc)"
             ></visible-columns-component>
             <filter-component :fields="filterFields"></filter-component>
-            <q-btn
-              round
-              color="secondary"
+            <q-btn-component
+              :tooltips="props.inFullscreen ? 'Restaurar' : 'Maximizar'"
               :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
               @click="props.toggleFullscreen"
-              size="sm"
-            >
-              <q-tooltip class="bg-brown">{{
-                props.inFullscreen ? "Restaurar" : "Maximizar"
-              }}</q-tooltip>
-            </q-btn>
+            />
           </div>
         </q-toolbar>
         <div
@@ -126,7 +120,7 @@
       <template v-slot:body-cell-actions="props">
         <q-td
           :props="props"
-          style="width: 0; position: sticky; right: 0"
+          style="width: 0; position: sticky; right: 0; background-color: #fff"
           class="actions-def"
         >
           <history-component
@@ -226,6 +220,7 @@ import VisibleColumnsComponent from "./actions/VisibleColumnsComponent.vue";
 import FormComponent from "../form/FormComponent.vue";
 import HistoryComponent from "../form/HistoryComponent.vue";
 import SeeComponent from "../form/SeeComponent.vue";
+import QBtnComponent from "src/components/base/QBtnComponent.vue";
 import { $t } from "src/services/i18n";
 
 defineOptions({
@@ -306,8 +301,6 @@ onMounted(() => {
 .doc-card-title {
   margin-left: -24px;
   padding: 2px 10px 2px 24px;
-  background: #e0e0e0;
-  color: #616161;
   position: relative;
   border-radius: 3px 5px 5px 0;
 }
@@ -320,7 +313,7 @@ onMounted(() => {
   width: 0;
   height: 0;
   border: 0 solid transparent;
-  border-top-color: #bebebe;
+  border-top-color: var(--q-primary);
   border-width: 9px 0 0 11px;
 }
 

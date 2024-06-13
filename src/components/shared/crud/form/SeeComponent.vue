@@ -1,13 +1,10 @@
 <template>
-  <q-btn
-    round
-    @click="showDialog = true"
+  <q-btn-component
+    tooltips="Ver"
     icon="remove_red_eye"
-    color="secondary"
     size="xs"
-  >
-    <q-tooltip class="bg-brown">Ver</q-tooltip>
-  </q-btn>
+    @click="showDialog = true"
+  />
 
   <q-dialog v-model="showDialog" full-height>
     <q-card style="width: 600px">
@@ -27,11 +24,11 @@
 </template>
 
 <script setup>
+import { ref, onMounted, watch } from "vue";
+import QBtnComponent from "src/components/base/QBtnComponent.vue";
 defineOptions({
   name: "SeeComponent",
 });
-
-import { ref, onMounted, watch } from "vue";
 
 const props = defineProps({
   object: {

@@ -1,16 +1,12 @@
 <template>
-  <q-btn
-    round
+  <q-btn-component
     :class="
       filteredBy && filteredBy.length > 0 ? 'animated pulse infinite' : ''
     "
-    @click="showDialog = true"
+    :tooltips="$q.lang.label.filter"
     icon="filter_alt"
-    color="secondary"
-    size="sm"
-  >
-    <q-tooltip class="bg-brown">{{ $q.lang.label.filter }}</q-tooltip>
-  </q-btn>
+    @click="showDialog = true"
+  />
 
   <q-dialog v-model="showDialog" position="right" full-height>
     <q-card style="width: 400px">
@@ -42,6 +38,7 @@ defineOptions({
 });
 
 import { ref, onMounted, watch } from "vue";
+import QBtnComponent from "src/components/base/QBtnComponent.vue";
 
 const props = defineProps({
   fields: {

@@ -23,7 +23,7 @@
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
+      <!-- <q-list>
         <q-item-label header> Essential Links </q-item-label>
 
         <EssentialLink
@@ -31,7 +31,8 @@
           :key="link.title"
           v-bind="link"
         />
-      </q-list>
+      </q-list> -->
+      <q-menu-component />
     </q-drawer>
 
     <q-page-container>
@@ -43,6 +44,7 @@
 <script setup>
 import { ref } from "vue";
 import EssentialLink from "components/EssentialLink.vue";
+import QMenuComponent from "components/navigation/QMenuComponent.vue";
 
 defineOptions({
   name: "MainLayout",

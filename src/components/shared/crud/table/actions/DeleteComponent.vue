@@ -1,15 +1,19 @@
 <template>
-  <q-btn round color="red" icon="mdi-minus" :size="size" @click="handleDelete">
-    <q-tooltip class="bg-red">{{ $q.lang.label.remove }}</q-tooltip>
-  </q-btn>
+  <q-btn-component
+    :tooltips="$q.lang.label.remove"
+    :size="size"
+    icon="mdi-minus"
+    color="red"
+    @click="handleDelete"
+  />
 </template>
 
 <script setup>
+import { useQuasar } from "quasar";
+import QBtnComponent from "src/components/base/QBtnComponent.vue";
 defineOptions({
   name: "DeleteComponent",
 });
-
-import { useQuasar } from "quasar";
 
 const props = defineProps({
   objects: {

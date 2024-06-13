@@ -1,13 +1,10 @@
 <template>
-  <q-btn
-    round
-    @click="showDialog = true"
+  <q-btn-component
+    :tooltips="title"
     :icon="icon"
-    color="secondary"
     :size="size"
-  >
-    <q-tooltip class="bg-brown">{{ title }}</q-tooltip>
-  </q-btn>
+    @click="showDialog = true"
+  />
 
   <q-dialog v-model="showDialog" full-height>
     <q-card style="width: 600px">
@@ -34,6 +31,7 @@ defineOptions({
 });
 
 import { ref, onMounted, watch } from "vue";
+import QBtnComponent from "src/components/base/QBtnComponent.vue";
 
 const props = defineProps({
   fields: {
