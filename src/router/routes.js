@@ -40,6 +40,21 @@ const routes = [
         path: "groups",
         component: () => import("pages/groups/ListPage.vue"),
       },
+      {
+        name: "clients",
+        path: "clients",
+        component: () => import("pages/clients/ListPage.vue"),
+      },
+      {
+        name: "carriers",
+        path: "carriers",
+        component: () => import("pages/carriers/ListPage.vue"),
+      },
+      {
+        name: "bearings",
+        path: "bearings",
+        component: () => import("pages/bearings/ListPage.vue"),
+      },
     ],
   },
 

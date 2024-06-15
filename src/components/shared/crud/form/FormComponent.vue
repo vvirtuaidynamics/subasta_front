@@ -1,22 +1,25 @@
 <template>
   <q-btn-component
-    :tooltips="title"
+    :tooltips="$t(object === null ? 'labels.add' : 'labels.edit')"
     :icon="icon"
     :size="size"
     @click="showDialog = true"
   />
 
-  <q-dialog v-model="showDialog" full-height>
+  <q-dialog v-model="showDialog">
     <q-card style="width: 600px">
-      <q-card-section class="row items-center q-pb-none">
+      <q-card-section class="row items-center">
         <div class="text-h6">
           <q-icon :name="icon" size="25px"></q-icon> {{ title }}
         </div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
-      <q-card-section class="q-gutter-md"> </q-card-section>
-      <q-card-actions align="right" class="bg-white text-teal">
+      <q-card-section>
+        asdfasdf asdf adsf gsdfg sdfg sdfg sdgf sdfgs dfgs dfgsd fgsdfg dsg sdfg
+        sdfgs dfg sdfgs dfg sdfg</q-card-section
+      >
+      <q-card-actions align="right">
         <q-btn flat color="secondary">Adicionar</q-btn>
         <q-btn flat color="secondary">Adicionar y crear otro</q-btn>
         <q-btn flat :label="$q.lang.label.cancel" color="red" v-close-popup />
@@ -32,6 +35,7 @@ defineOptions({
 
 import { ref, onMounted, watch } from "vue";
 import QBtnComponent from "src/components/base/QBtnComponent.vue";
+import { $t } from "src/services/i18n";
 
 const props = defineProps({
   fields: {
@@ -46,6 +50,14 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+  object_str: {
+    type: String,
+    default: "id",
+  },
+  object_label: {
+    type: String,
+    default: "Object",
+  },
 });
 
 const emit = defineEmits(["save"]);
@@ -57,10 +69,10 @@ const showDialog = ref(false);
 
 onMounted(() => {
   if (props.object != null) {
-    title.value = "Editar";
+    title.value = `${$t("labels.edit")} ${props.object_label}`;
     icon.value = "edit";
   } else {
-    title.value = "Adicionar";
+    title.value = `${$t("labels.add")} ${props.object_label}`;
     icon.value = "add";
   }
 });

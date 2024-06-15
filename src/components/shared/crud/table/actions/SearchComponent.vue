@@ -111,7 +111,7 @@
           @update:model-value="onChangeQuery"
         />
       </q-card-section>
-      <q-card-actions align="right" class="bg-white text-teal">
+      <q-card-actions align="right">
         <q-btn
           flat
           color="secondary"
@@ -153,73 +153,69 @@ const $q = useQuasar();
 
 const emit = defineEmits(["search", "reset"]);
 
-const conditions = [
-  {
-    label: "Igual a",
-    value: "equal",
+const config = ref({
+  show: false,
+  current: {
+    column: null,
+    condition: null,
+    value: null,
   },
-  {
-    label: "Diferente de",
-    value: "nequal",
-  },
-  {
-    label: "Cominenza con",
-    value: "start",
-  },
-  {
-    label: "Termina en",
-    value: "end",
-  },
-  {
-    label: "Contiene",
-    value: "contains",
-  },
-  {
-    label: "No contiene",
-    value: "ncontains",
-  },
-];
-const column = ref(null);
-const condition = ref(null);
-const query = ref(null);
-const queryRef = ref(null);
-
-const querySearchError = ref(false);
-const querySearchMsg = $t("validations.required");
-const searched = ref(false);
-const showDialog = ref(false);
-
-onMounted(() => {
-  column.value = props.fields[0];
-  condition.value = {
-    label: "Contiene",
-    value: "contains",
-  };
+  conditions: [
+    {
+      label: "Igual a",
+      value: "equal",
+    },
+    {
+      label: "Diferente de",
+      value: "nequal",
+    },
+    {
+      label: "Cominenza con",
+      value: "start",
+    },
+    {
+      label: "Termina en",
+      value: "end",
+    },
+    {
+      label: "Contiene",
+      value: "contains",
+    },
+    {
+      label: "No contiene",
+      value: "ncontains",
+    },
+  ],
 });
 
-const onChangeQuery = () => {
-  if (!!query.value?.trim()) {
-    querySearchError.value = false;
+onMounted(() => {
+  refreshSearch();
+});
+
+watch(() => props.fields, refreshSearch);
+
+watch(
+  () => props.searched,
+  () => {
+    if (!props.searched) {
+      refreshSearch();
+    }
   }
-};
+);
+
+function refreshSearch() {
+  config.value.current = {
+    column: props.fields[0].value,
+    condition: {
+      label: "Contiene",
+      value: "contains",
+    },
+    value: "",
+  };
+}
 
 function search() {
-  if (!!query.value?.trim()) {
-    $q.notify({
-      position: "top-right",
-      message: "OK",
-      type: "success",
-      progress: true,
-    });
-  } else {
-    querySearchError.value = true;
-    $q.notify({
-      position: "top-right",
-      message: $t("validations.required"),
-      type: "negative",
-      progress: true,
-    });
-  }
+  emit("search", config.value.current);
 }
 function resetSearch() {
   emit("reset");

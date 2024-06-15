@@ -1,5 +1,11 @@
 <template>
-  <q-tooltip :class="props.class" v-if="props.title">
+  <q-tooltip
+    :class="props.class"
+    :anchor="anchor"
+    :self="self"
+    :offset="offset"
+    if="props.title"
+  >
     {{ props.title }}</q-tooltip
   >
 </template>
@@ -15,6 +21,18 @@ const props = defineProps({
     required: true,
   },
   class: { type: String, default: "bg-primary" },
+  anchor: {
+    type: String,
+    defaul: "bottom middle",
+  },
+  self: {
+    type: String,
+    defaul: "top middle",
+  },
+  offset: {
+    type: Array,
+    default: () => [5, 5],
+  },
 });
 </script>
 

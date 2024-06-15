@@ -17,22 +17,21 @@
 
 <script setup>
 import TableComponent from "components/shared/crud/table/TableComponent.vue";
-import { $t } from "src/services/i18n";
 
 defineOptions({
   name: "ListPage",
 });
 
-const name = "user";
-const label_plural = "Usuarios";
-const label_singular = "Usuario";
+const name = "bearing";
+const label_plural = "Portes";
+const label_singular = "Porte";
 const to_str = null;
-const icon = "mdi-account-outline";
+const icon = "mdi-cube-outline";
 
 const searchFields = [
   {
-    value: "username",
-    label: $t("fields.username"),
+    value: "user",
+    label: "Usuario",
   },
   {
     value: "first_name",
@@ -57,52 +56,29 @@ const filterFields = [
 
 const columns = [
   {
-    field: "username",
-    name: "username",
-    label: "Usuario",
+    field: "weight",
+    name: "weight",
+    label: "Peso",
     align: "left",
     sortable: true,
     type: "text",
     required: true,
   },
   {
-    field: "first_name",
-    name: "first_name",
-    label: "Nombre(s)",
+    field: "total_packages",
+    name: "total_packages",
+    label: "Cant. paquetes",
     align: "left",
     sortable: true,
     type: "text",
   },
   {
-    field: "last_name",
-    name: "last_name",
-    label: "Apellidos",
+    field: "content_description",
+    name: "content_description",
+    label: "Descripción",
     align: "left",
     sortable: true,
     type: "text",
-  },
-  {
-    field: "email",
-    name: "email",
-    label: "Correo",
-    align: "left",
-    sortable: true,
-    type: "text",
-  },
-  {
-    field: "group",
-    name: "group",
-    label: "Grupos",
-    align: "left",
-    sortable: false,
-    type: "text",
-  },
-  {
-    field: "active",
-    name: "active",
-    label: "Activo",
-    align: "center",
-    type: "boolean",
   },
   {
     field: "actions",
@@ -117,7 +93,7 @@ const rows = [];
 for (let i = 1; i < 101; i++) {
   rows.push({
     id: i,
-    username: `usuario${i}`,
+    user: `usuario${i}`,
     first_name: `nombre ${i}`,
     last_name: `apellidos ${i}`,
     email: `usuario${i}@correo.com`,

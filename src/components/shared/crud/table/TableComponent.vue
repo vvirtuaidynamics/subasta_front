@@ -6,10 +6,10 @@
       :grid="$q.screen.lt.sm"
       :loading="loadingTable"
       :visible-columns="visibleColumns"
+      :rows-per-page-options="[10, 20, 30, 50, 100]"
       row-key="id"
       selection="multiple"
       v-model:selected="selected"
-      class="my-sticky-column-table"
       @update:selected="(s) => (objects_selected = s)"
     >
       <template v-slot:loading>
@@ -20,12 +20,15 @@
         <q-toolbar>
           <section class="q-my-xs q-mr-sm cursor-pointer text-subtitle1">
             <div class="doc-card-title bg-primary text-white">
-              <q-icon :name="icon" size="22px" /> {{ title }}
+              <q-icon :name="icon" size="22px" /> {{ label_plural }}
             </div>
           </section>
           <q-space />
           <div class="col-auto">
-            <form-component size="sm"></form-component>
+            <form-component
+              size="sm"
+              :object_label="label_singular"
+            ></form-component>
             <delete-component
               :objects="objects_selected"
               v-if="has_delete"
@@ -36,7 +39,13 @@
             ></visible-columns-component>
             <filter-component :fields="filterFields"></filter-component>
             <q-btn-component
-              :tooltips="props.inFullscreen ? 'Restaurar' : 'Maximizar'"
+              :tooltips="
+                $t(
+                  props.inFullscreen
+                    ? 'labels.restoreWindow'
+                    : 'labels.maximizeWindow'
+                )
+              "
               :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
               @click="props.toggleFullscreen"
             />
@@ -120,7 +129,7 @@
       <template v-slot:body-cell-actions="props">
         <q-td
           :props="props"
-          style="width: 0; position: sticky; right: 0; background-color: #fff"
+          style="width: 0; position: sticky; right: 0"
           class="actions-def"
         >
           <history-component
@@ -129,6 +138,7 @@
           ></history-component>
           <form-component
             :object="[props.row]"
+            :object_label="label_singular"
             v-if="has_edit"
           ></form-component>
           <see-component :object="[props.row]" v-if="has_see"></see-component>
@@ -188,6 +198,7 @@
                     ></history-component>
                     <form-component
                       :object="[props.row]"
+                      :object_label="label_singular"
                       v-if="has_edit"
                     ></form-component>
                     <see-component
@@ -228,9 +239,21 @@ defineOptions({
 });
 
 const props = defineProps({
-  title: {
+  name: {
     type: String,
-    default: "Tabla",
+    default: "object",
+  },
+  label_plural: {
+    type: String,
+    default: "Objetos",
+  },
+  label_singular: {
+    type: String,
+    default: "Objetos",
+  },
+  to_str: {
+    type: String,
+    default: "id",
   },
   icon: {
     type: String,
@@ -325,15 +348,18 @@ th:nth-child(1),
 tbody > tr > td:nth-child(1) {
   position: sticky;
   left: 0;
-  background-color: #fff;
   z-index: 99;
 }
-
-.q-table > thead > tr > th,
+.q-table td.actions-def,
+th:nth-child(1),
 tbody > tr > td:nth-child(1) {
-  background-color: #f8f9fa;
+  background-color: #fff;
 }
-
+.q-table--dark td.actions-def,
+.q-table--dark th:nth-child(1),
+.q-table--dark tbody > tr > td:nth-child(1) {
+  background-color: #1d222e;
+}
 td.actions-def > .q-btn {
   margin-right: 3px;
 }
