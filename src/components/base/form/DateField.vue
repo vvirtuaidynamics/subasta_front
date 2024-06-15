@@ -1,40 +1,38 @@
 <template>
 
-  <div id="QDateField" class="full-width">
-      <q-input :name="`${name}_input`" ref="refInput" :v-bind="bindsProp"
-               v-model="qdate_input" @click="() => qdate_pop = !qdate_pop"
-               :rules="setRules()" readonly lazy-rules
-               :label="props.label" class="cursor-pointer q-my-xs full-width"
-               :error="qdate_error">
-        <template v-slot:append>
-          <q-btn flat round icon="mdi-eraser" v-if="qdate_input" @click="() => reset()" />
-          <q-icon name="event" class="cursor-pointer">
-            <q-popup-proxy transition-show="fade" transition-hide="scale" v-model="qdate_pop" :breakpoint="600">
-              <q-date :name="`${props.name}_qdate`" :ref="refQDate" v-model="qdate_data" :locale="$q.lang.date" today-btn
-                      :minimal="props.minimal" :multiple="props.multiple"
-                      :landscape="props.landscape" :range="props.range" :error="qdate_error"
-                      @update:model-value="(val) => qdateUpdate(val)" :rules="props.rules" >
-<!--                <div class="row items-center justify-end">-->
-<!--                  <q-btn v-close-popup :label="$q.lang.label.close" color="primary" flat />-->
-<!--                </div>-->
-              </q-date>
+  <div id="DateField" class="full-width">
+    <q-input :name="`${name}_input`" ref="refInput" :v-bind="bindsProp"
+             v-model="qdate_input" @click="() => qdate_pop = !qdate_pop"
+             :rules="setRules()" readonly lazy-rules
+             :label="props.label" class="cursor-pointer q-my-xs full-width"
+             :error="qdate_error">
+      <template v-slot:append>
+        <q-btn flat round icon="mdi-eraser" v-if="qdate_input" @click="() => reset()"/>
+        <q-icon name="event" class="cursor-pointer">
+          <q-popup-proxy transition-show="fade" transition-hide="scale" v-model="qdate_pop" :breakpoint="600">
+            <q-date :name="`${props.name}_qdate`" :ref="refQDate" v-model="qdate_data" :locale="$q.lang.date" today-btn
+                    :minimal="props.minimal" :multiple="props.multiple"
+                    :landscape="props.landscape" :range="props.range" :error="qdate_error"
+                    @update:model-value="(val) => qdateUpdate(val)" :rules="props.rules">
 
-            </q-popup-proxy>
-          </q-icon>
-        </template>
-      </q-input>
+            </q-date>
+
+          </q-popup-proxy>
+        </q-icon>
+      </template>
+    </q-input>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, onBeforeMount } from 'vue';
-import { useQuasar, date } from 'quasar';
-import { DateTime, Interval } from 'luxon';
+import {ref, reactive, onMounted, onBeforeMount} from 'vue';
+import {useQuasar, date} from 'quasar';
+import {DateTime, Interval} from 'luxon';
 import {$t} from 'src/services/i18n';
 import {forms} from "src/config/theme/forms";
 
 defineOptions({
-  name: "QDateField",
+  name: "DateField",
 });
 
 /**
@@ -86,8 +84,9 @@ function validate() {
   refInput.value.validate()
   refQDate.value.validate()
 }
+
 function setRules() {
-  const rules= []
+  const rules = []
   if (props.required) {
     rules.push(requiredRule)
   }
@@ -98,6 +97,7 @@ function setRules() {
   }
   return rules
 }
+
 function reset() {
   qdate_emit.value = '';
 
@@ -112,6 +112,7 @@ function reset() {
   emits('update', qdate_emit.value)
 
 }
+
 function updateFromValue() {
 
   if (props.modelValue) {
@@ -144,7 +145,7 @@ function updateFromValue() {
             } else {
               //SI LA DIFERENCIA ES MAYOR A 1 DIA ENTONCES ES UN RANGO
 
-              dates.push({ from: from.toFormat('yyyy/MM/dd'), to: to.toFormat('yyyy/MM/dd') })
+              dates.push({from: from.toFormat('yyyy/MM/dd'), to: to.toFormat('yyyy/MM/dd')})
               if (input.length === 0)
                 input += `${$t('from')}: ${from.toFormat('dd/MM/yyyy')} ${$t('to')}: ${to.toFormat('dd/MM/yyyy')}`
               else
@@ -183,7 +184,7 @@ function updateFromValue() {
             input = `, ${from.toFormat('dd/MM/yyyy')}`
         } else {
           //SI LA DIFERENCIA ES MAYOR A 1 DIA ENTONCES ES UN RANGO
-          dates = { from: from.toFormat('yyyy/MM/dd'), to: to.toFormat('yyyy/MM/dd') }
+          dates = {from: from.toFormat('yyyy/MM/dd'), to: to.toFormat('yyyy/MM/dd')}
           if (input.length === 0)
             input = `${$t('from')}: ${from.toFormat('dd/MM/yyyy')} ${$t('to')}: ${to.toFormat('dd/MM/yyyy')}`
           else
@@ -201,10 +202,11 @@ function updateFromValue() {
     qdate_data.value = dates
     qdate_input.value = input
 
-    return { date: dates, input: input }
+    return {date: dates, input: input}
   }
   return false
 }
+
 function qdateUpdate(val) {
 
   qdate_input.value = '';
@@ -227,7 +229,7 @@ function qdateUpdate(val) {
         const hasta = date.formatDate(val.to ?? val, 'DD/MM/YYYY', esLocale)
         qdate_emit.value = `${date.formatDate(val.from ?? val, 'YYYY-MM-DD')}|${date.formatDate(val.to ?? val, 'YYYY-MM-DD')}`;
 
-        let dif = date.getDateDiff(date.formatDate(val.from ?? val, 'YYYY/MM/DD'), date.formatDate(val.to ?? val, 'YYYY/MM/DD'), $q.lang.date.days||'days')
+        let dif = date.getDateDiff(date.formatDate(val.from ?? val, 'YYYY/MM/DD'), date.formatDate(val.to ?? val, 'YYYY/MM/DD'), $q.lang.date.days || 'days')
         if (dif === 0) {
           if (qdate_input.value.length === 0) {
             qdate_input.value = `${desde}`
@@ -310,6 +312,7 @@ function qdateUpdate(val) {
     emits('update', qdate_emit.value)
   }
 }
+
 /**
  * depureRangeDates funcion que depura los rangos cuando multiple esta habilitado de forma tal que si un
  * rango contiene un value, lo quite.
@@ -318,7 +321,7 @@ function qdateUpdate(val) {
  */
 function depureRangeDates(dates) {
   let v_result = []
-  let r_result= []
+  let r_result = []
   let qt_val = []
   if (dates.length > 0) {
     const values = dates.filter(d => typeof d === 'string')
@@ -334,8 +337,11 @@ function depureRangeDates(dates) {
       for (let i = 1; i < ranges.length; i++) {
         const rangoActual = ranges[i]
         const ultimoRango = r_result[r_result.length - 1];
-        if ((new Date(rangoActual.from).getTime()) > (new Date(ultimoRango.to).getTime())) { r_result.push(rangoActual) }
-        else if ((new Date(rangoActual.to).getTime()) > (new Date(ultimoRango.to).getTime())) { ultimoRango.to = rangoActual.to }
+        if ((new Date(rangoActual.from).getTime()) > (new Date(ultimoRango.to).getTime())) {
+          r_result.push(rangoActual)
+        } else if ((new Date(rangoActual.to).getTime()) > (new Date(ultimoRango.to).getTime())) {
+          ultimoRango.to = rangoActual.to
+        }
       }
     }
     if (values) {
@@ -343,7 +349,11 @@ function depureRangeDates(dates) {
       values.forEach((v) => {
         if (r_result.length > 0) {
           r_result.forEach((r) => {
-            if (!date.isBetweenDates((new Date(v).getTime()), (new Date(r.from).getTime()), (new Date(r.to).getTime()), { inclusiveFrom: true, inclusiveTo: true, onlyDate: true }))
+            if (!date.isBetweenDates((new Date(v).getTime()), (new Date(r.from).getTime()), (new Date(r.to).getTime()), {
+              inclusiveFrom: true,
+              inclusiveTo: true,
+              onlyDate: true
+            }))
               if (!v_result.includes(v))
                 v_result.push(v)
           })
@@ -355,7 +365,11 @@ function depureRangeDates(dates) {
         v_result.forEach((v) => {
           if (r_result.length > 0) {
             r_result.forEach((r) => {
-              if (date.isBetweenDates((new Date(v).getTime()), (new Date(r.from).getTime()), (new Date(r.to).getTime()), { inclusiveFrom: true, inclusiveTo: true, onlyDate: true })) {
+              if (date.isBetweenDates((new Date(v).getTime()), (new Date(r.from).getTime()), (new Date(r.to).getTime()), {
+                inclusiveFrom: true,
+                inclusiveTo: true,
+                onlyDate: true
+              })) {
                 let index = v_result.indexOf(v)
                 v_result.splice(index, 1)
               }
@@ -373,6 +387,7 @@ function depureRangeDates(dates) {
   }
 
 }
+
 defineExpose({
   reset,
 })
@@ -388,5 +403,6 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-#QDateField{}
+#DateField {
+}
 </style>
