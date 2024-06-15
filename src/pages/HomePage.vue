@@ -289,9 +289,10 @@ onMounted(() => {
   }
 
   .header {
-    background-color: #0000001a;
+    background-color: #0000001e;
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
+
   }
 
 
@@ -307,7 +308,6 @@ onMounted(() => {
     border-radius: 20px;
     word-wrap: break-word;
     overflow: hidden;
-    //max-height: 250px;
   }
 
   .fit-text {

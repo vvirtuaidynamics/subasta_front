@@ -5,6 +5,7 @@ export default function useField() {
   const fieldTypes = {
     boolean: 'boolean',
     datetime: 'datetime',
+    timestamps: 'timestamps',
     image: 'image',
     images: 'images',
     json: 'json',
@@ -17,22 +18,16 @@ export default function useField() {
   }
 
 
-  function field({name, label, type, component, order, group, ..._props}) {
+  function field({name, label, type, ..._props}) {
     this.name = props?.name;
     this.label = $t(`fields.${props?.label}`) || props?.label;
     this.type = props?.type || fieldTypes.string;
-    this.component = props?.component || 'TextField';
-    this.order = props?.order || 0;
-    this.group = props?.group || '';
     this.props = this._props || {}
 
     return {
       name: this.name,
       label: this.label,
       type: this.type,
-      component: this.component,
-      order: this.order,
-      group: this.group,
       props: this._props
     }
 

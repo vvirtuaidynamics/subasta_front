@@ -3,13 +3,14 @@
     <LoaderPage :show="false" :dark="false"></LoaderPage>
 
     <div class="flex flex-center">
-        <div style="width:500px;">
-          <q-date-field label="birthday" name="birthday" :model-value="data" required @update="(val)=>data=val" :options="{}" multiple range>
+      <div style="width:500px;">
+        <q-date-field label="birthday" name="birthday" :model-value="data" required @update="(val)=>data=val"
+                      :options="{}" multiple range>
 
-          </q-date-field>
-          <picture-field avatar @change="(val)=>data=val"></picture-field>
-          {{data}}
-        </div>
+        </q-date-field>
+        <picture-field avatar @change="(val)=>data=val"></picture-field>
+        {{ data }}
+      </div>
 
 
     </div>
@@ -17,14 +18,14 @@
 </template>
 
 <script setup>
-import { useQuasar } from "quasar";
-import { ref } from 'vue';
+import {useQuasar} from "quasar";
+import {ref} from 'vue';
 import IconPickerField from "src/components/base/IconPickerField.vue";
 import LoaderPage from "components/base/LoaderPage.vue";
 import TextField from "components/base/form/TextField.vue";
 import NumberField from "components/base/form/NumberField.vue";
 import {$t} from "src/services/i18n";
-import QDateField from "components/base/form/QDateField.vue";
+import QDateField from "components/base/form/DateField.vue";
 import PictureField from "components/base/PictureField.vue";
 
 const $q = useQuasar();
