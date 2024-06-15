@@ -1,7 +1,7 @@
 export default {
   app: {
-    name: 'auction',
-    description: '',
+    name: "auction",
+    description: "",
   },
   welcome: "Welcome ",
   language: "Language",
@@ -155,7 +155,7 @@ export default {
     iconSelectTitle: "Select a icon",
     iconSet: "Icon set",
     loading: "Loading",
-    maximizeWindow: "Maximize window",
+    maximizeWindow: "Maximize",
     menu: "Menu",
     name: "Name",
     notValidFiles: "file(s) did not pass validation constraints",
@@ -167,7 +167,7 @@ export default {
     readed: "Check as read",
     reload: "Reload",
     reset: "Reset",
-    restoreWindow: "Restore window",
+    restoreWindow: "Restore",
     retry: "Retry",
     rol: "Rol",
     rols: "Rols",
@@ -195,8 +195,6 @@ export default {
   notifications: {
     saveWork: "The text have been save to your local storage",
   },
-
-
 
   validations: {
     exist: "Already exist on database",

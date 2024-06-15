@@ -1,84 +1,84 @@
 <template>
   <q-page>
-    <div id="Home" >
+    <div id="Home">
       <q-header :class="'header'">
-        <q-bar id="header-bar" class="faa-parent animated-hover absolute-top" dense style="height: 50px" >
+        <q-bar
+          id="header-bar"
+          class="faa-parent animated-hover absolute-top"
+          dense
+          style="height: 50px"
+        >
           <div class="row login-header">
-            <q-btn flat  @click="navigateTo({path:'/'})" :title="$t('homeTip')">
-              <img
-                :src="images.appLogo"
-                alt="SUBASTA"
-              />
+            <q-btn
+              flat
+              @click="navigateTo({ path: '/' })"
+              :title="$t('homeTip')"
+            >
+              <img :src="images.appLogo" alt="SUBASTA" />
 
               <div class="text-h6 text-uppercase">
-                  {{ appConfig.name }}
+                {{ appConfig.name }}
               </div>
               <q-tooltip
-              :model-value="menuTip"
-              :offset=[25,10]
-              class="bg-amber text-black shadow-4 text-uppercase text-subtitle1 z-max"
-              self="center left"
-              anchor="center right"
-            >
-            <q-icon name="mdi-arrow-left-bold-outline" size="sm" />
-              {{ $t("labels.options") }}
-            </q-tooltip>
-
-            <q-menu
-              class="z-max"
-              style="border-radius: 15px"
-              transition-hide="jump-up"
-              transition-show="jump-down"
-              :offset=[0,10]
-            >
-              <q-list
-                class="text-black text-caption text-uppercase"
-                style="min-width: 180px"
+                :model-value="menuTip"
+                :offset="[25, 10]"
+                class="bg-amber text-black shadow-4 text-uppercase text-subtitle1 z-max"
+                self="center left"
+                anchor="center right"
               >
-                <q-item
-                  v-if="!false"
-                  clickable
-                  @click="navigateTo({ name: 'login' })"
-                >
-                  <q-item-section avatar>
-                    <q-icon name="mdi-login" size="md" />
-                  </q-item-section>
-                  <q-item-section class="text-body1 text-uppercase"
-                    >{{ $t("login") }}
-                  </q-item-section>
-                </q-item>
+                <q-icon name="mdi-arrow-left-bold-outline" size="sm" />
+                {{ $t("labels.options") }}
+              </q-tooltip>
 
-                <q-item clickable @click="navigateTo({ name: 'register' })">
-                  <q-item-section avatar>
-                    <q-icon name="mdi-account-arrow-up-outline" size="md" />
-                  </q-item-section>
-                  <q-item-section class="text-body1 text-uppercase"
-                    >{{ $t("register") }}
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-menu>
+              <q-menu
+                class="z-max"
+                style="border-radius: 15px"
+                transition-hide="jump-up"
+                transition-show="jump-down"
+                :offset="[0, 10]"
+              >
+                <q-list
+                  class="text-black text-caption text-uppercase"
+                  style="min-width: 180px"
+                >
+                  <q-item
+                    v-if="!false"
+                    clickable
+                    @click="navigateTo({ name: 'login' })"
+                  >
+                    <q-item-section avatar>
+                      <q-icon name="mdi-login" size="md" />
+                    </q-item-section>
+                    <q-item-section class="text-body1 text-uppercase"
+                      >{{ $t("login") }}
+                    </q-item-section>
+                  </q-item>
+
+                  <q-item clickable @click="navigateTo({ name: 'register' })">
+                    <q-item-section avatar>
+                      <q-icon name="mdi-account-arrow-up-outline" size="md" />
+                    </q-item-section>
+                    <q-item-section class="text-body1 text-uppercase"
+                      >{{ $t("register") }}
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </q-menu>
             </q-btn>
           </div>
 
-
           <q-space />
-          <div class="row login-header-right ">
-
+          <div class="row login-header-right">
             <LangSwitcher class="z-max q-ml-sm" />
             <DarkSwitcher
-            class="z-max"
-            size="md"
-            colorDark="blue-6"
-            colorLight="yellow-6"
-            :model-value="$q.dark.isActive"
-            @update="(val) => $q.dark.set(val)"
-
-          />
-
+              class="z-max"
+              size="md"
+              colorDark="blue-6"
+              colorLight="yellow-6"
+              :model-value="$q.dark.isActive"
+              @update="(val) => $q.dark.set(val)"
+            />
           </div>
-
-
         </q-bar>
       </q-header>
 
@@ -99,7 +99,6 @@
           swipeable
           transition-next="fade"
           transition-prev="fade"
-
         >
           <q-carousel-slide
             v-for="slide in carouselItems"
@@ -107,7 +106,6 @@
             :img-src="slide.src"
             :name="slide.id"
             class="full-width"
-
           >
             <div class="absolute-bottom custom-caption">
               <div class="text-h3">{{ slide.title }}</div>
@@ -159,7 +157,7 @@
         </p>
       </div>
 
-       <q-card class="q-mt-sm row page-footer bg-dark">
+      <q-card class="q-mt-sm row page-footer bg-dark">
         <q-card-section class="col-12 row text-center q-pa-xs">
           <div class="col-xs-12 col-sm-12 col-md-6 col-lg-12 q-gutter-sm">
             <q-img
@@ -181,10 +179,8 @@
               dense
               flat
               disabled
-
               icon="phone"
               :label="appConfig.phone"
-
               round
             ></q-btn>
           </div>
@@ -201,15 +197,14 @@
         :scroll-offset="$q.screen.height * 0.8"
         position="bottom-right"
       >
-        <q-btn
-          class="shadow-3"
-          color="dark"
-          icon="keyboard_arrow_up"
-          round
-        />
+        <q-btn class="shadow-3" color="dark" icon="keyboard_arrow_up" round />
       </q-page-scroller>
     </div>
-    <q-scroll-observer  @scroll="scrollObserver" :debounce="100" axis="vertical"/>
+    <q-scroll-observer
+      @scroll="scrollObserver"
+      :debounce="100"
+      axis="vertical"
+    />
   </q-page>
 </template>
 
@@ -221,8 +216,8 @@ import DarkSwitcher from "src/components/base/DarkSwitcher.vue";
 import LangSwitcher from "src/components/base/LangSwitcher.vue";
 import { useQuasar } from "quasar";
 import { homeCarouselData } from "src/config/homeCarouselData";
-import appConfig from "src/config/app.js"
-import images from "src/config/theme/images"
+import appConfig from "src/config/app.js";
+import images from "src/config/theme/images";
 
 const $q = useQuasar();
 const $app = useApp();
@@ -238,10 +233,10 @@ const isTop = ref(true);
 
 const scrollObserver = ({ direction, position }) => {
   if (position.top === 0) {
-    isTop.value = true
-    showHide()
-  }else{
-    isTop.value = false
+    isTop.value = true;
+    showHide();
+  } else {
+    isTop.value = false;
   }
   if (position.top === $q.screen.height) {
     console.log("1 screen height", scrollTo.value);
@@ -280,8 +275,7 @@ onBeforeMount(() => {
 });
 
 onMounted(() => {
-  showHide()
-
+  showHide();
 });
 </script>
 
@@ -299,16 +293,12 @@ onMounted(() => {
     backdrop-filter: blur(10px);
   }
 
-
-
   .custom-caption {
     height: calc(100vh * 0.3);
     text-align: center;
     color: white;
     background-color: rgba(0, 0, 0, 0.6);
   }
-
-
 
   .services-card {
     border-radius: 20px;
@@ -324,10 +314,7 @@ onMounted(() => {
   }
 
   .logo-header-title {
-    max-width:250px;
-
-
+    max-width: 250px;
   }
-
 }
 </style>
