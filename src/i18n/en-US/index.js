@@ -21,7 +21,7 @@ export default {
   passwordChangeError: "Password changed failed!",
   register: "Sign Up",
   rememberMe: "Remember me.",
-
+  noOptions: "No options",
   error400ListMsg:
     "Something went wrong while processing your request. Invalid filter. ${error}",
   error400CreateMsg: "Failed to create record. ${error}",
@@ -200,9 +200,6 @@ export default {
   notifications: {
     saveWork: "The text have been save to your local storage",
   },
-
-
-
   validations: {
     exist: "Already exist on database",
     unique: "The ${col}s already have a ${field} with this value",

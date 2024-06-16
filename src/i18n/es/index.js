@@ -21,6 +21,8 @@ export default {
   passwordChangeError: "Error al cambiar la contraseña!",
   register: "Registrarse",
   rememberMe: "Acuérdate de mi.",
+  noOptions: "Sin opciones",
+
 
   error400ListMsg: "No se pudo completar la acción ejecutada. { error }",
   error400CreateMsg: "Error al crear el registro. { error }",
