@@ -7,7 +7,6 @@ export const forms = {
     square: false,
     outlined: false,
     dense: false,
-
   },
   editor: {
     filled: false,
@@ -17,7 +16,6 @@ export const forms = {
     square: false,
     outlined: false,
     dense: false,
-
   },
   number: {
     filled: false,
@@ -27,6 +25,18 @@ export const forms = {
     square: false,
     outlined: false,
     dense: false,
+  },
+  select: {
+    "use-input": true,
+    "use-chips": false,
+    filled: true,
+    standout: false, //puede recibir un bg-[color] y text-[color]
+    borderless: false,
+    rounded: false,
+    square: false,
+    outlined: false,
+    dense: false,
+    optionsDense: false,
 
   },
   button: {

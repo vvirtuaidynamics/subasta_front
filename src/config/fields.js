@@ -1,5 +1,5 @@
 import {$t} from "src/services/i18n";
-import useField from "src/types/field"
+import useField from "src/types/field.types"
 
 export default function useFields() {
   const {field, fieldTypes} = useField();
