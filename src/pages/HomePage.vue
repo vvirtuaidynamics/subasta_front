@@ -168,21 +168,14 @@
               style="height: 48px; width: 96px"
             />
 
-            <span
+            <span class="text-grey"
             ><q-icon name="email"/>
               {{ appConfig.email }}</span>
+            <span class="text-white"
+            ><q-icon name="grey"/>
+              {{ appConfig.phone }}</span>
 
-            <q-btn
-              color="white"
-              dense
-              flat
-              disabled
 
-              icon="phone"
-              :label="appConfig.phone"
-
-              round
-            ></q-btn>
           </div>
           <div
             class="col-xs-12 col-sm-12 col-md-6 col-lg-12 text-caption q-mt-sm text-white"
