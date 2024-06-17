@@ -1,7 +1,7 @@
 <template>
   <div class="q-gutter-md flex" v-if="$q.screen.gt.sm">
     <q-select
-      v-model="config.current.column"
+      v-model="column"
       dense
       options-dense
       :options="fields"
@@ -12,10 +12,10 @@
       :class="fields.length == 1 ? 'hidden' : ''"
     />
     <q-select
-      v-model="config.current.condition"
+      v-model="condition"
       dense
       options-dense
-      :options="config.conditions"
+      :options="conditions"
       :label="fields.length == 1 ? fields[0].label : 'Condición'"
       emit-value
       map-options
@@ -23,11 +23,14 @@
     />
     <q-input
       bottom-slots
-      v-model="config.current.value"
+      v-model="query"
+      :error="querySearchError"
+      :error-message="querySearchMsg"
       label="Frase"
       dense
       hide-bottom-space
-      @keyup.enter="search()"
+      @keyup.enter="search"
+      @update:model-value="onChangeQuery"
     >
       <template v-slot:append>
         <q-icon
@@ -40,22 +43,33 @@
         </q-icon>
       </template>
       <template v-slot:after>
-        <q-btn flat dense color="secondary" icon="search" @click="search()">
-          <q-tooltip class="bg-brown">{{ $q.lang.label.search }}</q-tooltip>
-        </q-btn>
+        <q-btn-component
+          :round="false"
+          :tooltips="$q.lang.label.search"
+          flat
+          dense
+          size="md"
+          icon="search"
+          @click="search"
+        />
       </template>
     </q-input>
   </div>
   <q-btn-group v-else outline>
-    <q-btn color="secondary" icon="search" @click="config.show = true" outline>
-      <q-tooltip class="bg-brown">{{ $q.lang.label.search }}</q-tooltip>
-    </q-btn>
+    <q-btn-component
+      :round="false"
+      :tooltips="$q.lang.label.search"
+      outline
+      icon="search"
+      size="md"
+      @click="showDialog = true"
+    />
     <q-btn color="brown" icon="close" v-if="searched" @click="resetSearch()">
       <q-tooltip class="bg-brown">{{ $q.lang.label.reset }}</q-tooltip>
     </q-btn>
   </q-btn-group>
 
-  <q-dialog v-model="config.show">
+  <q-dialog v-model="showDialog" @before-show="querySearchError = false">
     <q-card style="min-width: 305px">
       <q-card-section class="row items-center q-pb-none">
         <div class="text-h6">
@@ -66,7 +80,7 @@
       </q-card-section>
       <q-card-section class="q-gutter-md">
         <q-select
-          v-model="config.current.column"
+          v-model="column"
           dense
           options-dense
           :options="fields"
@@ -77,24 +91,27 @@
           :class="fields.length == 1 ? 'hidden' : ''"
         />
         <q-select
-          v-model="config.current.condition"
+          v-model="condition"
           dense
           options-dense
-          :options="config.conditions"
+          :options="conditions"
           :label="fields.length == 1 ? fields[0].label : 'Condición'"
           emit-value
           map-options
           style="min-width: 150px"
         />
         <q-input
-          v-model="config.current.value"
+          v-model="query"
           label="Frase"
           dense
           style="min-width: 150px"
-          @keyup.enter="search()"
+          :error="querySearchError"
+          :error-message="querySearchMsg"
+          @keyup.enter="search"
+          @update:model-value="onChangeQuery"
         />
       </q-card-section>
-      <q-card-actions align="right" class="bg-white text-teal">
+      <q-card-actions align="right">
         <q-btn
           flat
           color="secondary"
@@ -115,6 +132,9 @@
 </template>
 
 <script setup>
+import QBtnComponent from "src/components/base/QBtnComponent.vue";
+import { $t } from "src/services/i18n";
+import { useQuasar } from "quasar";
 defineOptions({
   name: "SearchComponent",
 });
@@ -127,79 +147,79 @@ const props = defineProps({
     required: true,
     default: () => [],
   },
-  searched: {
-    type: Boolean,
-    default: false,
-  },
 });
 
-const emit = defineEmits(["search", "resetSearch"]);
+const $q = useQuasar();
 
-const config = ref({
-  show: false,
-  current: {
-    column: null,
-    condition: null,
-    value: null,
+const emit = defineEmits(["search", "reset"]);
+
+const conditions = [
+  {
+    label: "Igual a",
+    value: "equal",
   },
-  conditions: [
-    {
-      label: "Igual a",
-      value: "equal",
-    },
-    {
-      label: "Diferente de",
-      value: "nequal",
-    },
-    {
-      label: "Cominenza con",
-      value: "start",
-    },
-    {
-      label: "Termina en",
-      value: "end",
-    },
-    {
-      label: "Contiene",
-      value: "contains",
-    },
-    {
-      label: "No contiene",
-      value: "ncontains",
-    },
-  ],
+  {
+    label: "Diferente de",
+    value: "nequal",
+  },
+  {
+    label: "Cominenza con",
+    value: "start",
+  },
+  {
+    label: "Termina en",
+    value: "end",
+  },
+  {
+    label: "Contiene",
+    value: "contains",
+  },
+  {
+    label: "No contiene",
+    value: "ncontains",
+  },
+];
+const column = ref(null);
+const condition = ref({
+  label: "Contiene",
+  value: "contains",
 });
+const query = ref(null);
+
+const querySearchError = ref(false);
+const querySearchMsg = $t("validations.required");
+const searched = ref(false);
+const showDialog = ref(false);
 
 onMounted(() => {
-  refreshSearch();
+  column.value = props.fields[0];
 });
 
-watch(() => props.fields, refreshSearch);
-
-watch(
-  () => props.searched,
-  () => {
-    if (!props.searched) {
-      refreshSearch();
-    }
+const onChangeQuery = () => {
+  if (!!query.value?.trim()) {
+    querySearchError.value = false;
   }
-);
-
-function refreshSearch() {
-  config.value.current = {
-    column: props.fields[0].value,
-    condition: {
-      label: "Contiene",
-      value: "contains",
-    },
-    value: "",
-  };
-}
+};
 
 function search() {
-  emit("search", config.value.current);
+  if (!!query.value?.trim()) {
+    $q.notify({
+      position: "top-right",
+      message: "OK",
+      type: "success",
+      progress: true,
+    });
+  } else {
+    querySearchError.value = true;
+    $q.notify({
+      position: "top-right",
+      message: $t("errorValidation"),
+      type: "negative",
+      progress: true,
+    });
+  }
 }
 function resetSearch() {
-  emit("resetSearch");
+  emit("reset");
 }
 </script>

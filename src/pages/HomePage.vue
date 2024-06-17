@@ -2,7 +2,9 @@
   <q-page>
     <div id="Home">
       <q-header class="header">
-        <q-bar id="header-bar" class=" absolute-top" dense style="height: 50px">
+        <q-bar
+          id="header-bar"
+          class=" absolute-top" dense style="height: 50px">
           <div class="row login-header">
             <q-btn flat @click="navigateTo({path:'/'})" :title="$t('homeTip')">
               <img class="z-top"
@@ -15,7 +17,7 @@
               </div>
               <q-tooltip
                 :model-value="menuTip"
-                :offset=[25,10]
+                :offset="[25, 10]"
                 class="bg-amber text-black shadow-4 text-uppercase text-subtitle1 z-max"
                 self="center left"
                 anchor="center right"
@@ -29,7 +31,7 @@
                 style="border-radius: 15px"
                 transition-hide="jump-up"
                 transition-show="jump-down"
-                :offset=[0,10]
+                :offset="[0, 10]"
               >
                 <q-list
                   class="text-black text-caption text-uppercase"
@@ -44,7 +46,7 @@
                       <q-icon name="mdi-login" size="md"/>
                     </q-item-section>
                     <q-item-section class="text-body1 text-uppercase"
-                    >{{ $t("login") }}
+                      >{{ $t("login") }}
                     </q-item-section>
                   </q-item>
 
@@ -167,15 +169,26 @@
               fit="scale-down"
               style="height: 48px; width: 96px"
             />
+            <q-btn
+              color="white"
+              dense
+              flat
+              icon="email"
+              round
+              disabled
+              :label="appConfig.email"
+            ></q-btn>
+            <q-btn
+              color="white"
+              dense
+              flat
+              disabled
 
-            <span class="text-grey"
-            ><q-icon name="email"/>
-              {{ appConfig.email }}</span>
-            <span class="text-white"
-            ><q-icon name="grey"/>
-              {{ appConfig.phone }}</span>
+              icon="phone"
+              :label="appConfig.phone"
 
-
+              round
+            ></q-btn>
           </div>
           <div
             class="col-xs-12 col-sm-12 col-md-6 col-lg-12 text-caption q-mt-sm text-white"
@@ -198,7 +211,7 @@
         />
       </q-page-scroller>
     </div>
-    <q-scroll-observer @scroll="scrollObserver" :debounce="100" axis="vertical"/>
+    <q-scroll-observer  @scroll="scrollObserver" :debounce="100" axis="vertical"/>
   </q-page>
 </template>
 
@@ -208,8 +221,8 @@ import {$t} from "src/services/i18n";
 import {useApp} from "src/composables/useApp";
 import DarkSwitcher from "src/components/base/DarkSwitcher.vue";
 import LangSwitcher from "src/components/base/LangSwitcher.vue";
-import {useQuasar} from "quasar";
-import {homeCarouselData} from "src/config/homeCarouselData";
+import { useQuasar } from "quasar";
+import { homeCarouselData } from "src/config/homeCarouselData";
 import appConfig from "src/config/app.js"
 import images from "src/config/theme/images"
 
@@ -228,7 +241,7 @@ const scrollObserver = ({direction, position}) => {
   if (position.top === 0) {
     isTop.value = true
     showHide()
-  } else {
+  }else{
     isTop.value = false
   }
   if (position.top === $q.screen.height) {
@@ -286,7 +299,6 @@ onMounted(() => {
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
 
-  }
 
 
   .custom-caption {
@@ -295,6 +307,7 @@ onMounted(() => {
     color: white;
     background-color: rgba(0, 0, 0, 0.6);
   }
+
 
 
   .services-card {
@@ -310,7 +323,7 @@ onMounted(() => {
   }
 
   .logo-header-title {
-    max-width: 250px;
+    max-width:250px;
 
 
   }

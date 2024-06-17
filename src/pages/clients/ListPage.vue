@@ -17,22 +17,21 @@
 
 <script setup>
 import TableComponent from "components/shared/crud/table/TableComponent.vue";
-import { $t } from "src/services/i18n";
 
 defineOptions({
   name: "ListPage",
 });
 
-const name = "user";
-const label_plural = "Usuarios";
-const label_singular = "Usuario";
+const name = "client";
+const label_plural = "Clientes";
+const label_singular = "Cliente";
 const to_str = null;
-const icon = "mdi-account-outline";
+const icon = "mdi-briefcase-variant-outline";
 
 const searchFields = [
   {
-    value: "username",
-    label: $t("fields.username"),
+    value: "user",
+    label: "Usuario",
   },
   {
     value: "first_name",
@@ -57,21 +56,13 @@ const filterFields = [
 
 const columns = [
   {
-    field: "username",
-    name: "username",
-    label: "Usuario",
-    align: "left",
-    sortable: true,
-    type: "text",
-    required: true,
-  },
-  {
     field: "first_name",
     name: "first_name",
     label: "Nombre(s)",
     align: "left",
     sortable: true,
     type: "text",
+    required: true,
   },
   {
     field: "last_name",
@@ -80,6 +71,7 @@ const columns = [
     align: "left",
     sortable: true,
     type: "text",
+    required: true,
   },
   {
     field: "email",
@@ -88,13 +80,54 @@ const columns = [
     align: "left",
     sortable: true,
     type: "text",
+    required: true,
   },
   {
-    field: "group",
-    name: "group",
-    label: "Grupos",
+    field: "gender",
+    name: "gender",
+    label: "Género",
+    align: "left",
+    sortable: true,
+    type: "text",
+  },
+  {
+    field: "date_of_birth",
+    name: "date_of_birth",
+    label: "F. nacimiento",
+    align: "left",
+    sortable: true,
+    type: "text",
+  },
+  {
+    field: "address",
+    name: "address",
+    label: "Dirección",
     align: "left",
     sortable: false,
+    type: "text",
+  },
+  {
+    field: "phone",
+    name: "phone",
+    label: "Teléfono",
+    align: "left",
+    sortable: true,
+    type: "text",
+  },
+  {
+    field: "company",
+    name: "company",
+    label: "Compañía",
+    align: "left",
+    sortable: true,
+    type: "text",
+  },
+  {
+    field: "industry",
+    name: "industry",
+    label: "Industria",
+    align: "left",
+    sortable: true,
     type: "text",
   },
   {
@@ -117,7 +150,6 @@ const rows = [];
 for (let i = 1; i < 101; i++) {
   rows.push({
     id: i,
-    username: `usuario${i}`,
     first_name: `nombre ${i}`,
     last_name: `apellidos ${i}`,
     email: `usuario${i}@correo.com`,

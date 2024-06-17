@@ -1,21 +1,33 @@
 <template>
   <q-page padding>
     <table-component
-      title="Grupos"
-      icon="mdi-account-group-outline"
+      :name="name"
+      :label_plural="label_plural"
+      :label_singular="label_singular"
+      :to_str="to_str"
+      :icon="icon"
       :columns="columns"
       :rows="rows"
       :searchFields="searchFields"
+      :filterFields="filterFields"
+      :has_delete="false"
     ></table-component>
   </q-page>
 </template>
 
 <script setup>
 import TableComponent from "components/shared/crud/table/TableComponent.vue";
+import { $t } from "src/services/i18n";
 
 defineOptions({
-  name: "IndexPage",
+  name: "ListPage",
 });
+
+const name = "group";
+const label_plural = "Grupos";
+const label_singular = "Grupo";
+const to_str = null;
+const icon = "mdi-account-multiple-outline";
 
 const searchFields = [
   {
@@ -23,6 +35,8 @@ const searchFields = [
     label: "Nombre",
   },
 ];
+
+const filterFields = [];
 
 const columns = [
   {

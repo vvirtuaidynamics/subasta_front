@@ -5,4 +5,4 @@ export default {
   phone: "+34 601 345 754",
   api_url: process.env.API_URL || "http://localhost:8000/api"
 
-}
+};

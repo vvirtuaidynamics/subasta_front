@@ -1,13 +1,10 @@
 <template>
-  <q-btn
-    round
-    color="secondary"
+  <q-btn-component
+    :tooltips="$q.lang.table.columns"
     icon="mdi-table-check"
-    size="sm"
     v-if="fullVisibleColums.length > 0"
   >
-    <q-tooltip class="bg-brown">{{ $q.lang.table.columns }}</q-tooltip>
-    <q-menu transition-show="scale" transition-hide="scale">
+    <q-menu transition-show="scale" transition-hide="scale" :offset="[0, 5]">
       <q-list dense>
         <q-item
           clickable
@@ -15,14 +12,21 @@
           :key="`visible-columns-${index}`"
           @click="onChange(c)"
         >
-          <q-item-section> {{ c.label }} </q-item-section>
+          <q-item-section :class="c.checked ? 'text-primary' : ''">
+            {{ c.label }}
+          </q-item-section>
           <q-item-section side>
-            <q-icon name="check" size="xs" v-if="c.checked"></q-icon>
+            <q-icon
+              name="check"
+              size="xs"
+              class="text-primary"
+              v-if="c.checked"
+            ></q-icon>
           </q-item-section>
         </q-item>
       </q-list>
     </q-menu>
-  </q-btn>
+  </q-btn-component>
 </template>
 
 <script setup>
@@ -31,6 +35,7 @@ defineOptions({
 });
 
 import { ref, onMounted, watch } from "vue";
+import QBtnComponent from "src/components/base/QBtnComponent.vue";
 
 const props = defineProps({
   columns: {
