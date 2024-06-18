@@ -46,7 +46,7 @@
                       <q-icon name="mdi-login" size="md"/>
                     </q-item-section>
                     <q-item-section class="text-body1 text-uppercase"
-                      >{{ $t("login") }}
+                    >{{ $t("login") }}
                     </q-item-section>
                   </q-item>
 
@@ -211,7 +211,7 @@
         />
       </q-page-scroller>
     </div>
-    <q-scroll-observer  @scroll="scrollObserver" :debounce="100" axis="vertical"/>
+    <q-scroll-observer @scroll="scrollObserver" :debounce="100" axis="vertical"/>
   </q-page>
 </template>
 
@@ -221,8 +221,8 @@ import {$t} from "src/services/i18n";
 import {useApp} from "src/composables/useApp";
 import DarkSwitcher from "src/components/base/DarkSwitcher.vue";
 import LangSwitcher from "src/components/base/LangSwitcher.vue";
-import { useQuasar } from "quasar";
-import { homeCarouselData } from "src/config/homeCarouselData";
+import {useQuasar} from "quasar";
+import {homeCarouselData} from "src/config/homeCarouselData";
 import appConfig from "src/config/app.js"
 import images from "src/config/theme/images"
 
@@ -241,7 +241,7 @@ const scrollObserver = ({direction, position}) => {
   if (position.top === 0) {
     isTop.value = true
     showHide()
-  }else{
+  } else {
     isTop.value = false
   }
   if (position.top === $q.screen.height) {
@@ -298,7 +298,7 @@ onMounted(() => {
     background-color: #0000001e;
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-
+  }
 
 
   .custom-caption {
@@ -307,7 +307,6 @@ onMounted(() => {
     color: white;
     background-color: rgba(0, 0, 0, 0.6);
   }
-
 
 
   .services-card {
@@ -323,10 +322,9 @@ onMounted(() => {
   }
 
   .logo-header-title {
-    max-width:250px;
+    max-width: 250px;
 
 
   }
-
 }
 </style>
