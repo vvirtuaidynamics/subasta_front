@@ -75,6 +75,12 @@ const routes = [
         meta: { requiredAuth: false, breadcrumb: "Debug" },
         component: () => import("pages/dev/DebugPage.vue"),
       },
+      {
+        name: "components",
+        path: "components",
+        meta: { requiredAuth: false, breadcrumb: "Components" },
+        component: () => import("pages/dev/ComponentsPage.vue"),
+      },
     ],
   },
 

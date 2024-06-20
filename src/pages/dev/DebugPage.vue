@@ -21,12 +21,19 @@
         />
       </div>
     </div>
+
+    <radio-field label="radio"></radio-field>
+    <checkbox-field label="checkbox"></checkbox-field>
+    <range-field></range-field>
   </q-page>
 </template>
 
 <script setup>
 import { useQuasar } from "quasar";
 import IconPickerField from "src/components/base/IconPickerField.vue";
+import RadioField from "src/components/base/form/RadioField.vue";
+import CheckboxField from "src/components/base/form/CheckboxField.vue";
+import RangeField from "src/components/base/form/RangeField.vue";
 const $q = useQuasar();
 document.title = document.title + " - Iconos";
 </script>

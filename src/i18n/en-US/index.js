@@ -213,4 +213,12 @@ export default {
     validDate: "Value ${val} is not valid date.",
     Length: "Value should have a length of ${length} chars",
   },
+  file: {
+    exists: "File exists",
+    select: "File select",
+    add: "File add",
+    change: "File change",
+    delete: "File delete",
+    clear: "Clear all files",
+  },
 };

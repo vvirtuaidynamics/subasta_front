@@ -211,4 +211,12 @@ export default {
     sameAs: "El valor debe ser igual al valor de ${otherName}",
     validDate: "El valor ${val} no es una fecha válida.",
   },
+  file: {
+    exists: "El archivo ya existe",
+    select: "Seleccionar archivo(s)",
+    add: "Adicionar archivo",
+    change: "Cambiar archivo",
+    delete: "Eliminar archivo",
+    clear: "Eliminar todos los archivos",
+  },
 };
