@@ -15,7 +15,11 @@
     :text-color="text_color"
     @click="onClick"
   >
-    <q-tooltip-component :title="tooltips" v-if="tooltips" />
+    <q-tooltip-component
+      :title="tooltips"
+      v-if="tooltips"
+      :class="`bg-${color}`"
+    />
     <slot></slot>
   </q-btn>
 </template>

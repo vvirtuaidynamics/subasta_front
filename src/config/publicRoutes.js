@@ -10,4 +10,5 @@ export const debugRoutes = [
   "carriers",
   "clients",
   "bearings",
+  "components",
 ];
