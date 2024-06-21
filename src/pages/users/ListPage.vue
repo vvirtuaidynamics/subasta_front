@@ -24,8 +24,8 @@ defineOptions({
 });
 
 const name = "user";
-const label_plural = "Usuarios";
-const label_singular = "Usuario";
+const label_plural = $t("models.users");
+const label_singular = $t("models.user");
 const to_str = null;
 const icon = "mdi-account-outline";
 
@@ -36,21 +36,21 @@ const searchFields = [
   },
   {
     value: "first_name",
-    label: "Nombre(s)",
+    label: $t("fields.first_name"),
   },
   {
     value: "last_name",
-    label: "Apellidos",
+    label: $t("fields.last_name"),
   },
   {
     value: "email",
-    label: "Correo",
+    label: $t("fields.email"),
   },
 ];
 
 const filterFields = [
   {
-    value: "active",
+    label: $t("fields.active"),
     type: "select",
   },
 ];
@@ -59,7 +59,7 @@ const columns = [
   {
     field: "username",
     name: "username",
-    label: "Usuario",
+    label: $t("fields.username"),
     align: "left",
     sortable: true,
     type: "text",
@@ -68,7 +68,7 @@ const columns = [
   {
     field: "first_name",
     name: "first_name",
-    label: "Nombre(s)",
+    label: $t("fields.first_name"),
     align: "left",
     sortable: true,
     type: "text",
@@ -76,7 +76,7 @@ const columns = [
   {
     field: "last_name",
     name: "last_name",
-    label: "Apellidos",
+    label: $t("fields.last_name"),
     align: "left",
     sortable: true,
     type: "text",
@@ -84,23 +84,15 @@ const columns = [
   {
     field: "email",
     name: "email",
-    label: "Correo",
+    label: $t("fields.email"),
     align: "left",
     sortable: true,
     type: "text",
   },
   {
-    field: "group",
-    name: "group",
-    label: "Grupos",
-    align: "left",
-    sortable: false,
-    type: "text",
-  },
-  {
     field: "active",
     name: "active",
-    label: "Activo",
+    label: $t("fields.active"),
     align: "center",
     type: "boolean",
   },

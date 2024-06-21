@@ -24,15 +24,15 @@ defineOptions({
 });
 
 const name = "group";
-const label_plural = "Grupos";
-const label_singular = "Grupo";
+const label_plural = $t("models.groups");
+const label_singular = $t("models.group");
 const to_str = null;
 const icon = "mdi-account-multiple-outline";
 
 const searchFields = [
   {
     value: "name",
-    label: "Nombre",
+    label: $t("fields.name"),
   },
 ];
 
@@ -43,7 +43,7 @@ const columns = [
     field: "name",
     required: true,
     name: "name",
-    label: "Nombre",
+    label: $t("fields.name"),
     align: "left",
     sortable: true,
     type: "text",

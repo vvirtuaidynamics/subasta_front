@@ -109,6 +109,7 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import QTooltipComponent from "../base/QTooltipComponent.vue";
 import appConfig from "src/config/app.js";
+import { $t } from "src/services/i18n";
 defineOptions({
   name: "MenuComponent",
 });
@@ -128,22 +129,22 @@ const emit = defineEmits(["change-url"]);
 
 const options = [
   {
-    label: "Inicio",
+    label: $t("models.home"),
     icon: "home",
     url: "crud",
   },
   {
-    label: "Administración",
+    label: $t("models.administration"),
     icon: "mdi-account-cog-outline",
     modules: [
       {
-        label: "Grupos",
+        label: $t("models.groups"),
         icon: "mdi-account-multiple-outline",
         url: "groups",
         permissions: [],
       },
       {
-        label: "Usuarios",
+        label: $t("models.users"),
         icon: "mdi-account-outline",
         url: "users",
         permissions: [],
@@ -151,23 +152,23 @@ const options = [
     ],
   },
   {
-    label: "Personas",
+    label: $t("models.persons"),
     icon: "mdi-account-multiple-outline",
     modules: [
       {
-        label: "Transportistas",
+        label: $t("models.carriers"),
         icon: "mdi-human-male",
         url: "carriers",
       },
       {
-        label: "Clientes",
+        label: $t("models.clients"),
         icon: "mdi-briefcase-variant-outline",
         url: "clients",
       },
     ],
   },
   {
-    label: "Portes",
+    label: $t("models.bearings"),
     icon: "mdi-cube-outline",
     url: "bearings",
   },

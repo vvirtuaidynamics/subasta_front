@@ -5,7 +5,7 @@
       dense
       options-dense
       :options="fields"
-      label="Columna"
+      :label="$t('labels.column')"
       emit-value
       map-options
       hide-bottom-space
@@ -16,7 +16,7 @@
       dense
       options-dense
       :options="conditions"
-      :label="fields.length == 1 ? fields[0].label : 'Condición'"
+      :label="fields.length == 1 ? fields[0].label : $t('conditions.condition')"
       emit-value
       map-options
       hide-bottom-space
@@ -26,7 +26,7 @@
       v-model="query"
       :error="querySearchError"
       :error-message="querySearchMsg"
-      label="Frase"
+      :label="$t('labels.phrase')"
       dense
       hide-bottom-space
       @keyup.enter="search"
@@ -84,7 +84,7 @@
           dense
           options-dense
           :options="fields"
-          label="Columna"
+          :label="$t('labels.column')"
           emit-value
           map-options
           style="min-width: 150px"
@@ -95,14 +95,16 @@
           dense
           options-dense
           :options="conditions"
-          :label="fields.length == 1 ? fields[0].label : 'Condición'"
+          :label="
+            fields.length == 1 ? fields[0].label : $t('conditions.condition')
+          "
           emit-value
           map-options
           style="min-width: 150px"
         />
         <q-input
           v-model="query"
-          label="Frase"
+          :label="$t('labels.phrase')"
           dense
           style="min-width: 150px"
           :error="querySearchError"
@@ -155,33 +157,33 @@ const emit = defineEmits(["search", "reset"]);
 
 const conditions = [
   {
-    label: "Igual a",
+    label: $t("conditions.equal"),
     value: "equal",
   },
   {
-    label: "Diferente de",
+    label: $t("conditions.distinct"),
     value: "nequal",
   },
   {
-    label: "Cominenza con",
+    label: $t("conditions.start"),
     value: "start",
   },
   {
-    label: "Termina en",
+    label: $t("conditions.end"),
     value: "end",
   },
   {
-    label: "Contiene",
+    label: $t("conditions.contains"),
     value: "contains",
   },
   {
-    label: "No contiene",
+    label: $t("conditions.not_contains"),
     value: "ncontains",
   },
 ];
 const column = ref(null);
 const condition = ref({
-  label: "Contiene",
+  label: $t("conditions.contains"),
   value: "contains",
 });
 const query = ref(null);
