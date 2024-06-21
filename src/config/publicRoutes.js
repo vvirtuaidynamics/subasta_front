@@ -7,4 +7,7 @@ export const debugRoutes = [
   "crud",
   "users",
   "groups",
+  "carriers",
+  "clients",
+  "bearings",
 ];

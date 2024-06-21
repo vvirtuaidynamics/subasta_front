@@ -6,10 +6,10 @@
       :grid="$q.screen.lt.sm"
       :loading="loadingTable"
       :visible-columns="visibleColumns"
+      :rows-per-page-options="[10, 20, 30, 50, 100]"
       row-key="id"
       selection="multiple"
       v-model:selected="selected"
-      class="my-sticky-column-table"
       @update:selected="(s) => (objects_selected = s)"
     >
       <template v-slot:loading>
@@ -19,13 +19,16 @@
       <template v-slot:top="props">
         <q-toolbar>
           <section class="q-my-xs q-mr-sm cursor-pointer text-subtitle1">
-            <div class="doc-card-title">
-              <q-icon :name="icon" size="22px" /> {{ title }}
+            <div class="doc-card-title bg-primary text-white">
+              <q-icon :name="icon" size="22px" /> {{ label_plural }}
             </div>
           </section>
           <q-space />
           <div class="col-auto">
-            <form-component size="sm"></form-component>
+            <form-component
+              size="sm"
+              :object_label="label_singular"
+            ></form-component>
             <delete-component
               :objects="objects_selected"
               v-if="has_delete"
@@ -35,17 +38,17 @@
               @change="(vc) => (visibleColumns = vc)"
             ></visible-columns-component>
             <filter-component :fields="filterFields"></filter-component>
-            <q-btn
-              round
-              color="secondary"
+            <q-btn-component
+              :tooltips="
+                $t(
+                  props.inFullscreen
+                    ? 'labels.restoreWindow'
+                    : 'labels.maximizeWindow'
+                )
+              "
               :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
               @click="props.toggleFullscreen"
-              size="sm"
-            >
-              <q-tooltip class="bg-brown">{{
-                props.inFullscreen ? "Restaurar" : "Maximizar"
-              }}</q-tooltip>
-            </q-btn>
+            />
           </div>
         </q-toolbar>
         <div
@@ -135,6 +138,7 @@
           ></history-component>
           <form-component
             :object="[props.row]"
+            :object_label="label_singular"
             v-if="has_edit"
           ></form-component>
           <see-component :object="[props.row]" v-if="has_see"></see-component>
@@ -194,6 +198,7 @@
                     ></history-component>
                     <form-component
                       :object="[props.row]"
+                      :object_label="label_singular"
                       v-if="has_edit"
                     ></form-component>
                     <see-component
@@ -226,6 +231,7 @@ import VisibleColumnsComponent from "./actions/VisibleColumnsComponent.vue";
 import FormComponent from "../form/FormComponent.vue";
 import HistoryComponent from "../form/HistoryComponent.vue";
 import SeeComponent from "../form/SeeComponent.vue";
+import QBtnComponent from "src/components/base/QBtnComponent.vue";
 import { $t } from "src/services/i18n";
 
 defineOptions({
@@ -233,9 +239,21 @@ defineOptions({
 });
 
 const props = defineProps({
-  title: {
+  name: {
     type: String,
-    default: "Tabla",
+    default: "object",
+  },
+  label_plural: {
+    type: String,
+    default: "Objetos",
+  },
+  label_singular: {
+    type: String,
+    default: "Objetos",
+  },
+  to_str: {
+    type: String,
+    default: "id",
   },
   icon: {
     type: String,
@@ -306,8 +324,6 @@ onMounted(() => {
 .doc-card-title {
   margin-left: -24px;
   padding: 2px 10px 2px 24px;
-  background: #e0e0e0;
-  color: #616161;
   position: relative;
   border-radius: 3px 5px 5px 0;
 }
@@ -320,7 +336,7 @@ onMounted(() => {
   width: 0;
   height: 0;
   border: 0 solid transparent;
-  border-top-color: #bebebe;
+  border-top-color: var(--q-primary);
   border-width: 9px 0 0 11px;
 }
 
@@ -332,15 +348,18 @@ th:nth-child(1),
 tbody > tr > td:nth-child(1) {
   position: sticky;
   left: 0;
-  background-color: #fff;
   z-index: 99;
 }
-
-.q-table > thead > tr > th,
+.q-table td.actions-def,
+th:nth-child(1),
 tbody > tr > td:nth-child(1) {
-  background-color: #f8f9fa;
+  background-color: #fff;
 }
-
+.q-table--dark td.actions-def,
+.q-table--dark th:nth-child(1),
+.q-table--dark tbody > tr > td:nth-child(1) {
+  background-color: #1d222e;
+}
 td.actions-def > .q-btn {
   margin-right: 3px;
 }

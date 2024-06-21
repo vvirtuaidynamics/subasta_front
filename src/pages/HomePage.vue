@@ -2,7 +2,9 @@
   <q-page>
     <div id="Home">
       <q-header class="header">
-        <q-bar id="header-bar" class=" absolute-top" dense style="height: 50px">
+        <q-bar
+          id="header-bar"
+          class=" absolute-top" dense style="height: 50px">
           <div class="row login-header">
             <q-btn flat @click="navigateTo({path:'/'})" :title="$t('homeTip')">
               <img class="z-top"
@@ -15,7 +17,7 @@
               </div>
               <q-tooltip
                 :model-value="menuTip"
-                :offset=[25,10]
+                :offset="[25, 10]"
                 class="bg-amber text-black shadow-4 text-uppercase text-subtitle1 z-max"
                 self="center left"
                 anchor="center right"
@@ -29,7 +31,7 @@
                 style="border-radius: 15px"
                 transition-hide="jump-up"
                 transition-show="jump-down"
-                :offset=[0,10]
+                :offset="[0, 10]"
               >
                 <q-list
                   class="text-black text-caption text-uppercase"
@@ -167,15 +169,26 @@
               fit="scale-down"
               style="height: 48px; width: 96px"
             />
+            <q-btn
+              color="white"
+              dense
+              flat
+              icon="email"
+              round
+              disabled
+              :label="appConfig.email"
+            ></q-btn>
+            <q-btn
+              color="white"
+              dense
+              flat
+              disabled
 
-            <span class="text-grey"
-            ><q-icon name="email"/>
-              {{ appConfig.email }}</span>
-            <span class="text-white"
-            ><q-icon name="grey"/>
-              {{ appConfig.phone }}</span>
+              icon="phone"
+              :label="appConfig.phone"
 
-
+              round
+            ></q-btn>
           </div>
           <div
             class="col-xs-12 col-sm-12 col-md-6 col-lg-12 text-caption q-mt-sm text-white"
@@ -285,7 +298,6 @@ onMounted(() => {
     background-color: #0000001e;
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-
   }
 
 
@@ -314,6 +326,5 @@ onMounted(() => {
 
 
   }
-
 }
 </style>
