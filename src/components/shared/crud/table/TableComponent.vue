@@ -37,7 +37,10 @@
               :columns="columns"
               @change="(vc) => (visibleColumns = vc)"
             ></visible-columns-component>
-            <filter-component :fields="filterFields"></filter-component>
+            <filter-component
+              :fields="filterFields"
+              v-if="filterFields.length > 0"
+            ></filter-component>
             <q-btn-component
               :tooltips="
                 $t(

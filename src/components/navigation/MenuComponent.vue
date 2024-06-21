@@ -149,6 +149,12 @@ const options = [
         url: "users",
         permissions: [],
       },
+      {
+        label: $t("models.history"),
+        icon: "mdi-account-clock-outline",
+        url: "history",
+        permissions: [],
+      },
     ],
   },
   {
@@ -171,6 +177,11 @@ const options = [
     label: $t("models.bearings"),
     icon: "mdi-cube-outline",
     url: "bearings",
+  },
+  {
+    label: $t("models.validationtasks"),
+    icon: "mdi-calendar-multiple-check",
+    url: "validation_tasks",
   },
 ];
 
