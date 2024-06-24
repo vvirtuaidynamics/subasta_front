@@ -5,7 +5,7 @@ defineOptions({
 defineProps({
 
   title: {type: String, default: 'Title'},
-  words: {type: Array, default: ()=>["primera", "segunda"]},
+  words: {type: Array, default: () => ["primera", "segunda"]},
 
   color: {type: String, default: '#0e6ffc'}
 })
@@ -14,7 +14,6 @@ defineProps({
 
 <template>
   <div class="wrapper">
-<!--    <p>Coding is</p>-->
     <div class="words">
       <span :style="`color:${color}`">good</span>
       <span>fantastic</span>
@@ -32,17 +31,20 @@ defineProps({
   //box-sizing: border-box;
   //font-size: inherit;
 }
-.wrapper{
+
+.wrapper {
   box-sizing: content-box;
   height: 50px;
   display: flex;
   //box-shadow: 0 20px 25px rgba(0,0,0,0.2);
 
 }
-.words{
+
+.words {
   overflow: hidden;
 }
-span{
+
+span {
   display: block;
   height: 100%;
   padding-left: 10px;

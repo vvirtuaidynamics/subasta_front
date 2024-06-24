@@ -15,11 +15,11 @@
         style="border-radius: 15px 15px 15px 15px; border: none"
       >
         <q-bar class="">
-          <q-icon :name="pageDialog.icon ?? 'mdi-form-select'" size="sm" />
+          <q-icon :name="pageDialog.icon ?? 'mdi-form-select'" size="sm"/>
           <span class="q-ml-xs text-body1 text-bold text-uppercase">{{
-            pageDialog.title ?? $t("defaultDialogTitle")
-          }}</span>
-          <q-space />
+              pageDialog.title ?? $t("defaultDialogTitle")
+            }}</span>
+          <q-space/>
           <div class="q-gutter q-gutter-x-xs">
             <q-btn
               v-if="pageDialog.maximizedBtn"
@@ -39,7 +39,7 @@
               @click="pageDialog.maximized = !pageDialog.maximized"
             >
               <q-tooltip
-                >{{
+              >{{
                   !pageDialog.maximized
                     ? $t("labels.maximizeWindow")
                     : $t("labels.restoreWindow")
@@ -81,17 +81,16 @@
 </template>
 
 <script setup>
-import { computed, defineAsyncComponent, onBeforeMount, ref, watch } from "vue";
-import { storeToRefs } from "pinia";
-import { useQuasar } from "quasar";
-import { $t } from "src/services/i18n";
-import { useApp } from "src/composables/useApp";
+import {computed, defineAsyncComponent, onBeforeMount, ref, watch} from "vue";
+import {storeToRefs} from "pinia";
+import {useQuasar} from "quasar";
+import {$t} from "src/services/i18n";
+import {useApp} from "src/composables/useApp";
 import LoaderPage from "src/components/base/LoaderPage.vue";
 
 const $q = useQuasar();
 const $app = useApp();
-const { pageDialog, loading } = $app;
-// import FormBuilder, { IForm } from "src/components/FormBuilder.vue";
+const {pageDialog, loading} = $app;
 
 let pageContent = pageDialog.pageComponent;
 
@@ -100,13 +99,6 @@ const emits = defineEmits(["close", "submitForm"]);
 onBeforeMount(() => {
   if (pageDialog.pageComponent) pageContent.value = pageDialog.pageComponent;
 });
-
-// watch(
-//   () => pageDialog.showDialog,
-//   (mostrar, prev_mostrar) => {
-//     show.value = mostrar;
-//   }
-// );
 
 /**
  * Metodos
@@ -119,7 +111,7 @@ function handleFormSubmit(formData) {
   emits("submitForm", formData ?? null);
 }
 
-defineExpose({ handleClose, handleFormSubmit });
+defineExpose({handleClose, handleFormSubmit});
 </script>
 
 <style lang="scss" scoped>

@@ -29,9 +29,9 @@
         >
           <q-bar>
             <span class="text-caption text-bold text-uppercase">{{
-              $t("labels.iconSelectTitle")
-            }}</span>
-            <q-space />
+                $t("labels.iconSelectTitle")
+              }}</span>
+            <q-space/>
             <q-btn dense flat icon="close" v-close-popup>
               <q-tooltip>{{ $q.lang.label.close }}</q-tooltip>
             </q-btn>
@@ -55,7 +55,7 @@
                     class="q-ma-sm"
                   >
                     <template v-slot:append>
-                      <q-icon name="search" />
+                      <q-icon name="search"/>
                     </template>
                   </q-input>
                 </div>
@@ -82,11 +82,6 @@
               </div>
 
               <div class="row justify-center">
-                <!-- <q-icon-picker :dense="props.styleField?.includes('dense')" v-model="data.iconName" tooltips
-                  v-model:model-pagination="data.pagination" selected-color="primary"
-                  selected-background-color="secondary" :icon-set="data.iconSet" :filter="data.filter"
-                  style="height: 60vh" >
-                </q-icon-picker> -->
                 <q-icon-picker
                   :dense="props.styleField?.includes('dense')"
                   v-model="data.iconName"
@@ -146,7 +141,7 @@
             :outlined="props.styleField?.includes('outlined')"
           >
             <template v-slot:prepend v-if="data.iconName">
-              <q-icon :name="data.iconName" />
+              <q-icon :name="data.iconName"/>
             </template>
             <template v-slot:append>
               <q-btn
@@ -183,9 +178,6 @@
       </div>
     </div>
 
-    <!-- *************************************************************** -->
-    <!---- No Picker                                                     -->
-    <!-- *************************************************************** -->
     <q-card
       v-else
       class="full-width shadow-3"
@@ -214,7 +206,7 @@
               class="q-ma-sm"
             >
               <template v-slot:append>
-                <q-icon name="search" />
+                <q-icon name="search"/>
               </template>
             </q-input>
             <q-input
@@ -234,7 +226,7 @@
               @click="inputSelection"
             >
               <template v-slot:prepend>
-                <q-icon :name="data.iconName" />
+                <q-icon :name="data.iconName"/>
               </template>
               <template v-slot:append>
                 <q-btn
@@ -271,10 +263,6 @@
           </div>
         </div>
         <div class="row justify-center q-mt-xs">
-          <!-- <q-icon-picker :dense="props.styleField?.includes('dense')" v-model="data.iconName" tooltips
-            v-model:model-pagination="data.pagination" :icon-set="props.iconSet" :filter="data.filter"
-            :style="`${height ? 'height: ' + height + 'px;' : 'height: 40vh;'}`">
-          </q-icon-picker> -->
           <q-icon-picker
             :dense="props.styleField?.includes('dense')"
             v-model="data.iconName"
@@ -292,11 +280,12 @@
 </template>
 
 <script setup>
-import { useQuasar, copyToClipboard } from "quasar";
-import { Clipboard } from "@capacitor/clipboard";
-import { onBeforeMount, onMounted, ref, watch, computed } from "vue";
-import { QIconPicker } from "@quasar/quasar-ui-qiconpicker";
+import {useQuasar, copyToClipboard} from "quasar";
+import {Clipboard} from "@capacitor/clipboard";
+import {onBeforeMount, onMounted, ref, watch, computed} from "vue";
+import {QIconPicker} from "@quasar/quasar-ui-qiconpicker";
 import "@quasar/quasar-ui-qiconpicker/src/index.sass";
+
 const $q = useQuasar();
 import materialIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/material-icons";
 import fontawesomeIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/fontawesome-v5";
@@ -304,7 +293,6 @@ import mdiIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/mdi-
 import bootstrapIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/bootstrap-icons";
 import ionIcons from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/ionicons-v4";
 import themify from "@quasar/quasar-ui-qiconpicker/src/components/icon-set/themify";
-// import bootstrapIcons from '@quasar/quasar-ui-qiconpicker/src/components/icon-set/bootstrap-icons'
 
 defineOptions({
   name: "IconPickerField",
@@ -351,10 +339,7 @@ onBeforeMount(() => {
       (iconset) => iconset.value === data.value.iconSet
     );
 });
-onMounted(() => {
-  // if (process.env.NODE_ENV !== 'production') console.log('onMounted');
-});
-// $q.screen.gt.xs || $q.fullscreen.isActive;
+
 
 const selectedIconset = ref();
 const showIconPicker = ref(false);
@@ -412,7 +397,7 @@ const data = ref({
 });
 const emits = defineEmits(["update"]);
 
-defineExpose({ emits });
+defineExpose({emits});
 
 watch(
   () => data.value.iconName,
@@ -445,8 +430,9 @@ function showNotify(mensaje, color = "info", icon = "info") {
 
 const writeToClipboard = async (text) => {
   //await copyToClipboard(text) --> Quasar
-  await Clipboard.write({ string: text }); //--> capacitor
+  await Clipboard.write({string: text}); //--> capacitor
 };
+
 async function toClip(text) {
   await copyToClipboard(text)
     .then(() => {
@@ -462,6 +448,7 @@ async function toClip(text) {
         });
     });
 }
+
 function inputSelection() {
   if (props.picker && !data.value.iconName) {
     showIconPicker.value = !showIconPicker.value;

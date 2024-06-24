@@ -67,7 +67,7 @@
         @update:modelValue="selectFile"
       >
         <template v-if="!model" v-slot:prepend>
-          <q-icon name="attachment" />
+          <q-icon name="attachment"/>
         </template>
         <template v-if="model" v-slot:append>
           <q-icon
@@ -97,7 +97,7 @@
   >
     <q-card class="no-scroll" style="border-radius: 15px">
       <q-bar style="background-color: rgba(174, 176, 181, 0.7)">
-        <q-space />
+        <q-space/>
 
         <q-btn
           dense
@@ -140,7 +140,7 @@
           :title="$t('labels.cut')"
           @click="getResult"
         />
-        <q-space />
+        <q-space/>
         <q-btn
           dense
           class="q-mr-sm"
@@ -180,7 +180,7 @@
             }
           "
         />
-        <q-space />
+        <q-space/>
 
         <q-btn
           dense
@@ -308,11 +308,11 @@
 </template>
 
 <script setup>
-import { $t } from "src/services/i18n";
-import { reactive, ref, watch } from "vue";
+import {$t} from "src/services/i18n";
+import {reactive, ref, watch} from "vue";
 
-import VuePictureCropper, { cropper } from "vue-picture-cropper";
-import { useQuasar } from "quasar";
+import VuePictureCropper, {cropper} from "vue-picture-cropper";
+import {useQuasar} from "quasar";
 
 const $q = useQuasar();
 
@@ -321,25 +321,17 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  pic: { default: "" },
-  Width: { type: Number, default: 128 },
-  Height: { type: Number, default: 128 },
-  radio1: { type: Number, default: 1 },
-  radio2: { type: Number, default: 1 },
-  label: { type: String, default: $t("labels.selectPicture") },
-  styleForm: { type: String, default: "borderless" },
-  readonly: { type: Boolean, default: false },
+  pic: {default: ""},
+  Width: {type: Number, default: 128},
+  Height: {type: Number, default: 128},
+  radio1: {type: Number, default: 1},
+  radio2: {type: Number, default: 1},
+  label: {type: String, default: $t("labels.selectPicture")},
+  styleForm: {type: String, default: "borderless"},
+  readonly: {type: Boolean, default: false},
 });
 
 const emits = defineEmits(["change"]);
-
-// function updatePicture(newPicVal: string) {
-//   pic.value = newPicVal;
-
-//   emits('update:Picture');
-//   console.log('update:Picture');
-// }
-//console.log(props.avatar);
 
 const action = ref("");
 const hasAction = ref(false);
@@ -361,36 +353,24 @@ const result = reactive({
   blobURL: "",
 });
 
-/**
- * Select the picture to be cropped
- */
 
 function selectFile() {
   // Reset last selection and results
-  //pic.value = '';
   pic.value = "";
   picHistory = [];
   result.dataURL = "";
   result.blobURL = "";
-  // Get selected files
   const file = model?.value;
 
   if (!file) return;
-  // console.log(data);
-  // Convert to dataURL and pass to the cropper component
-  //console.log(file);
-
   const reader = new FileReader();
   reader.readAsDataURL(file);
   reader.onload = () => {
     hasAction.value = true;
-    // Update the picture source of the `img` prop
     pic.value = String(reader.result);
     imagen.value = file;
     startpic.value = String(reader.result);
-    // Show the modal
     isShowModal.value = true;
-    // Clear selected files of input element
     if (!uploadInput.value) return;
     uploadInput.value.value = "";
   };
@@ -399,34 +379,22 @@ function selectFile() {
 function refreshFile() {
   // Reset last selection and results
 
-  // Get selected files
   const data = model?.value;
 
   if (!data) return;
-  //console.log(data);
-  // Convert to dataURL and pass to the cropper component
-  //const file = files[0];
+  const file = files[0];
   const reader = new FileReader();
   reader.readAsDataURL(data);
   reader.onload = () => {
     hasAction.value = true;
-    // Update the picture source of the `img` prop
     pic.value = String(reader.result);
-    //updatePicture(String(reader.result));
-
-    // Show the modal
     isShowModal.value = true;
 
-    // Clear selected files of input element
     if (!uploadInput.value) return;
     uploadInput.value.value = "";
     emits("change", pic.value);
   };
 }
-
-/**
- * Get cropping results
- */
 
 async function getResult() {
   if (!cropper) return;
@@ -511,7 +479,6 @@ function rotate() {
  */
 async function ready() {
   if (!cropper) return;
-  //console.log('Cropper is ready.');
 }
 </script>
 
