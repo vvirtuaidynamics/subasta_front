@@ -4,7 +4,6 @@
     :icon="isDark ? 'wb_sunny' : 'nights_stay'"
     :size="size"
     flat
-    round
     @click="handleUpdate(!isDark)"
   >
     <q-tooltip class="bg-amber text-black text-caption text-center">

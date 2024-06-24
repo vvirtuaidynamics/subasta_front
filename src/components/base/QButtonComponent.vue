@@ -1,7 +1,6 @@
 <template>
   <q-btn
     :label="props.label"
-    class="shadow-3 text-uppercase"
     :class="props.class"
     v-bind="forms.button"
     type="button"
@@ -9,9 +8,9 @@
     @click="onClick"
     @dblclick="onDblClick"
     :loading="props.loading"
-    :icon="props.icon ? props.icon : ''"
+    :icon="props.icon"
   >
-    <q-tooltip v-if="props.title?.length"> {{ props.title }}</q-tooltip>
+    <q-tooltip v-if="props.title"> {{ props.title }}</q-tooltip>
     <template #loading>
       <span class="text-caption text-uppercase q-gutter q-gutter-x-sm">{{
         loadingMsg
@@ -32,7 +31,7 @@ const props = defineProps({
   label: String,
   title: String,
   icon: { type: String, require: false },
-  class: { type: String, require: false },
+  class: { type: String, default: 'shadow-3 text-uppercase' },
   color: { type: String, default: "primary" },
   loading: { type: Boolean, require: false },
 });

@@ -1,20 +1,16 @@
 <template>
   <q-page>
     <div id="Home">
-      <q-header :class="'header'">
+      <q-header class="header">
         <q-bar
           id="header-bar"
-          class="faa-parent animated-hover absolute-top"
-          dense
-          style="height: 50px"
-        >
+          class=" absolute-top" dense style="height: 50px">
           <div class="row login-header">
-            <q-btn
-              flat
-              @click="navigateTo({ path: '/' })"
-              :title="$t('homeTip')"
-            >
-              <img :src="images.appLogo" alt="SUBASTA" />
+            <q-btn flat @click="navigateTo({path:'/'})" :title="$t('homeTip')">
+              <img class="z-top"
+                   :src="images.appLogo"
+                   alt=""
+              />
 
               <div class="text-h6 text-uppercase">
                 {{ appConfig.name }}
@@ -26,7 +22,7 @@
                 self="center left"
                 anchor="center right"
               >
-                <q-icon name="mdi-arrow-left-bold-outline" size="sm" />
+                <q-icon name="mdi-arrow-left-bold-outline" size="sm"/>
                 {{ $t("labels.options") }}
               </q-tooltip>
 
@@ -47,19 +43,19 @@
                     @click="navigateTo({ name: 'login' })"
                   >
                     <q-item-section avatar>
-                      <q-icon name="mdi-login" size="md" />
+                      <q-icon name="mdi-login" size="md"/>
                     </q-item-section>
                     <q-item-section class="text-body1 text-uppercase"
-                      >{{ $t("login") }}
+                    >{{ $t("login") }}
                     </q-item-section>
                   </q-item>
 
                   <q-item clickable @click="navigateTo({ name: 'register' })">
                     <q-item-section avatar>
-                      <q-icon name="mdi-account-arrow-up-outline" size="md" />
+                      <q-icon name="mdi-account-arrow-up-outline" size="md"/>
                     </q-item-section>
                     <q-item-section class="text-body1 text-uppercase"
-                      >{{ $t("register") }}
+                    >{{ $t("register") }}
                     </q-item-section>
                   </q-item>
                 </q-list>
@@ -67,9 +63,11 @@
             </q-btn>
           </div>
 
-          <q-space />
-          <div class="row login-header-right">
-            <LangSwitcher class="z-max q-ml-sm" />
+
+          <q-space/>
+          <div class="row login-header-right ">
+
+            <LangSwitcher class="z-max q-ml-sm"/>
             <DarkSwitcher
               class="z-max"
               size="md"
@@ -77,8 +75,12 @@
               colorLight="yellow-6"
               :model-value="$q.dark.isActive"
               @update="(val) => $q.dark.set(val)"
+
             />
+
           </div>
+
+
         </q-bar>
       </q-header>
 
@@ -99,6 +101,7 @@
           swipeable
           transition-next="fade"
           transition-prev="fade"
+
         >
           <q-carousel-slide
             v-for="slide in carouselItems"
@@ -106,6 +109,7 @@
             :img-src="slide.src"
             :name="slide.id"
             class="full-width"
+
           >
             <div class="absolute-bottom custom-caption">
               <div class="text-h3">{{ slide.title }}</div>
@@ -114,7 +118,7 @@
           </q-carousel-slide>
         </q-carousel>
       </q-card>
-      <q-separator class="q-my-sm transparent" />
+      <q-separator class="q-my-sm transparent"/>
       <div
         class="text-justify vertical-middle flex flex-center q-gutter q-gutter-sm q-gutter-y-md justify-around full-width q-px-sm"
       >
@@ -179,8 +183,10 @@
               dense
               flat
               disabled
+
               icon="phone"
               :label="appConfig.phone"
+
               round
             ></q-btn>
           </div>
@@ -197,27 +203,28 @@
         :scroll-offset="$q.screen.height * 0.8"
         position="bottom-right"
       >
-        <q-btn class="shadow-3" color="dark" icon="keyboard_arrow_up" round />
+        <q-btn
+          class="shadow-3"
+          color="dark"
+          icon="keyboard_arrow_up"
+          round
+        />
       </q-page-scroller>
     </div>
-    <q-scroll-observer
-      @scroll="scrollObserver"
-      :debounce="100"
-      axis="vertical"
-    />
+    <q-scroll-observer @scroll="scrollObserver" :debounce="100" axis="vertical"/>
   </q-page>
 </template>
 
 <script setup>
-import { ref, reactive, onBeforeMount, onMounted, watch, computed } from "vue";
-import { $t } from "src/services/i18n";
-import { useApp } from "src/composables/useApp";
+import {ref, reactive, onBeforeMount, onMounted, watch, computed} from "vue";
+import {$t} from "src/services/i18n";
+import {useApp} from "src/composables/useApp";
 import DarkSwitcher from "src/components/base/DarkSwitcher.vue";
 import LangSwitcher from "src/components/base/LangSwitcher.vue";
-import { useQuasar } from "quasar";
-import { homeCarouselData } from "src/config/homeCarouselData";
-import appConfig from "src/config/app.js";
-import images from "src/config/theme/images";
+import {useQuasar} from "quasar";
+import {homeCarouselData} from "src/config/homeCarouselData";
+import appConfig from "src/config/app.js"
+import images from "src/config/theme/images"
 
 const $q = useQuasar();
 const $app = useApp();
@@ -225,21 +232,19 @@ const $app = useApp();
 const year = new Date().getFullYear();
 const currentSlide = ref(0);
 const slider = ref();
-const { navigateTo } = $app;
+const {navigateTo} = $app;
 const carouselItems = ref();
-
 const scrollRef = ref();
 const isTop = ref(true);
 
-const scrollObserver = ({ direction, position }) => {
+const scrollObserver = ({direction, position}) => {
   if (position.top === 0) {
-    isTop.value = true;
-    showHide();
+    isTop.value = true
+    showHide()
   } else {
-    isTop.value = false;
+    isTop.value = false
   }
   if (position.top === $q.screen.height) {
-    console.log("1 screen height", scrollTo.value);
     scrollTo.value.direction = direction;
     scrollTo.value.top = position.top;
   }
@@ -275,23 +280,26 @@ onBeforeMount(() => {
 });
 
 onMounted(() => {
-  showHide();
+  showHide()
+
 });
 </script>
 
 <style lang="scss" scoped>
 #Home {
   width: 100%;
+
   .q-header,
   .q-footer {
     z-index: 10;
   }
 
   .header {
-    background-color: #0000001a;
+    background-color: #0000001e;
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
   }
+
 
   .custom-caption {
     height: calc(100vh * 0.3);
@@ -300,11 +308,11 @@ onMounted(() => {
     background-color: rgba(0, 0, 0, 0.6);
   }
 
+
   .services-card {
     border-radius: 20px;
     word-wrap: break-word;
     overflow: hidden;
-    //max-height: 250px;
   }
 
   .fit-text {
@@ -315,6 +323,8 @@ onMounted(() => {
 
   .logo-header-title {
     max-width: 250px;
+
+
   }
 }
 </style>

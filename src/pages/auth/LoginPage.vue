@@ -1,17 +1,17 @@
 <script setup>
-import { reactive, ref, watch, onBeforeMount } from "vue";
-import { useQuasar } from "quasar";
-import { useApp } from "src/composables/useApp";
-import { $t } from "src/services/i18n";
+import {reactive, ref, watch, onBeforeMount} from "vue";
+import {useQuasar} from "quasar";
+import {useApp} from "src/composables/useApp";
+import {$t} from "src/services/i18n";
 
 // Component
-import QButtonComponent from "src/components/base/QButtonComponent.vue";
+import QButtonComponent from "components/base/QButtonComponent.vue";
 import DarkSwitcher from "src/components/base/DarkSwitcher.vue";
 import LangSwitcher from "src/components/base/LangSwitcher.vue";
-import { createRouter as $router } from "vue-router";
-import { utils } from "src/helpers/utils";
-import { forms } from "src/config/theme/forms";
-import { texts } from "src/config/theme/texts";
+import {createRouter as $router} from "vue-router";
+import {utils} from "src/helpers/utils";
+import {forms} from "src/config/theme/forms";
+import {texts} from "src/config/theme/texts";
 import images from "src/config/theme/images";
 import appConfig from "src/config/app";
 
@@ -86,7 +86,7 @@ async function onSubmit() {
       $app.setLoading();
     }
   } else {
-    utils.sendMsg({ type: "negative", msg: `${$t("errorValidation")}` });
+    utils.sendMsg({type: "negative", msg: `${$t("errorValidation")}`});
 
     if (formData.username.length === 0) fInputUsername.value.focus();
     else if (formData.password.length === 0) fInputPassword.value.focus();
@@ -113,14 +113,14 @@ onBeforeMount(() => {
 <template>
   <q-page>
     <div id="login" class="page row gradient-bg-blue">
-        <div
-          id="form"
-          :class="
+      <div
+        id="form"
+        :class="
             $q.screen.gt.sm
               ? 'form-div col-6 flex flex-center'
               : 'form-div col-12 flex flex-center'
           "
-        >
+      >
         <q-card bordered class="shadow-5  login-card q-pb-md">
           <q-card-section class="q-mb-xs">
             <q-avatar
@@ -177,7 +177,7 @@ onBeforeMount(() => {
                 @change="(user) => Avatar(user)"
               >
                 <template v-slot:prepend>
-                  <q-icon name="fas fa-user-tie" />
+                  <q-icon name="fas fa-user-tie"/>
                 </template>
               </q-input>
               <q-input
@@ -191,7 +191,7 @@ onBeforeMount(() => {
                 @keyup.enter="onSubmit()"
               >
                 <template v-slot:prepend>
-                  <q-icon name="mdi-lock" />
+                  <q-icon name="mdi-lock"/>
                 </template>
               </q-input>
 
@@ -225,13 +225,13 @@ onBeforeMount(() => {
             ></q-button-component>
           </q-card-actions>
         </q-card>
-        </div>
+      </div>
 
-        <transition
-          appear
-          enter-active-class="animated slideInRight"
-          leave-active-class="animated slideOutRight"
-        >
+      <transition
+        appear
+        enter-active-class="animated slideInRight"
+        leave-active-class="animated slideOutRight"
+      >
         <div v-if="$q.screen.gt.sm" class="logo-div col-6">
           <q-img
             fit="fill"
@@ -242,10 +242,9 @@ onBeforeMount(() => {
         </div>
       </transition>
 
-
       <q-bar class="login-footer absolute-bottom " :class="texts.footer" dense style="height: 50px">
-       <div class="row login-footer-header">
-          <q-btn flat  @click="navigateTo({path:'/'})" :title="$t('homeTip')">
+        <div class="row login-footer-header">
+          <q-btn flat @click="navigateTo({path:'/'})" :title="$t('homeTip')">
             <img
               :src="images.appLogo"
               alt="SUBASTA"
@@ -255,18 +254,18 @@ onBeforeMount(() => {
 
             <div class="text-h6 text-uppercase">
 
-                {{ appConfig.name }}
+              {{ appConfig.name }}
 
             </div>
           </q-btn>
         </div>
-        <q-space />
-        <div class="q-mx-sm" >
+        <q-space/>
+        <div class="q-mx-sm">
           {{ $q.platform.is.desktop ? $t("copyright") : "Copyright " }} &copy;
           {{ year }}
         </div>
-        <q-separator vertical />
-        <LangSwitcher />
+        <q-separator vertical/>
+        <LangSwitcher/>
       </q-bar>
     </div>
   </q-page>
@@ -291,16 +290,16 @@ onBeforeMount(() => {
     padding: 0;
   }
 
-  .login-footer-header{
+  .login-footer-header {
     min-width: 250px;
     transform: skewX(-10deg) translateX(-50px);
     background-color: $dark;
     margin: 0;
-    padding-left:50px;
+    padding-left: 50px;
     border: solid 1px $dark;
 
     img {
-      margin:0 10px 0 0;
+      margin: 0 10px 0 0;
       max-height: 40px;
     }
 
@@ -322,14 +321,7 @@ onBeforeMount(() => {
     border-left: solid 4px $dark;
     border-top: solid 2px $dark;
   }
-  .div-index-content {
-    width: 100vw;
-    height: 100vh;
-    min-width: 400px;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-image: url($background1);
-  }
+
   .gradient-bg-blue {
     background: linear-gradient(to bottom, #0e4b8a, #00c6ff);
   }

@@ -6,6 +6,7 @@ export const forms = {
     rounded: false,
     square: false,
     outlined: false,
+    dense: false,
   },
   editor: {
     filled: false,
@@ -14,6 +15,7 @@ export const forms = {
     rounded: false,
     square: false,
     outlined: false,
+    dense: false,
   },
   number: {
     filled: false,
@@ -22,6 +24,20 @@ export const forms = {
     rounded: false,
     square: false,
     outlined: false,
+    dense: false,
+  },
+  select: {
+    "use-input": true,
+    "use-chips": false,
+    filled: true,
+    standout: false, //puede recibir un bg-[color] y text-[color]
+    borderless: false,
+    rounded: false,
+    square: false,
+    outlined: false,
+    dense: false,
+    optionsDense: false,
+
   },
   button: {
     round: false,
@@ -29,6 +45,7 @@ export const forms = {
     flat: false,
     rounded: false,
     push: false,
+    dense: false,
     unelevated: false,
     "no-caps": false,
     style: "border-radius: 10px;",
