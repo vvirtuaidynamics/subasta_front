@@ -37,7 +37,10 @@
               :columns="columns"
               @change="(vc) => (visibleColumns = vc)"
             ></visible-columns-component>
-            <filter-component :fields="filterFields"></filter-component>
+            <filter-component
+              :fields="filterFields"
+              v-if="filterFields.length > 0"
+            ></filter-component>
             <q-btn-component
               :tooltips="
                 $t(
@@ -77,6 +80,7 @@
         <q-th
           :props="props"
           :align="props.col.align"
+          :class="props?.col?.name === 'actions' ? 'last-column-sticky' : ''"
           v-if="props.col.type !== 'hidden'"
         >
           {{ props.col.name !== "actions" ? props.col.label : "" }}
@@ -313,7 +317,7 @@ onMounted(() => {
     .map((c) => c.field);
 });
 </script>
-<style scope>
+<style>
 .q-table__top {
   padding: 0px !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
@@ -346,21 +350,27 @@ onMounted(() => {
 
 th:nth-child(1),
 tbody > tr > td:nth-child(1) {
-  position: sticky;
   left: 0;
-  z-index: 99;
 }
 .q-table td.actions-def,
 th:nth-child(1),
-tbody > tr > td:nth-child(1) {
+tbody > tr > td:nth-child(1),
+.q-table th.last-column-sticky {
+  position: sticky;
+  z-index: 99;
   background-color: #fff;
 }
 .q-table--dark td.actions-def,
 .q-table--dark th:nth-child(1),
+.q-table--dark th.last-column-sticky,
 .q-table--dark tbody > tr > td:nth-child(1) {
   background-color: #1d222e;
 }
 td.actions-def > .q-btn {
   margin-right: 3px;
+}
+
+.q-table th.last-column-sticky {
+  right: 0;
 }
 </style>

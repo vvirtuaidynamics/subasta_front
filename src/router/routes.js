@@ -41,6 +41,11 @@ const routes = [
         component: () => import("pages/groups/ListPage.vue"),
       },
       {
+        name: "history",
+        path: "history",
+        component: () => import("pages/history/ListPage.vue"),
+      },
+      {
         name: "clients",
         path: "clients",
         component: () => import("pages/clients/ListPage.vue"),
@@ -54,6 +59,11 @@ const routes = [
         name: "bearings",
         path: "bearings",
         component: () => import("pages/bearings/ListPage.vue"),
+      },
+      {
+        name: "validation_tasks",
+        path: "validation_tasks",
+        component: () => import("pages/validation_tasks/ListPage.vue"),
       },
     ],
   },
@@ -74,6 +84,12 @@ const routes = [
         path: "debug",
         meta: { requiredAuth: false, breadcrumb: "Debug" },
         component: () => import("pages/dev/DebugPage.vue"),
+      },
+      {
+        name: "components",
+        path: "components",
+        meta: { requiredAuth: false, breadcrumb: "Components" },
+        component: () => import("pages/dev/ComponentsPage.vue"),
       },
     ],
   },

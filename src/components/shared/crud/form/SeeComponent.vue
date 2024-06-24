@@ -1,6 +1,6 @@
 <template>
   <q-btn-component
-    tooltips="Ver"
+    :tooltips="$t('labels.show')"
     icon="remove_red_eye"
     size="xs"
     @click="showDialog = true"
@@ -26,6 +26,7 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import QBtnComponent from "src/components/base/QBtnComponent.vue";
+import { $t } from "src/services/i18n";
 defineOptions({
   name: "SeeComponent",
 });

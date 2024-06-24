@@ -17,14 +17,15 @@
 
 <script setup>
 import TableComponent from "components/shared/crud/table/TableComponent.vue";
+import { $t } from "src/services/i18n";
 
 defineOptions({
   name: "ListPage",
 });
 
 const name = "bearing";
-const label_plural = "Portes";
-const label_singular = "Porte";
+const label_plural = $t("models.bearings");
+const label_singular = $t("models.bearing");
 const to_str = null;
 const icon = "mdi-cube-outline";
 

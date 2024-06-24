@@ -24,77 +24,63 @@ defineOptions({
 });
 
 const name = "user";
-const label_plural = $t("models.users");
-const label_singular = $t("models.user");
+const label_plural = $t("models.history");
+const label_singular = $t("models.history");
 const to_str = null;
-const icon = "mdi-account-outline";
+const icon = "mdi-account-clock-outline";
 
-const searchFields = [
-  {
-    value: "username",
-    label: $t("fields.username"),
-  },
-  {
-    value: "first_name",
-    label: $t("fields.first_name"),
-  },
-  {
-    value: "last_name",
-    label: $t("fields.last_name"),
-  },
-  {
-    value: "email",
-    label: $t("fields.email"),
-  },
-];
+const searchFields = [];
 
-const filterFields = [
-  {
-    label: $t("fields.active"),
-    type: "select",
-  },
-];
+const filterFields = [];
 
 const columns = [
   {
-    field: "username",
-    name: "username",
-    label: $t("fields.username"),
+    field: "created_at",
+    name: "created_at",
+    label: $t("fields.created_at"),
     align: "left",
     sortable: true,
-    type: "text",
+    type: "date",
     required: true,
   },
   {
-    field: "first_name",
-    name: "first_name",
-    label: $t("fields.first_name"),
+    field: "user",
+    name: "user",
+    label: $t("fields.user"),
     align: "left",
     sortable: true,
     type: "text",
   },
   {
-    field: "last_name",
-    name: "last_name",
-    label: $t("fields.last_name"),
+    field: "action",
+    name: "action",
+    label: $t("fields.action"),
     align: "left",
     sortable: true,
     type: "text",
   },
   {
-    field: "email",
-    name: "email",
-    label: $t("fields.email"),
+    field: "model",
+    name: "model",
+    label: $t("fields.model"),
     align: "left",
     sortable: true,
     type: "text",
   },
   {
-    field: "active",
-    name: "active",
-    label: $t("fields.active"),
+    field: "object",
+    name: "object",
+    label: $t("fields.object"),
+    align: "left",
+    sortable: true,
+    type: "text",
+  },
+  {
+    field: "message",
+    name: "message",
+    label: $t("fields.message"),
     align: "center",
-    type: "boolean",
+    type: "text",
   },
   {
     field: "actions",
@@ -109,11 +95,12 @@ const rows = [];
 for (let i = 1; i < 101; i++) {
   rows.push({
     id: i,
-    username: `usuario${i}`,
-    first_name: `nombre ${i}`,
-    last_name: `apellidos ${i}`,
-    email: `usuario${i}@correo.com`,
-    active: i % 3 === 0,
+    created_at: new Date(),
+    user: `Usuario ${i}`,
+    model: i % 3 === 0 ? "Usuario" : "Grupo",
+    action: i % 3 === 0 ? "Adicionar" : "Modificar",
+    object: `Objeto ${i}`,
+    message: i % 3 === 0 ? "Adicionado" : "Modificado",
   });
 }
 </script>

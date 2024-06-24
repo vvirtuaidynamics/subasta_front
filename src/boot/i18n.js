@@ -9,7 +9,7 @@ import messages from "src/i18n";
 
 export const locales = {
   es: { en: "Spanish", es: "Español", locale: es },
-  "en-US": { en: "English", es: "Ingles",locale: en },
+  "en-US": { en: "English", es: "Ingles", locale: en },
 };
 
 export default boot(({ app }) => {
@@ -31,7 +31,6 @@ export default boot(({ app }) => {
     globalInjection: true,
     messages,
   });
-
 
   app.config.globalProperties.$i18n = i18n;
   app.config.globalProperties.$dark = _dark;

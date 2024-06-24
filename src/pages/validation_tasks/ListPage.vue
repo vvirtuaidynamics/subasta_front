@@ -24,29 +24,12 @@ defineOptions({
 });
 
 const name = "user";
-const label_plural = $t("models.users");
-const label_singular = $t("models.user");
+const label_plural = $t("models.validationtasks");
+const label_singular = $t("models.validationtasks");
 const to_str = null;
-const icon = "mdi-account-outline";
+const icon = "mdi-calendar-multiple-check";
 
-const searchFields = [
-  {
-    value: "username",
-    label: $t("fields.username"),
-  },
-  {
-    value: "first_name",
-    label: $t("fields.first_name"),
-  },
-  {
-    value: "last_name",
-    label: $t("fields.last_name"),
-  },
-  {
-    value: "email",
-    label: $t("fields.email"),
-  },
-];
+const searchFields = [];
 
 const filterFields = [
   {
@@ -57,44 +40,37 @@ const filterFields = [
 
 const columns = [
   {
-    field: "username",
-    name: "username",
-    label: $t("fields.username"),
+    field: "type",
+    name: "type",
+    label: $t("fields.type"),
     align: "left",
     sortable: true,
     type: "text",
     required: true,
   },
   {
-    field: "first_name",
-    name: "first_name",
-    label: $t("fields.first_name"),
+    field: "status",
+    name: "status",
+    label: $t("fields.status"),
     align: "left",
     sortable: true,
     type: "text",
   },
   {
-    field: "last_name",
-    name: "last_name",
-    label: $t("fields.last_name"),
+    field: "validated",
+    name: "validated",
+    label: $t("fields.validated"),
     align: "left",
     sortable: true,
     type: "text",
   },
   {
-    field: "email",
-    name: "email",
-    label: $t("fields.email"),
+    field: "validated_by",
+    name: "validated_by",
+    label: $t("fields.validated_by"),
     align: "left",
     sortable: true,
     type: "text",
-  },
-  {
-    field: "active",
-    name: "active",
-    label: $t("fields.active"),
-    align: "center",
-    type: "boolean",
   },
   {
     field: "actions",
@@ -109,11 +85,10 @@ const rows = [];
 for (let i = 1; i < 101; i++) {
   rows.push({
     id: i,
-    username: `usuario${i}`,
-    first_name: `nombre ${i}`,
-    last_name: `apellidos ${i}`,
-    email: `usuario${i}@correo.com`,
-    active: i % 3 === 0,
+    type: i % 3 === 0 ? "Tipo 1" : "Tipo 2",
+    status: i % 3 === 0 ? "Pendiente" : "Validado",
+    validated: i % 3 === 0 ? null : new Date(),
+    validated_by: i % 3 === 0 ? `Usuario ${i}` : `Usuario ${i}`,
   });
 }
 </script>
