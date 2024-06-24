@@ -17,14 +17,15 @@
 
 <script setup>
 import TableComponent from "components/shared/crud/table/TableComponent.vue";
+import { $t } from "src/services/i18n";
 
 defineOptions({
   name: "ListPage",
 });
 
 const name = "carrier";
-const label_plural = "Transportistas";
-const label_singular = "Transportista";
+const label_plural = $t("models.carriers");
+const label_singular = $t("models.carrier");
 const to_str = null;
 const icon = "mdi-human-male";
 
@@ -58,34 +59,31 @@ const columns = [
   {
     field: "first_name",
     name: "first_name",
-    label: "Nombre(s)",
+    label: $t("fields.first_name"),
     align: "left",
     sortable: true,
     type: "text",
-    required: true,
   },
   {
     field: "last_name",
     name: "last_name",
-    label: "Apellidos",
+    label: $t("fields.last_name"),
     align: "left",
     sortable: true,
     type: "text",
-    required: true,
   },
   {
     field: "email",
     name: "email",
-    label: "Correo",
+    label: $t("fields.email"),
     align: "left",
     sortable: true,
     type: "text",
-    required: true,
   },
   {
     field: "gender",
     name: "gender",
-    label: "Género",
+    label: $t("fields.gender"),
     align: "left",
     sortable: true,
     type: "text",
@@ -93,7 +91,7 @@ const columns = [
   {
     field: "date_of_birth",
     name: "date_of_birth",
-    label: "F. nacimiento",
+    label: $t("fields.birthday"),
     align: "left",
     sortable: true,
     type: "text",
@@ -101,7 +99,7 @@ const columns = [
   {
     field: "address",
     name: "address",
-    label: "Dirección",
+    label: $t("fields.address"),
     align: "left",
     sortable: false,
     type: "text",
@@ -109,7 +107,7 @@ const columns = [
   {
     field: "phone",
     name: "phone",
-    label: "Teléfono",
+    label: $t("fields.phone"),
     align: "left",
     sortable: true,
     type: "text",
@@ -117,7 +115,7 @@ const columns = [
   {
     field: "company",
     name: "company",
-    label: "Compañía",
+    label: $t("fields.company"),
     align: "left",
     sortable: true,
     type: "text",
@@ -125,7 +123,7 @@ const columns = [
   {
     field: "industry",
     name: "industry",
-    label: "Industria",
+    label: $t("fields.industry"),
     align: "left",
     sortable: true,
     type: "text",
@@ -133,7 +131,7 @@ const columns = [
   {
     field: "active",
     name: "active",
-    label: "Activo",
+    label: $t("fields.active"),
     align: "center",
     type: "boolean",
   },

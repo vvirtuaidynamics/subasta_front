@@ -1,15 +1,35 @@
 <template>
-  <q-list
-    separator
-    v-for="(o, indexOption) in options"
-    :key="`menu-option-${indexOption}`"
-  >
-    <q-item style="min-height: 49px; font-size: 21px" v-if="indexOption === 0">
+  <q-list separator>
+    <q-item style="min-height: 49px; font-size: 21px">
       <q-item-section avatar>
         <q-icon name="img:/src/assets/images/default.png" size="28px"></q-icon>
       </q-item-section>
-      <q-item-section>{{ appConfig.name }}</q-item-section>
+      <q-item-section class="text-uppercase">{{
+        appConfig.name
+      }}</q-item-section>
     </q-item>
+    <q-item
+      clickable
+      :active="isActive('crud')"
+      @click="navigateTo({ name: 'crud' })"
+    >
+      <q-item-section avatar>
+        <q-icon name="home" />
+      </q-item-section>
+      <q-item-section>{{ $t("models.home") }}</q-item-section>
+      <q-tooltip-component
+        :title="$t('models.home')"
+        anchor="center right"
+        self="center left"
+        v-if="mini"
+      ></q-tooltip-component>
+    </q-item>
+  </q-list>
+  <q-list
+    separator
+    v-for="(o, indexOption) in current_modules"
+    :key="`menu-option-${indexOption}`"
+  >
     <q-item
       clickable
       :active="isActive(o.url)"
@@ -105,10 +125,11 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onBeforeMount, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import QTooltipComponent from "../base/QTooltipComponent.vue";
 import appConfig from "src/config/app.js";
+import { $t } from "src/services/i18n";
 defineOptions({
   name: "MenuComponent",
 });
@@ -126,55 +147,82 @@ const props = defineProps({
 
 const emit = defineEmits(["change-url"]);
 
-const options = [
+const all_modules = [
   {
-    label: "Inicio",
-    icon: "home",
-    url: "crud",
-  },
-  {
-    label: "Administración",
+    label: $t("models.administration"),
     icon: "mdi-account-cog-outline",
     modules: [
       {
-        label: "Grupos",
+        label: $t("models.groups"),
         icon: "mdi-account-multiple-outline",
         url: "groups",
+        model: "group",
         permissions: [],
       },
       {
-        label: "Usuarios",
+        label: $t("models.users"),
         icon: "mdi-account-outline",
         url: "users",
+        model: "user",
+        permissions: [],
+      },
+      {
+        label: $t("models.history"),
+        icon: "mdi-account-clock-outline",
+        url: "history",
+        model: "history",
         permissions: [],
       },
     ],
   },
   {
-    label: "Personas",
+    label: $t("models.persons"),
     icon: "mdi-account-multiple-outline",
     modules: [
       {
-        label: "Transportistas",
+        label: $t("models.carriers"),
         icon: "mdi-human-male",
         url: "carriers",
+        model: "carrier",
+        permissions: [],
       },
       {
-        label: "Clientes",
+        label: $t("models.clients"),
         icon: "mdi-briefcase-variant-outline",
         url: "clients",
+        model: "client",
+        permissions: [],
       },
     ],
   },
   {
-    label: "Portes",
+    label: $t("models.bearings"),
     icon: "mdi-cube-outline",
     url: "bearings",
+    model: "bearing",
+    permissions: [],
+  },
+  {
+    label: $t("models.validationtasks"),
+    icon: "mdi-calendar-multiple-check",
+    url: "validation_tasks",
+    model: "validationtasks",
+    permissions: [],
   },
 ];
 
 const $router = useRouter();
-const currentMini = ref(null);
+
+const permissions = ["user:create", "user:edit", "group:view"];
+
+const current_modules = ref([]);
+
+onBeforeMount(() => {
+  all_modules.forEach((m) => {
+    current_modules.value.push(m);
+  });
+});
+
 onMounted(() => {
   let name = $router.currentRoute.value.name;
   emit("change-url", name ? getCurrentModuleByRoute(name) : null);
@@ -210,13 +258,14 @@ const isActiveParent = (module) => {
 
 const getCurrentModuleByRoute = (route) => {
   if (route === "crud") return null;
-  for (let i = 0; i < options.length; i++) {
-    if (options[i].url === route) {
-      return options[i];
-    } else if (options[i].modules) {
-      for (let j = 0; j < options[i].modules.length; j++) {
-        if (options[i].modules[j].url === route) {
-          return options[i].modules[j];
+  let modules = current_modules.value;
+  for (let i = 0; i < modules.length; i++) {
+    if (modules[i].url === route) {
+      return modules[i];
+    } else if (modules[i].modules) {
+      for (let j = 0; j < modules[i].modules.length; j++) {
+        if (modules[i].modules[j].url === route) {
+          return modules[i].modules[j];
         }
       }
     }

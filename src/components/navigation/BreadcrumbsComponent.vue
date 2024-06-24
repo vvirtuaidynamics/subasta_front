@@ -2,7 +2,7 @@
   <div class="q-pa-md">
     <q-breadcrumbs separator-color="primary" style="font-size: 14px">
       <q-breadcrumbs-el
-        label="Inicio"
+        :label="$t('models.home')"
         icon="home"
         class="cursor-pointer"
         @click="setHome"
@@ -14,6 +14,7 @@
 </template>
 <script setup>
 import { useRouter } from "vue-router";
+import { $t } from "src/services/i18n";
 defineOptions({
   name: "BreadcrumbsComponent",
 });

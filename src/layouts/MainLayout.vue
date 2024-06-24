@@ -18,7 +18,9 @@
         />
 
         <q-toolbar-title style="padding-left: 2px">
-          <span v-if="!leftDrawerOpen">{{ appConfig.name }}</span>
+          <span class="text-uppercase" v-if="!leftDrawerOpen">{{
+            appConfig.name
+          }}</span>
         </q-toolbar-title>
         <LangSwitcher class="z-max q-ml-sm" />
         <DarkSwitcher
@@ -69,7 +71,11 @@
           src="~assets/images/default.png"
           style="width: 32px; height: 32px"
         />
-        <q-toolbar-title shrink style="font-size: 14px; padding-left: 2px">
+        <q-toolbar-title
+          class="text-uppercase"
+          shrink
+          style="font-size: 14px; padding-left: 2px"
+        >
           {{ appConfig.name }}</q-toolbar-title
         >
         <q-icon name="email" size="sm"></q-icon>
