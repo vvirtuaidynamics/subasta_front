@@ -187,6 +187,8 @@ const condition = ref({
   value: "contains",
 });
 
+const query = ref("");
+
 onMounted(() => {
   refreshSearch();
 });
@@ -203,14 +205,12 @@ watch(
 );
 
 function refreshSearch() {
-  config.value.current = {
-    column: props.fields[0].value,
-    condition: {
-      label: "Contiene",
-      value: "contains",
-    },
-    value: "",
+  condition.value = {
+    label: $t("conditions.contains"),
+    value: "contains",
   };
+  column.value = props.fields[0].value;
+  query.value = "";
 }
 
 function search() {

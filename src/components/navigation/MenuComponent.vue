@@ -218,9 +218,11 @@ const permissions = ["user:create", "user:edit", "group:view"];
 const current_modules = ref([]);
 
 onBeforeMount(() => {
-  all_modules.forEach((m) => {
-    current_modules.value.push(m);
-  });
+  // all_modules.forEach((m) => {
+  //   current_modules.value.push(m);
+  // });
+
+  current_modules.value = all_modules;
 });
 
 onMounted(() => {
