@@ -92,6 +92,7 @@ export default {
     administration: "administración",
   },
   fields: {
+    date: "Fecha",
     about_me: "acerca de",
     action: "acción",
     active: "Activo",
@@ -220,6 +221,7 @@ export default {
     uploaderFiles: "Seleccionar fichero(s)",
     user: "Usuario",
     view: "Ver",
+    noOptions: "Sin opciones disponibles",
   },
   language: "Idioma",
   login: "Iniciar sesión",
@@ -296,6 +298,10 @@ export default {
     undefined: "El valor es requerido.",
     unique: "Ya existe un ${col} con este ${field}",
     validDate: "El valor ${val} no es una fecha válida.",
+  },
+  titles: {
+    filter: "Opciones de filtrado",
+    search: "Opciones de búsqueda",
   },
   welcome: "Bienvenido ",
   width: "Ancho",

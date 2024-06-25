@@ -12,12 +12,21 @@
     <q-card style="width: 400px">
       <q-card-section class="row items-center q-pb-none">
         <div class="text-h6">
-          <q-icon name="filter_alt" size="25px"></q-icon> Opciones de filtrado
+          <q-icon name="filter_alt" size="25px"></q-icon>
+          {{ $t("titles.filter") }}
         </div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
-      <q-card-section class="q-gutter-md"> </q-card-section>
+      <q-card-section>
+        <div class="row" v-for="(f, index) in fields" :key="`filter-${index}`">
+          <select-field
+            v-if="f.type === 'select'"
+            :name="`filter-${f.scope}`"
+            :label="f.label"
+          ></select-field>
+        </div>
+      </q-card-section>
       <q-card-actions align="right">
         <q-btn
           flat
@@ -39,6 +48,10 @@ defineOptions({
 
 import { ref, onMounted, watch } from "vue";
 import QBtnComponent from "src/components/base/QBtnComponent.vue";
+import SelectField from "src/components/base/form/SelectField.vue";
+//import DateField from "src/components/base/form/DateField.vue";
+import RangeField from "src/components/base/form/RangeField.vue";
+import { $t } from "src/services/i18n";
 
 const props = defineProps({
   fields: {

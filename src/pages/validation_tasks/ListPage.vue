@@ -33,8 +33,24 @@ const searchFields = [];
 
 const filterFields = [
   {
-    label: $t("fields.active"),
+    scope: "type",
+    label: $t("fields.type"),
     type: "select",
+  },
+  {
+    scope: "status",
+    label: $t("fields.status"),
+    type: "select",
+  },
+  {
+    scope: "validated_by",
+    label: $t("fields.validated_by"),
+    type: "select",
+  },
+  {
+    scope: "validated",
+    label: $t("fields.validated"),
+    type: "date",
   },
 ];
 

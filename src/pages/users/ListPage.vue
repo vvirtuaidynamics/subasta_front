@@ -50,6 +50,7 @@ const searchFields = [
 
 const filterFields = [
   {
+    scope: "active",
     label: $t("fields.active"),
     type: "select",
   },

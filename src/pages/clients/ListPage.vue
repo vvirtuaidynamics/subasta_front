@@ -50,8 +50,29 @@ const searchFields = [
 
 const filterFields = [
   {
-    value: "active",
+    scope: "company",
+    label: $t("fields.company"),
     type: "select",
+  },
+  {
+    scope: "industry",
+    label: $t("fields.industry"),
+    type: "select",
+  },
+  {
+    scope: "active",
+    label: $t("fields.active"),
+    type: "select",
+    options: [
+      {
+        label: "Si",
+        value: true,
+      },
+      {
+        label: "No",
+        value: false,
+      },
+    ],
   },
 ];
 

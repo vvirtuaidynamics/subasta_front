@@ -73,7 +73,7 @@
     <q-card style="min-width: 305px">
       <q-card-section class="row items-center q-pb-none">
         <div class="text-h6">
-          <q-icon name="search"></q-icon> Opciones de b&uacute;squeda
+          <q-icon name="search"></q-icon> {{ $t("titles.search") }}
         </div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
@@ -149,11 +149,17 @@ const props = defineProps({
     required: true,
     default: () => [],
   },
+  searched: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const $q = useQuasar();
 
 const emit = defineEmits(["search", "reset"]);
+
+const showDialog = ref(false);
 
 const conditions = [
   {
@@ -189,6 +195,9 @@ const condition = ref({
 
 const query = ref("");
 
+const querySearchError = ref(false);
+const querySearchMsg = ref($t("validations.required"));
+
 onMounted(() => {
   refreshSearch();
 });
@@ -204,6 +213,8 @@ watch(
   }
 );
 
+const onChangeQuery = () => {};
+
 function refreshSearch() {
   condition.value = {
     label: $t("conditions.contains"),
@@ -214,7 +225,16 @@ function refreshSearch() {
 }
 
 function search() {
-  emit("search", config.value.current);
+  if (query.value?.trim() !== "") {
+    emit("search", config.value.current);
+  } else {
+    $q.notify({
+      position: "top-right",
+      message: $t("errorValidation"),
+      type: "negative",
+      progress: true,
+    });
+  }
 }
 function resetSearch() {
   emit("reset");
