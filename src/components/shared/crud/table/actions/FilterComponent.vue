@@ -10,21 +10,50 @@
 
   <q-dialog v-model="showDialog" position="right" full-height>
     <q-card style="width: 400px">
-      <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6">
-          <q-icon name="filter_alt" size="25px"></q-icon>
-          {{ $t("titles.filter") }}
-        </div>
-        <q-space />
-        <q-btn icon="close" flat round dense v-close-popup />
-      </q-card-section>
+      <dialog-header-component
+        icon="filter_alt"
+        :title="$t('titles.filter')"
+        closable
+      />
       <q-card-section>
-        <div class="row" v-for="(f, index) in fields" :key="`filter-${index}`">
+        <div
+          class="row"
+          v-for="(f, index) in filters"
+          :key="`filter-${index}`"
+          style="padding-bottom: 10px"
+        >
           <select-field
-            v-if="f.type === 'select'"
-            :name="`filter-${f.scope}`"
+            :name="f.scope"
             :label="f.label"
-          ></select-field>
+            :options="f.options"
+            :modelValue="f.value"
+            :filterable="f.filterable"
+            @update="onUpdate"
+            v-if="f.type === 'select'"
+          />
+          <boolean-select-field
+            :name="f.scope"
+            :label="f.label"
+            :modelValue="f.value"
+            @update="onUpdate"
+            v-if="f.type === 'boolean'"
+          />
+          <date-range-field
+            :name="f.scope"
+            :label="f.label"
+            :modelValue="f.value"
+            @update="onUpdate"
+            v-if="f.type === 'date'"
+          />
+          <range-field
+            :name="f.scope"
+            :label="f.label"
+            :modelValue="f.value"
+            :min="f.min"
+            :max="f.max"
+            @update="onUpdate"
+            v-if="f.type === 'range'"
+          />
         </div>
       </q-card-section>
       <q-card-actions align="right">
@@ -32,7 +61,7 @@
           flat
           :label="$q.lang.label.reset"
           color="brown"
-          @click="resetFilter()"
+          @click="reset"
           v-if="filteredBy && filteredBy.length > 0"
         />
         <q-btn flat :label="$q.lang.label.close" color="red" v-close-popup />
@@ -42,16 +71,18 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from "vue";
+import DialogHeaderComponent from "src/components/base/DialogHeaderComponent.vue";
+import QBtnComponent from "src/components/base/QBtnComponent.vue";
+import SelectField from "src/components/base/form/SelectField.vue";
+import BooleanSelectField from "src/components/base/form/BooleanSelectField.vue";
+import DateRangeField from "src/components/base/form/DateRangeField.vue";
+import RangeField from "src/components/base/form/RangeField.vue";
+import { $t } from "src/services/i18n";
+
 defineOptions({
   name: "FilterComponent",
 });
-
-import { ref, onMounted, watch } from "vue";
-import QBtnComponent from "src/components/base/QBtnComponent.vue";
-import SelectField from "src/components/base/form/SelectField.vue";
-//import DateField from "src/components/base/form/DateField.vue";
-import RangeField from "src/components/base/form/RangeField.vue";
-import { $t } from "src/services/i18n";
 
 const props = defineProps({
   fields: {
@@ -65,7 +96,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["filter", "resetFilter"]);
+const emit = defineEmits(["filter", "reset"]);
 
 const config = ref({
   show: false,
@@ -73,143 +104,35 @@ const config = ref({
 
 const showDialog = ref(false);
 
+const filters = ref([]);
+
+const currentFilters = ref([]);
+
 onMounted(() => {
-  refresh();
+  filters.value = props.fields;
 });
-
-watch(() => props.fields, refresh);
-
-watch(
-  () => props.filteredBy,
-  () => {
-    if (!props.filteredBy || props.filteredBy.length === 0) {
-      props.fields.forEach(function (f) {
-        f.value = null;
-      });
-    }
-  }
-);
-
-function refresh() {
-  props.fields.forEach(function (f) {
-    if (f.type === "bool") {
-      f.options = f.all_options = [
-        {
-          label: "Si",
-          value: true,
-        },
-        {
-          label: "No",
-          value: false,
-        },
-      ];
-    } else if (f.type === "relation" && f.collection) {
-      loadRelation(f);
-    }
-  });
-}
-
-async function loadRelation(f) {
-  let collection = f.collection;
-  let presentables = f.presentables;
-  let values = [];
-  if (!presentables || presentables.length === 0) {
-    presentables = ["id"];
-  }
-  await pb
-    .collection(collection)
-    .getFullList()
-    .then((records) => {
-      records.forEach(function (r) {
-        let valor = "";
-        presentables.forEach(function (p) {
-          valor += r[p] + " > ";
-        });
-        if (valor !== "") {
-          valor = valor.substring(0, valor.lastIndexOf(" >"));
-        }
-        values.push({
-          label: valor,
-          value: r["id"],
-        });
-      });
-      f.options = f.all_options = values;
-    })
-    .catch((errResult) => {
-      values = [];
-    });
-}
-
-function updateProxyDateFilter(field) {
-  if (field.value) {
-    let date = field.value.split(" - ");
-    if (date[0] === date[1]) {
-      field.proxy = date[0];
-    } else {
-      field.proxy = {
-        from: date[0],
-        to: date[1],
-      };
-    }
-  }
-}
-
-function saveDateFilter(name, field) {
-  if (field.proxy) {
-    if (field.proxy.from) {
-      field.value = field.proxy.from + " - " + field.proxy.to;
-    } else {
-      field.value = field.proxy + " - " + field.proxy;
-    }
-  } else {
-    field.value = null;
-  }
-  filter(name);
-}
-
-function clearDateFilter(name, field) {
-  field.proxy = field.value = null;
-  filter(name);
-}
-
-function filterFn(val, update, abort, f) {
-  setTimeout(() => {
-    update(
-      () => {
-        if (val === "") {
-          f.options = f.all_options;
-        } else {
-          const needle = val.toLowerCase();
-          f.options = f.all_options.filter((v) =>
-            v.label
-              ? v.label.toLowerCase().indexOf(needle) > -1
-              : v.toLowerCase().indexOf(needle) > -1
-          );
-        }
-      },
-      (ref) => {
-        if (
-          val !== "" &&
-          ref.options.length > 0 &&
-          ref.getOptionIndex() === -1
-        ) {
-          ref.moveOptionSelection(1, true);
-          ref.toggleOption(ref.options[ref.optionIndex], true);
-        }
-      }
-    );
-  }, 100);
-}
-
-function abortFilterFn() {
-  // body...
-}
 
 function filter(f) {
   emit("filter", f);
 }
 
-function resetFilter() {
-  emit("resetFilter");
+function reset() {
+  emit("reset");
 }
+
+const onUpdate = (name, val) => {
+  let current = filters.value.find((f) => f.scope === name);
+  current.value =
+    val !== null
+      ? current.type === "select" || current.type === "boolean"
+        ? Array.isArray(val)
+          ? val
+          : [val]
+        : val
+      : null;
+  currentFilters.value = filters.value.filter(
+    (f) => f.value && f.value !== null
+  );
+  emit("filter", currentFilters.value);
+};
 </script>

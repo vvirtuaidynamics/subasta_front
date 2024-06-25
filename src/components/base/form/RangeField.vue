@@ -2,6 +2,7 @@
   <label v-if="label">{{ label }}</label>
   <q-range
     v-model="model"
+    :name="name"
     :min="min"
     :max="max"
     label-always
@@ -63,9 +64,9 @@ onMounted(() => {
 
 const onUpdate = (val) => {
   if (val.min === props.min && val.max === props.max) {
-    emits("update", null);
+    emits("update", props.name, null);
   } else {
-    emits("update", val);
+    emits("update", props.name, val);
   }
 };
 </script>

@@ -39,6 +39,8 @@
             ></visible-columns-component>
             <filter-component
               :fields="filterFields"
+              @filter="onFilterTable"
+              @reset="onFilterReset"
               v-if="filterFields.length > 0"
             ></filter-component>
             <q-btn-component
@@ -140,12 +142,12 @@
             :object="[props.row]"
             v-if="has_history"
           ></history-component>
+          <see-component :object="[props.row]" v-if="has_see"></see-component>
           <form-component
             :object="[props.row]"
             :object_label="label_singular"
             v-if="has_edit"
           ></form-component>
-          <see-component :object="[props.row]" v-if="has_see"></see-component>
           <delete-component
             :objects="[props.row]"
             size="xs"
@@ -200,15 +202,15 @@
                       :object="[props.row]"
                       v-if="has_history"
                     ></history-component>
+                    <see-component
+                      :object="[props.row]"
+                      v-if="has_see"
+                    ></see-component>
                     <form-component
                       :object="[props.row]"
                       :object_label="label_singular"
                       v-if="has_edit"
                     ></form-component>
-                    <see-component
-                      :object="[props.row]"
-                      v-if="has_see"
-                    ></see-component>
                     <delete-component
                       :objects="[props.row]"
                       size="xs"
@@ -316,6 +318,12 @@ onMounted(() => {
     .filter((c) => c.type !== "hidden" && !c.required)
     .map((c) => c.field);
 });
+
+const onFilterTable = (filters) => {
+  console.log(filters);
+};
+
+const onFilterReset = () => {};
 </script>
 <style>
 .q-table__top {

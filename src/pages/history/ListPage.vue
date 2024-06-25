@@ -36,21 +36,25 @@ const filterFields = [
     scope: "user",
     label: $t("fields.user"),
     type: "select",
+    value: null,
   },
   {
     scope: "action",
     label: $t("fields.action"),
     type: "select",
+    value: null,
   },
   {
     scope: "model",
     label: $t("fields.model"),
     type: "select",
+    value: null,
   },
   {
     scope: "date",
     label: $t("fields.date"),
     type: "date",
+    value: null,
   },
 ];
 

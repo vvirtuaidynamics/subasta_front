@@ -62,17 +62,37 @@ const filterFields = [
   {
     scope: "active",
     label: $t("fields.active"),
+    type: "boolean",
+    value: null,
+  },
+  {
+    scope: "gender",
+    label: $t("fields.gender"),
     type: "select",
+    filterable: false,
     options: [
       {
-        label: "Si",
-        value: true,
+        label: $t("labels.male"),
+        value: "male",
       },
       {
-        label: "No",
-        value: false,
+        label: $t("labels.female"),
+        value: "female",
+      },
+      {
+        label: $t("labels.other"),
+        value: "other",
       },
     ],
+    value: null,
+  },
+  {
+    scope: "age",
+    label: $t("labels.age"),
+    type: "range",
+    min: 18,
+    max: 120,
+    value: null,
   },
 ];
 

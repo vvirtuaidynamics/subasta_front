@@ -8,13 +8,7 @@
 
   <q-dialog v-model="showDialog">
     <q-card style="width: 600px">
-      <q-card-section class="row items-center">
-        <div class="text-h6">
-          <q-icon :name="icon" size="25px"></q-icon> {{ title }}
-        </div>
-        <q-space />
-        <q-btn icon="close" flat round dense v-close-popup />
-      </q-card-section>
+      <dialog-header-component :icon="icon" :title="title" closable />
       <q-card-section>
         asdfasdf asdf adsf gsdfg sdfg sdfg sdgf sdfgs dfgs dfgsd fgsdfg dsg sdfg
         sdfgs dfg sdfgs dfg sdfg</q-card-section
@@ -34,6 +28,7 @@ defineOptions({
 });
 
 import { ref, onMounted, watch } from "vue";
+import DialogHeaderComponent from "src/components/base/DialogHeaderComponent.vue";
 import QBtnComponent from "src/components/base/QBtnComponent.vue";
 import { $t } from "src/services/i18n";
 

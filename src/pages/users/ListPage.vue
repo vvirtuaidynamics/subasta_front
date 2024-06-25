@@ -52,7 +52,8 @@ const filterFields = [
   {
     scope: "active",
     label: $t("fields.active"),
-    type: "select",
+    type: "boolean",
+    value: null,
   },
 ];
 
