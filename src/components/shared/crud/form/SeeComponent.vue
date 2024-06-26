@@ -6,14 +6,27 @@
     @click="showDialog = true"
   />
 
-  <q-dialog v-model="showDialog" full-height>
+  <q-dialog v-model="showDialog">
     <q-card style="width: 600px">
       <dialog-header-component
         icon="remove_red_eye"
         :title="$t('titles.see')"
         closable
       />
-      <q-card-section class="q-gutter-md"> </q-card-section>
+      <q-card-section>
+        <div
+          class="row"
+          v-for="(f, index) in fields.filter((ff) => ff.name !== 'actions')"
+          :key="`field-${index}`"
+        >
+          <q-input
+            readonly
+            :label="f.label"
+            :model-value="object[f.name]"
+            style="width: 100%"
+          />
+        </div>
+      </q-card-section>
       <q-card-actions align="right">
         <q-btn flat :label="$q.lang.label.close" color="red" v-close-popup />
       </q-card-actions>
@@ -31,6 +44,10 @@ defineOptions({
 });
 
 const props = defineProps({
+  fields: {
+    type: Array,
+    default: () => [],
+  },
   object: {
     type: Object,
     required: true,

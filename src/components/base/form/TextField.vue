@@ -1,109 +1,106 @@
+<template>
+  <q-input
+    :ref="refEl"
+    :name="props.name"
+    :label="props.label"
+    v-bind="fieldOptions"
+    v-model="textValue"
+    class="full-width"
+    @update:model-value="(val) => update(val)"
+  >
+    <template #append v-if="props.options && props.options?.appendIcon">
+      <q-icon :name="props.options?.appendIcon" />
+    </template>
+    <template #prepend v-if="props.options && props.options?.prependIcon">
+      <q-icon :name="props.options?.prependIcon" />
+    </template>
+    <template #loading="props" v-if="props.data && props.data['loading']">
+      <q-spinner-facebook color="info" />
+    </template>
+  </q-input>
+</template>
+
 <script setup>
-import {computed, onBeforeMount, onMounted, ref} from "vue";
-import {forms} from "src/config/theme/forms";
-import {maxLength, minLength, required} from "src/services/validators";
+import { computed, onBeforeMount, onMounted, ref } from "vue";
+import { forms } from "src/config/theme/forms";
+import { maxLength, minLength, required } from "src/services/validators";
 
 defineOptions({
   name: "TextField",
 });
 
 const props = defineProps({
-  modelValue: {
-    type: String,
-    default: ""
-  },
+  modelValue: String,
   name: {
     type: String, //name, label, title
-    required: true
+    required: true,
   },
   label: {
     type: String, //name, label, title
-    required: true
+    required: true,
   },
   options: {
     type: Object,
-    default: () => ({})
-  }
-})
+    default: () => ({}),
+  },
+});
 
-const emits = defineEmits(["update", "error"])
+const emits = defineEmits(["update", "error"]);
 
-const refEl = ref()
-let textValue = ref("")
-const rules = ref([])
-const fieldOptions = {...forms.text, ...props.options}
-const fieldRules = {...rules.value, ...props.options?.rules ?? []}
+const refEl = ref();
+let textValue = ref("");
+const rules = ref([]);
+const fieldOptions = { ...forms.text, ...props.options };
+const fieldRules = { ...rules.value, ...(props.options?.rules ?? []) };
 
 onBeforeMount(() => {
   if (props.field && props.field?.options) {
     if (props.options?.required) {
-      rules.value.push(required)
+      rules.value.push(required);
     }
     if (props.options?.min && !Number.isNaN(props.options?.min)) {
-      rules.value.push(minLength(props.options?.min))
+      rules.value.push(minLength(props.options?.min));
     }
     if (props.options?.max && !Number.isNaN(props.options?.max)) {
-      rules.value.push(maxLength(props.options?.max))
+      rules.value.push(maxLength(props.options?.max));
     }
   }
-})
+});
 onMounted(() => {
   if (props.options && props.options?.value) {
-    textValue.value = props.options.value
+    textValue.value = props.options.value;
   }
-  if (props.modelValue.length > 0)
-    textValue.value = props.modelValue
-
-  // console.log("obj: ", textField.value)
-})
+  textValue.value = props.modelValue;
+});
 
 function reset() {
-  textValue.value = ''
-  emits('update', textValue.value)
-  resetValidation()
+  textValue.value = "";
+  emits("update", textValue.value);
+  resetValidation();
 }
 
 function update(val) {
-  textValue.value = val
-  emits('update', textValue.value)
+  textValue.value = val;
+  emits("update", textValue.value);
 }
 
 function validate() {
-  refEl.value.validate()
+  refEl.value.validate();
 }
 
 function resetValidation() {
-  refEl.value.resetValidation()
+  refEl.value.resetValidation();
 }
 
 const value = computed(() => {
-  return textValue.value
-})
+  return textValue.value;
+});
 defineExpose({
-  reset, validate, resetValidation, value
-})
-
+  reset,
+  validate,
+  resetValidation,
+  value,
+});
 </script>
 
-<template>
-  <q-input :ref="refEl" :name="props.name" :label="props.label" v-bind="fieldOptions" v-model="textValue"
-           class="full-width"
-           @update:model-value="(val)=>update(val)">
-    <template #append v-if="props.options && props.options?.appendIcon">
-      <q-icon :name="props.options?.appendIcon"/>
-    </template>
-    <template #prepend v-if="props.options && props.options?.prependIcon">
-      <q-icon :name="props.options?.prependIcon"/>
-    </template>
-    <template #loading="props" v-if="props.data && props.data['loading']">
-      <q-spinner-facebook color="info"/>
-    </template>
-
-  </q-input>
-
-</template>
-
-<style scoped lang="scss">
-
-</style>
-
+<style scoped lang="scss"></style>

@@ -7,6 +7,17 @@ export const forms = {
     square: false,
     outlined: false,
     dense: false,
+    readonly: false,
+  },
+  date: {
+    filled: false,
+    standout: false, //puede recibir un bg-[color] y text-[color]
+    borderless: false,
+    rounded: false,
+    square: false,
+    outlined: false,
+    dense: false,
+    readonly: true,
   },
   editor: {
     filled: false,
@@ -37,7 +48,6 @@ export const forms = {
     outlined: false,
     dense: false,
     optionsDense: false,
-
   },
   button: {
     round: false,

@@ -7,12 +7,14 @@
     :flat="flat"
     :no-caps="no_caps"
     :disable="disable"
+    :outline="outline"
     :rounded="rounded"
     :square="square"
     :dense="dense"
     :align="align"
     :padding="padding"
     :text-color="text_color"
+    :label="label"
     @click="onClick"
   >
     <q-tooltip-component

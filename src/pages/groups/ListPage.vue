@@ -9,7 +9,8 @@
       :columns="columns"
       :rows="rows"
       :searchFields="searchFields"
-      :filterFields="filterFields"
+      :create_fields="fields"
+      :update_fields="fields"
       :has_delete="false"
     ></table-component>
   </q-page>
@@ -36,8 +37,6 @@ const searchFields = [
   },
 ];
 
-const filterFields = [];
-
 const columns = [
   {
     field: "name",
@@ -53,6 +52,14 @@ const columns = [
     name: "actions",
     label: "Acciones",
     type: "actions",
+  },
+];
+
+const fields = [
+  {
+    name: "name",
+    label: $t("fields.name"),
+    type: "text",
   },
 ];
 

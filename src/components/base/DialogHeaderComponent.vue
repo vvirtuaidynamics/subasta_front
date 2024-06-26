@@ -4,6 +4,7 @@
     <q-toolbar-title style="padding-left: 5px">{{ title }}</q-toolbar-title>
     <q-btn flat round dense icon="close" v-close-popup />
   </q-toolbar>
+  <q-separator />
 </template>
 
 <script setup>

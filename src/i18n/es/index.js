@@ -213,6 +213,7 @@ export default {
     rols: "Roles",
     rotate: "Rotar",
     save: "Guardar",
+    saveAndAddOther: "Guardar y crear otro",
     search: "Buscar",
     selectPicture: "Seleccione una imagen",
     show: "Mostrar",

@@ -9,8 +9,8 @@
   >
     <template v-slot:append>
       <q-icon
-        name="mdi-close-circle-outline"
-        class="cursor-pointer"
+        name="cancel"
+        class="cursor-pointer text-grey"
         @click="clear"
         v-if="model"
       />
@@ -28,6 +28,7 @@
                 v-close-popup
                 :tooltips="$q.lang.label.ok"
                 @click="save"
+                v-if="proxy"
               />
 
               <q-btn-component

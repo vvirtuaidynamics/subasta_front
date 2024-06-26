@@ -9,7 +9,7 @@
   />
 
   <q-dialog v-model="showDialog" position="right" full-height>
-    <q-card style="width: 400px">
+    <q-card style="width: 320px">
       <dialog-header-component
         icon="filter_alt"
         :title="$t('titles.filter')"
