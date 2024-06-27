@@ -3,6 +3,10 @@
     :ref="refEl"
     :name="props.name"
     :label="props.label"
+    :rules="rules"
+    hide-bottom-space
+    lazy-rules
+    reactive-rules
     v-bind="fieldOptions"
     v-model="textValue"
     class="full-width"
@@ -23,7 +27,7 @@
 <script setup>
 import { computed, onBeforeMount, onMounted, ref } from "vue";
 import { forms } from "src/config/theme/forms";
-import { maxLength, minLength, required } from "src/services/validators";
+import { $t } from "src/services/i18n";
 
 defineOptions({
   name: "TextField",
@@ -54,16 +58,20 @@ const fieldOptions = { ...forms.text, ...props.options };
 const fieldRules = { ...rules.value, ...(props.options?.rules ?? []) };
 
 onBeforeMount(() => {
-  if (props.field && props.field?.options) {
-    if (props.options?.required) {
-      rules.value.push(required);
-    }
-    if (props.options?.min && !Number.isNaN(props.options?.min)) {
-      rules.value.push(minLength(props.options?.min));
-    }
-    if (props.options?.max && !Number.isNaN(props.options?.max)) {
-      rules.value.push(maxLength(props.options?.max));
-    }
+  if (props.options?.required) {
+    rules.value.push((val) => {
+      return !!val || $t("validations.required");
+    });
+  }
+  if (props.options?.type === "email") {
+    rules.value.push((val, rules) => {
+      return rules.email(val) || "Please enter a valid email address";
+    });
+  }
+  if (props.options?.rules) {
+    props.options.rules.map((rule) => {
+      rules.value.push(rule);
+    });
   }
 });
 onMounted(() => {
@@ -73,6 +81,12 @@ onMounted(() => {
   textValue.value = props.modelValue;
 });
 
+const myRules = (val, rules) => {
+  return new Promise((resolve, reject) => {
+    resolve(!!val || $t("validations.required"));
+  });
+};
+
 function reset() {
   textValue.value = "";
   emits("update", textValue.value);
@@ -81,15 +95,7 @@ function reset() {
 
 function update(val) {
   textValue.value = val;
-  emits("update", textValue.value);
-}
-
-function validate() {
-  refEl.value.validate();
-}
-
-function resetValidation() {
-  refEl.value.resetValidation();
+  emits("update", props.name, textValue.value);
 }
 
 const value = computed(() => {
@@ -97,8 +103,6 @@ const value = computed(() => {
 });
 defineExpose({
   reset,
-  validate,
-  resetValidation,
   value,
 });
 </script>

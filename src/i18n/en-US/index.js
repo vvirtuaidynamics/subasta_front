@@ -304,4 +304,7 @@ export default {
   },
   welcome: "Welcome ",
   width: "Width",
+  alerts: {
+    noChanges: "No modifications have occurred",
+  },
 };
