@@ -28,6 +28,8 @@
             <form-component
               size="sm"
               :object_label="label_singular"
+              :fields="create_fields"
+              v-if="create_fields.length > 0"
             ></form-component>
             <delete-component
               :objects="objects_selected"
@@ -39,6 +41,8 @@
             ></visible-columns-component>
             <filter-component
               :fields="filterFields"
+              @filter="onFilterTable"
+              @reset="onFilterReset"
               v-if="filterFields.length > 0"
             ></filter-component>
             <q-btn-component
@@ -140,12 +144,13 @@
             :object="[props.row]"
             v-if="has_history"
           ></history-component>
+          <see-component :fields="columns" :object="props.row" v-if="has_see" />
           <form-component
-            :object="[props.row]"
+            :object="props.row"
             :object_label="label_singular"
-            v-if="has_edit"
+            :fields="update_fields"
+            v-if="update_fields.length > 0"
           ></form-component>
-          <see-component :object="[props.row]" v-if="has_see"></see-component>
           <delete-component
             :objects="[props.row]"
             size="xs"
@@ -200,15 +205,17 @@
                       :object="[props.row]"
                       v-if="has_history"
                     ></history-component>
-                    <form-component
-                      :object="[props.row]"
-                      :object_label="label_singular"
-                      v-if="has_edit"
-                    ></form-component>
                     <see-component
-                      :object="[props.row]"
+                      :fields="columns"
+                      :object="props.row"
                       v-if="has_see"
-                    ></see-component>
+                    />
+                    <form-component
+                      :object="props.row"
+                      :object_label="label_singular"
+                      :fields="update_fields"
+                      v-if="update_fields.length > 0"
+                    ></form-component>
                     <delete-component
                       :objects="[props.row]"
                       size="xs"
@@ -279,6 +286,14 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  update_fields: {
+    type: Array,
+    default: () => [],
+  },
+  create_fields: {
+    type: Array,
+    default: () => [],
+  },
   has_add: {
     type: Boolean,
     default: true,
@@ -316,6 +331,12 @@ onMounted(() => {
     .filter((c) => c.type !== "hidden" && !c.required)
     .map((c) => c.field);
 });
+
+const onFilterTable = (filters) => {
+  console.log(filters);
+};
+
+const onFilterReset = () => {};
 </script>
 <style>
 .q-table__top {

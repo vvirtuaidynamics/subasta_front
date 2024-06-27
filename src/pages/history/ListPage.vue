@@ -31,13 +31,38 @@ const icon = "mdi-account-clock-outline";
 
 const searchFields = [];
 
-const filterFields = [];
+const filterFields = [
+  {
+    scope: "user",
+    label: $t("fields.user"),
+    type: "select",
+    value: null,
+  },
+  {
+    scope: "action",
+    label: $t("fields.action"),
+    type: "select",
+    value: null,
+  },
+  {
+    scope: "model",
+    label: $t("fields.model"),
+    type: "select",
+    value: null,
+  },
+  {
+    scope: "date",
+    label: $t("fields.date"),
+    type: "date",
+    value: null,
+  },
+];
 
 const columns = [
   {
     field: "created_at",
     name: "created_at",
-    label: $t("fields.created_at"),
+    label: $t("fields.date"),
     align: "left",
     sortable: true,
     type: "date",
@@ -79,7 +104,7 @@ const columns = [
     field: "message",
     name: "message",
     label: $t("fields.message"),
-    align: "center",
+    align: "left",
     type: "text",
   },
   {

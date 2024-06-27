@@ -1,9 +1,11 @@
 <template>
-  <q-checkbox
+  <label for="" v-if="label">{{ label }}</label>
+  <q-option-group
+    :type="toggle ? 'toggle' : 'checkbox'"
     v-model="model"
-    :label="label"
+    :options="options"
     :left-label="leftLabel"
-    :name="name"
+    :inline="inline"
     :dense="dense"
     @update:model-value="onUpdate"
   />
@@ -12,13 +14,13 @@
 import { ref, onMounted } from "vue";
 
 defineOptions({
-  name: "CheckboxField",
+  name: "CheckboxGroupField",
 });
 
 const props = defineProps({
   modelValue: {
-    type: Boolean,
-    default: false,
+    type: Array,
+    default: () => [],
   },
   name: {
     type: String,
@@ -32,9 +34,22 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  inline: {
+    type: Boolean,
+    default: false,
+  },
+  toggle: {
+    type: Boolean,
+    default: false,
+  },
   dense: {
     type: Boolean,
     default: false,
+  },
+  options: {
+    type: Array,
+    required: true,
+    default: () => [],
   },
 });
 
@@ -47,6 +62,6 @@ onMounted(() => {
 });
 
 const onUpdate = (val) => {
-  emits("update", props.name, val);
+  emits("update", val);
 };
 </script>

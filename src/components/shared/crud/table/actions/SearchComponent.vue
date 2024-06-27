@@ -70,14 +70,12 @@
   </q-btn-group>
 
   <q-dialog v-model="showDialog" @before-show="querySearchError = false">
-    <q-card style="min-width: 305px">
-      <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6">
-          <q-icon name="search"></q-icon> Opciones de b&uacute;squeda
-        </div>
-        <q-space />
-        <q-btn icon="close" flat round dense v-close-popup />
-      </q-card-section>
+    <q-card>
+      <dialog-header-component
+        icon="search"
+        :title="$t('titles.search')"
+        closable
+      />
       <q-card-section class="q-gutter-md">
         <q-select
           v-model="column"
@@ -134,6 +132,7 @@
 </template>
 
 <script setup>
+import DialogHeaderComponent from "src/components/base/DialogHeaderComponent.vue";
 import QBtnComponent from "src/components/base/QBtnComponent.vue";
 import { $t } from "src/services/i18n";
 import { useQuasar } from "quasar";
@@ -149,11 +148,17 @@ const props = defineProps({
     required: true,
     default: () => [],
   },
+  searched: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const $q = useQuasar();
 
 const emit = defineEmits(["search", "reset"]);
+
+const showDialog = ref(false);
 
 const conditions = [
   {
@@ -189,6 +194,9 @@ const condition = ref({
 
 const query = ref("");
 
+const querySearchError = ref(false);
+const querySearchMsg = ref($t("validations.required"));
+
 onMounted(() => {
   refreshSearch();
 });
@@ -204,6 +212,10 @@ watch(
   }
 );
 
+const onChangeQuery = (val) => {
+  querySearchError.value = false;
+};
+
 function refreshSearch() {
   condition.value = {
     label: $t("conditions.contains"),
@@ -214,7 +226,17 @@ function refreshSearch() {
 }
 
 function search() {
-  emit("search", config.value.current);
+  if (query.value?.trim() !== "") {
+    emit("search", config.value.current);
+  } else {
+    querySearchError.value = true;
+    $q.notify({
+      position: "top-right",
+      message: $t("errorValidation"),
+      type: "negative",
+      progress: true,
+    });
+  }
 }
 function resetSearch() {
   emit("reset");

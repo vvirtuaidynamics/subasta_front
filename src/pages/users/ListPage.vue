@@ -10,6 +10,8 @@
       :rows="rows"
       :searchFields="searchFields"
       :filterFields="filterFields"
+      :create_fields="create_fields"
+      :update_fields="update_fields"
       :has_delete="false"
     ></table-component>
   </q-page>
@@ -50,8 +52,10 @@ const searchFields = [
 
 const filterFields = [
   {
+    scope: "active",
     label: $t("fields.active"),
-    type: "select",
+    type: "boolean",
+    value: null,
   },
 ];
 
@@ -101,6 +105,63 @@ const columns = [
     name: "actions",
     label: "Acciones",
     type: "actions",
+  },
+];
+
+const create_fields = [
+  {
+    name: "name",
+    label: $t("fields.name"),
+    type: "text",
+  },
+  {
+    name: "first_name",
+    label: $t("fields.first_name"),
+    type: "text",
+  },
+  {
+    name: "last_name",
+    label: $t("fields.last_name"),
+    type: "text",
+  },
+  {
+    name: "email",
+    label: $t("fields.email"),
+    type: "text",
+  },
+  {
+    name: "active",
+    label: $t("fields.active"),
+    type: "checkbox",
+  },
+];
+
+const update_fields = [
+  {
+    name: "username",
+    readonly: true,
+    label: $t("fields.username"),
+    type: "text",
+  },
+  {
+    name: "first_name",
+    label: $t("fields.first_name"),
+    type: "text",
+  },
+  {
+    name: "last_name",
+    label: $t("fields.last_name"),
+    type: "text",
+  },
+  {
+    name: "email",
+    label: $t("fields.email"),
+    type: "text",
+  },
+  {
+    name: "active",
+    label: $t("fields.active"),
+    type: "checkbox",
   },
 ];
 

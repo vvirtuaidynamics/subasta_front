@@ -148,7 +148,7 @@
       <li>:label="etiqueta a mostrar encima"</li>
       <li>:min="0" (mínimo)</li>
       <li>:max="100" (máximo)</li>
-      <li>@update="functionName"</li>
+      <li>@update="functionName" (parametros: name, val)</li>
     </ul>
     <div class="row">
       <div class="col">
@@ -157,7 +157,7 @@
           :min="0"
           :max="100"
           name="range_1"
-          @update="(val) => (range = val)"
+          @update="(name, val) => (range = val)"
         />
         <span v-if="range"
           >Mínimo <b>{{ range.min }}</b

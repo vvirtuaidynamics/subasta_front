@@ -10,6 +10,8 @@
       :rows="rows"
       :searchFields="searchFields"
       :filterFields="filterFields"
+      :create_fields="fields"
+      :update_fields="fields"
       :has_delete="false"
     ></table-component>
   </q-page>
@@ -48,10 +50,53 @@ const searchFields = [
   },
 ];
 
+const gender_options = [
+  {
+    label: $t("labels.male"),
+    value: "male",
+  },
+  {
+    label: $t("labels.female"),
+    value: "female",
+  },
+  {
+    label: $t("labels.other"),
+    value: "other",
+  },
+];
+
 const filterFields = [
   {
-    value: "active",
+    scope: "company",
+    label: $t("fields.company"),
     type: "select",
+  },
+  {
+    scope: "industry",
+    label: $t("fields.industry"),
+    type: "select",
+  },
+  {
+    scope: "active",
+    label: $t("fields.active"),
+    type: "boolean",
+    value: null,
+  },
+  {
+    scope: "gender",
+    label: $t("fields.gender"),
+    type: "select",
+    filterable: false,
+    options: gender_options,
+    value: null,
+  },
+  {
+    scope: "age",
+    label: $t("labels.age"),
+    type: "range",
+    min: 18,
+    max: 120,
+    value: null,
   },
 ];
 
@@ -140,6 +185,109 @@ const columns = [
     name: "actions",
     label: "Acciones",
     type: "actions",
+  },
+];
+
+const fields = [
+  {
+    name: "first_name",
+    label: $t("fields.first_name"),
+    type: "text",
+    props: {
+      required: true,
+      dense: true,
+      clearable: true,
+    },
+  },
+  {
+    name: "last_name",
+    label: $t("fields.last_name"),
+    type: "text",
+    props: {
+      required: true,
+      dense: true,
+      clearable: true,
+    },
+  },
+  {
+    name: "email",
+    label: $t("fields.email"),
+    type: "text",
+    props: {
+      required: true,
+      dense: true,
+      clearable: true,
+    },
+  },
+  {
+    name: "gender",
+    label: $t("fields.gender"),
+    type: "select",
+    filterable: false,
+    options: gender_options,
+    props: {
+      required: true,
+      dense: true,
+      clearable: true,
+    },
+  },
+  {
+    name: "date_of_birth",
+    label: $t("fields.date_of_birth"),
+    type: "date",
+    props: {
+      required: true,
+      dense: true,
+      clearable: true,
+    },
+  },
+  {
+    name: "address",
+    label: $t("fields.address"),
+    type: "text",
+    props: {
+      required: true,
+      dense: true,
+      clearable: true,
+    },
+  },
+  {
+    name: "phone",
+    label: $t("fields.phone"),
+    type: "text",
+    props: {
+      required: true,
+      dense: true,
+      clearable: true,
+    },
+  },
+  {
+    name: "company",
+    label: $t("fields.company"),
+    type: "select",
+    props: {
+      required: true,
+      dense: true,
+      clearable: true,
+    },
+  },
+  {
+    name: "industry",
+    label: $t("fields.industry"),
+    type: "select",
+    props: {
+      required: true,
+      dense: true,
+      clearable: true,
+    },
+  },
+  {
+    name: "active",
+    label: $t("fields.active"),
+    type: "checkbox",
+    props: {
+      dense: true,
+    },
   },
 ];
 

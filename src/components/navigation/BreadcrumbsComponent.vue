@@ -1,13 +1,24 @@
 <template>
   <div class="q-pa-md">
-    <q-breadcrumbs separator-color="primary" style="font-size: 14px">
+    <q-breadcrumbs
+      style="font-size: 14px"
+      :active-color="$q.dark.isActive ? 'white' : 'dark'"
+      class="text-primary"
+    >
+      <template v-slot:separator>
+        <q-icon
+          size="1.2em"
+          name="arrow_forward"
+          :color="$q.dark.isActive ? 'white' : 'dark'"
+        />
+      </template>
       <q-breadcrumbs-el
         :label="$t('models.home')"
         icon="home"
         class="cursor-pointer"
         @click="setHome"
       />
-      <q-breadcrumbs-el :label="nav.label" :icon="nav.icon" disable />
+      <q-breadcrumbs-el :label="nav.label" :icon="nav.icon" />
     </q-breadcrumbs>
   </div>
   <q-separator></q-separator>
@@ -15,6 +26,7 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { $t } from "src/services/i18n";
+import { useQuasar } from "quasar";
 defineOptions({
   name: "BreadcrumbsComponent",
 });
@@ -27,6 +39,7 @@ const props = defineProps({
 });
 const emit = defineEmits(["change-url"]);
 const $router = useRouter();
+const $q = useQuasar();
 function setHome() {
   $router.push({ name: "crud" });
   emit("change-url", null);
