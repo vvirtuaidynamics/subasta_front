@@ -86,6 +86,7 @@ onBeforeMount(() => {
     }
   }
 });
+
 onMounted(() => {
   model.value = props.modelValue;
 });
@@ -104,6 +105,7 @@ function resetValidation() {
 
 const ok = (val) => {
   model.value = val;
+  emits("update", props.name, val);
 };
 
 const clear = () => {

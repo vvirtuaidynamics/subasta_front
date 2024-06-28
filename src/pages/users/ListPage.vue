@@ -18,6 +18,7 @@
 </template>
 
 <script setup>
+import { required } from "@vuelidate/validators";
 import TableComponent from "components/shared/crud/table/TableComponent.vue";
 import { $t } from "src/services/i18n";
 
@@ -113,11 +114,17 @@ const create_fields = [
     name: "name",
     label: $t("fields.name"),
     type: "text",
+    props: {
+      required: true,
+    },
   },
   {
     name: "first_name",
     label: $t("fields.first_name"),
     type: "text",
+    props: {
+      rules: [(val) => !!val || $t("validations.required")],
+    },
   },
   {
     name: "last_name",
@@ -128,6 +135,10 @@ const create_fields = [
     name: "email",
     label: $t("fields.email"),
     type: "text",
+    props: {
+      required: true,
+      type: "email",
+    },
   },
   {
     name: "active",

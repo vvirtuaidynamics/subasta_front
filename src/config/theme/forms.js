@@ -6,7 +6,7 @@ export const forms = {
     rounded: false,
     square: false,
     outlined: false,
-    dense: false,
+    dense: true,
     readonly: false,
   },
   date: {

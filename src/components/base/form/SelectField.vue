@@ -47,7 +47,7 @@ const props = defineProps({
   },
   hidde_bottom_space: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   name: {
     type: String,

@@ -312,6 +312,9 @@ export default {
     history: "Histórico",
     see: "Datos",
   },
+  alerts: {
+    noChanges: "No han ocurrido modificaciones",
+  },
   welcome: "Bienvenido ",
   width: "Ancho",
 };
