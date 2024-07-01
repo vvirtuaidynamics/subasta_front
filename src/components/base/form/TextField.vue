@@ -3,7 +3,7 @@
     :ref="refEl"
     :name="props.name"
     :label="props.label"
-    :rules="rules"
+    :rules="fieldRules"
     hide-bottom-space
     bottom-slots
     hide-hint
@@ -14,10 +14,10 @@
     class="full-width"
     @update:model-value="(val) => update(val)"
   >
-    <template #hint v-if="options?.help">
+    <template #hint v-if="fieldHelp.length > 0">
       <ul style="padding: 0; margin-top: 0px; margin-bottom: 0px">
         <li
-          v-for="(h, index) in options?.help"
+          v-for="(h, index) in fieldHelp"
           :key="`help-${index}`"
           style="list-style: none"
         >
@@ -38,10 +38,9 @@
 </template>
 
 <script setup>
-import { computed, onBeforeMount, onMounted, ref } from "vue";
+import { onBeforeMount, onMounted, ref } from "vue";
 import { forms } from "src/config/theme/forms";
-import { $t } from "src/services/i18n";
-import { rules as defaultRules } from "src/helpers/validations";
+import { validations } from "src/helpers/validations";
 
 defineOptions({
   name: "TextField",
@@ -50,11 +49,11 @@ defineOptions({
 const props = defineProps({
   modelValue: String,
   name: {
-    type: String, //name, label, title
+    type: String,
     required: true,
   },
   label: {
-    type: String, //name, label, title
+    type: String,
     required: true,
   },
   options: {
@@ -63,64 +62,25 @@ const props = defineProps({
   },
 });
 
-const emits = defineEmits(["update", "error"]);
+const emits = defineEmits(["update"]);
 
 const refEl = ref();
 let textValue = ref("");
-const rules = ref([]);
+const fieldRules = ref([]);
+const fieldHelp = ref([]);
 const fieldOptions = { ...forms.text, ...props.options };
-const fieldRules = { ...rules.value, ...(props.options?.rules ?? []) };
 
 onBeforeMount(() => {
-  if (props.options?.required) {
-    rules.value.push(defaultRules.required);
-  }
-  if (props.options?.maxLength) {
-    console.log(defaultRules.maxLength(props.options.maxLength));
-    rules.value.push(
-      defaultRules.maxLength(textValue, props.options.maxLength)
-    );
-  }
-  if (props.options?.type === "email") {
-    rules.value.push(defaultRules.email);
-  }
-  if (props.options?.rules) {
-    props.options.rules.map((rule) => {
-      rules.value.push(rule);
-    });
-  }
+  const { rules, help } = validations.getRules(props.options);
+  fieldRules.value = rules;
+  fieldHelp.value = help;
 });
 onMounted(() => {
-  if (props.options && props.options?.value) {
-    textValue.value = props.options.value;
-  }
   textValue.value = props.modelValue;
 });
-
-const myRules = (val, rules) => {
-  return new Promise((resolve, reject) => {
-    resolve(!!val || $t("validations.required"));
-  });
-};
-
-function reset() {
-  textValue.value = "";
-  emits("update", textValue.value);
-  resetValidation();
-}
 
 function update(val) {
   textValue.value = val;
   emits("update", props.name, textValue.value);
 }
-
-const value = computed(() => {
-  return textValue.value;
-});
-defineExpose({
-  reset,
-  value,
-});
 </script>
-
-<style scoped lang="scss"></style>

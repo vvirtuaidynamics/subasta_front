@@ -194,10 +194,8 @@ const fields = [
     type: "text",
     props: {
       required: true,
-      maxLength: 3,
       dense: true,
       clearable: true,
-      help: ["Requerido"],
     },
   },
   {

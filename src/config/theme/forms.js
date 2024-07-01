@@ -1,7 +1,7 @@
 export const forms = {
   text: {
     filled: false,
-    standout: false, //puede recibir un bg-[color] y text-[color]
+    standout: false,
     borderless: false,
     rounded: false,
     square: false,
@@ -11,7 +11,7 @@ export const forms = {
   },
   date: {
     filled: false,
-    standout: false, //puede recibir un bg-[color] y text-[color]
+    standout: false,
     borderless: false,
     rounded: false,
     square: false,
@@ -21,7 +21,7 @@ export const forms = {
   },
   editor: {
     filled: false,
-    standout: false, //puede recibir un bg-[color] y text-[color]
+    standout: false,
     borderless: false,
     rounded: false,
     square: false,
@@ -30,7 +30,7 @@ export const forms = {
   },
   number: {
     filled: false,
-    standout: false, //puede recibir un bg-[color] y text-[color]
+    standout: false,
     borderless: false,
     rounded: false,
     square: false,
@@ -41,7 +41,7 @@ export const forms = {
     "use-input": true,
     "use-chips": false,
     filled: true,
-    standout: false, //puede recibir un bg-[color] y text-[color]
+    standout: false,
     borderless: false,
     rounded: false,
     square: false,
