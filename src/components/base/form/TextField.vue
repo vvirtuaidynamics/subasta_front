@@ -5,6 +5,8 @@
     :label="props.label"
     :rules="rules"
     hide-bottom-space
+    bottom-slots
+    hide-hint
     lazy-rules
     reactive-rules
     v-bind="fieldOptions"
@@ -12,6 +14,17 @@
     class="full-width"
     @update:model-value="(val) => update(val)"
   >
+    <template #hint v-if="options?.help">
+      <ul style="padding: 0; margin-top: 0px; margin-bottom: 0px">
+        <li
+          v-for="(h, index) in options?.help"
+          :key="`help-${index}`"
+          style="list-style: none"
+        >
+          {{ h }}
+        </li>
+      </ul>
+    </template>
     <template #append v-if="props.options && props.options?.appendIcon">
       <q-icon :name="props.options?.appendIcon" />
     </template>
@@ -28,6 +41,7 @@
 import { computed, onBeforeMount, onMounted, ref } from "vue";
 import { forms } from "src/config/theme/forms";
 import { $t } from "src/services/i18n";
+import { rules as defaultRules } from "src/helpers/validations";
 
 defineOptions({
   name: "TextField",
@@ -59,14 +73,16 @@ const fieldRules = { ...rules.value, ...(props.options?.rules ?? []) };
 
 onBeforeMount(() => {
   if (props.options?.required) {
-    rules.value.push((val) => {
-      return !!val || $t("validations.required");
-    });
+    rules.value.push(defaultRules.required);
+  }
+  if (props.options?.maxLength) {
+    console.log(defaultRules.maxLength(props.options.maxLength));
+    rules.value.push(
+      defaultRules.maxLength(textValue, props.options.maxLength)
+    );
   }
   if (props.options?.type === "email") {
-    rules.value.push((val, rules) => {
-      return rules.email(val) || "Please enter a valid email address";
-    });
+    rules.value.push(defaultRules.email);
   }
   if (props.options?.rules) {
     props.options.rules.map((rule) => {

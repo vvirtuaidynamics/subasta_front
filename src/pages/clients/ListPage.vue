@@ -2,17 +2,16 @@
   <q-page padding>
     <table-component
       :name="name"
-      :label_plural="label_plural"
-      :label_singular="label_singular"
-      :to_str="to_str"
+      :labelPlural="labelPlural"
+      :labelSingular="labelSingular"
+      :toStr="toStr"
       :icon="icon"
       :columns="columns"
       :rows="rows"
       :searchFields="searchFields"
       :filterFields="filterFields"
-      :create_fields="fields"
-      :update_fields="fields"
-      :has_delete="false"
+      :createFields="fields"
+      :updateFields="fields"
     ></table-component>
   </q-page>
 </template>
@@ -26,9 +25,9 @@ defineOptions({
 });
 
 const name = "client";
-const label_plural = $t("models.clients");
-const label_singular = $t("models.client");
-const to_str = null;
+const labelPlural = $t("models.clients");
+const labelSingular = $t("models.client");
+const toStr = null;
 const icon = "mdi-briefcase-variant-outline";
 
 const searchFields = [
@@ -195,8 +194,10 @@ const fields = [
     type: "text",
     props: {
       required: true,
+      maxLength: 3,
       dense: true,
       clearable: true,
+      help: ["Requerido"],
     },
   },
   {
@@ -217,6 +218,7 @@ const fields = [
       required: true,
       dense: true,
       clearable: true,
+      type: "email",
     },
   },
   {
@@ -233,7 +235,7 @@ const fields = [
   },
   {
     name: "date_of_birth",
-    label: $t("fields.date_of_birth"),
+    label: $t("fields.birthday"),
     type: "date",
     props: {
       required: true,

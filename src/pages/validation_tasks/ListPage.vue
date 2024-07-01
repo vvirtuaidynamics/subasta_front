@@ -2,9 +2,9 @@
   <q-page padding>
     <table-component
       :name="name"
-      :label_plural="label_plural"
-      :label_singular="label_singular"
-      :to_str="to_str"
+      :labelPlural="labelPlural"
+      :labelSingular="labelSingular"
+      :toStr="toStr"
       :icon="icon"
       :columns="columns"
       :rows="rows"
@@ -24,9 +24,9 @@ defineOptions({
 });
 
 const name = "user";
-const label_plural = $t("models.validationtasks");
-const label_singular = $t("models.validationtasks");
-const to_str = null;
+const labelPlural = $t("models.validationtasks");
+const labelSingular = $t("models.validationtasks");
+const toStr = null;
 const icon = "mdi-calendar-multiple-check";
 
 const searchFields = [];

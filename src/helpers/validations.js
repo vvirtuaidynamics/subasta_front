@@ -8,12 +8,12 @@ export const rules = {
   numeric: (val) => testPattern.numeric(val) || $t("validations.numeric"),
   minLength: (val, min = 0) =>
     val.length < min || $t("validations.minLength", { min }),
-  maxLength: (val, ax = 0) =>
-    (val.length > max) | $t("validations.maxLength", { max }),
+  maxLength: (val, max) =>
+    val.length <= max || $t("validations.maxLength", { max }),
   minValue: (val, min = 0) => val < min || $t("validations.minValue", { min }),
   maxValue: (val, ax = 0) => (val > max) | $t("validations.maxValue", { max }),
   ipAddress: (val) => testPattern.ipv4(val) | $t("validations.ipAddress"),
-  email: (val) => testPattern.email(val) | $t("validations.email"),
+  email: (val, rules) => rules.email(val) || $t("validations.email"),
   validDate: (val) => date.isValid(val) || $t("validations.validDate", { val }),
   Length: (val, length) =>
     val.length < length || $t("validations.validDate", { length }),

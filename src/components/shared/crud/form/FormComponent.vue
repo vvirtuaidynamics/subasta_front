@@ -8,50 +8,14 @@
 
   <q-dialog v-model="showDialog" persistent @show="onShow">
     <q-card style="width: 500px">
-      <dialog-header-component :icon="icon" :title="title" closable />
-      <q-card-section>
+      <dialog-header-component :icon="icon" :title="fullTitle" closable />
+      <q-card-section style="max-height: 50vh" class="scroll">
         <q-form class="q-gutter-md" ref="form" greedy>
-          <div
-            class="form-field"
-            v-for="(f, index) in fields"
-            :key="`field-${index}`"
-          >
-            <text-field
-              :label="f.label"
-              :name="f.name"
-              :modelValue="object ? object[f.name] : null"
-              :options="f.props"
-              @update="onUpdateField"
-              v-if="f.type === 'text'"
-            />
-            <checkbox-field
-              :label="f.label"
-              :name="f.name"
-              :modelValue="object ? object[f.name] : false"
-              :options="f.props"
-              @update="onUpdateField"
-              v-else-if="f.type === 'checkbox'"
-            />
-            <select-field
-              :label="f.label"
-              :name="f.name"
-              :modelValue="
-                object ? (object[f.name] ? [object[f.name]] : []) : []
-              "
-              :options="f.options"
-              :filterable="f.filterable"
-              @update="onUpdateField"
-              v-else-if="f.type === 'select'"
-            />
-            <date-field
-              :label="f.label"
-              :name="f.name"
-              :modelValue="object ? object[f.name] : null"
-              :options="f.props"
-              @update="onUpdateField"
-              v-else-if="f.type === 'date'"
-            />
-          </div>
+          <form-body
+            :object="object"
+            :fields="fields"
+            @update="onUpdateField"
+          />
         </q-form>
       </q-card-section>
       <q-separator />
@@ -88,11 +52,7 @@ defineOptions({
 import { ref, onMounted, onBeforeMount } from "vue";
 import DialogHeaderComponent from "src/components/base/DialogHeaderComponent.vue";
 import QBtnComponent from "src/components/base/QBtnComponent.vue";
-import TextField from "src/components/base/form/TextField.vue";
-import SelectField from "src/components/base/form/SelectField.vue";
-import CheckboxField from "src/components/base/form/CheckboxField.vue";
-import DateField from "src/components/base/form/DateField.vue";
-import RadioField from "src/components/base/form/RadioField.vue";
+import FormBody from "./FormBody.vue";
 import { $t } from "src/services/i18n";
 import { useQuasar } from "quasar";
 
@@ -109,11 +69,11 @@ const props = defineProps({
     type: Object,
     default: null,
   },
-  object_str: {
+  fieldToStr: {
     type: String,
     default: "id",
   },
-  object_label: {
+  title: {
     type: String,
     default: "Object",
   },
@@ -125,7 +85,7 @@ const props = defineProps({
 
 const emit = defineEmits(["save"]);
 
-const title = ref(null);
+const fullTitle = ref(null);
 const icon = ref(null);
 
 const showDialog = ref(false);
@@ -142,10 +102,10 @@ onBeforeMount(() => {
 
 onMounted(() => {
   if (props.object != null) {
-    title.value = `${$t("labels.edit")} ${props.object_label}`;
+    fullTitle.value = `${$t("labels.edit")} ${props.title}`;
     icon.value = "edit";
   } else {
-    title.value = `${$t("labels.add")} ${props.object_label}`;
+    fullTitle.value = `${$t("labels.add")} ${props.title}`;
     icon.value = "add";
   }
 });

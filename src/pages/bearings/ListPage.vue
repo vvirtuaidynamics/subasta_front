@@ -2,15 +2,14 @@
   <q-page padding>
     <table-component
       :name="name"
-      :label_plural="label_plural"
-      :label_singular="label_singular"
-      :to_str="to_str"
+      :labelPlural="labelPlural"
+      :labelSingular="labelSingular"
+      :toStr="toStr"
       :icon="icon"
       :columns="columns"
       :rows="rows"
       :searchFields="searchFields"
       :filterFields="filterFields"
-      :has_delete="false"
     ></table-component>
   </q-page>
 </template>
@@ -24,9 +23,9 @@ defineOptions({
 });
 
 const name = "bearing";
-const label_plural = $t("models.bearings");
-const label_singular = $t("models.bearing");
-const to_str = null;
+const labelPlural = $t("models.bearings");
+const labelSingular = $t("models.bearing");
+const toStr = null;
 const icon = "mdi-cube-outline";
 
 const searchFields = [

@@ -2,15 +2,15 @@
   <q-page padding>
     <table-component
       :name="name"
-      :label_plural="label_plural"
-      :label_singular="label_singular"
-      :to_str="to_str"
+      :labelPlural="labelPlural"
+      :labelSingular="labelSingular"
+      :toStr="toStr"
       :icon="icon"
       :columns="columns"
       :rows="rows"
       :searchFields="searchFields"
-      :create_fields="fields"
-      :update_fields="fields"
+      :createFields="fields"
+      :updateFields="fields"
       :has_delete="false"
     ></table-component>
   </q-page>
@@ -25,9 +25,9 @@ defineOptions({
 });
 
 const name = "group";
-const label_plural = $t("models.groups");
-const label_singular = $t("models.group");
-const to_str = null;
+const labelPlural = $t("models.groups");
+const labelSingular = $t("models.group");
+const toStr = null;
 const icon = "mdi-account-multiple-outline";
 
 const searchFields = [

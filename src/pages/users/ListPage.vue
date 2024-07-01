@@ -2,23 +2,22 @@
   <q-page padding>
     <table-component
       :name="name"
-      :label_plural="label_plural"
-      :label_singular="label_singular"
-      :to_str="to_str"
+      :labelPlural="labelPlural"
+      :labelSingular="labelSingular"
+      :toStr="toStr"
       :icon="icon"
       :columns="columns"
       :rows="rows"
       :searchFields="searchFields"
       :filterFields="filterFields"
-      :create_fields="create_fields"
-      :update_fields="update_fields"
+      :createFields="createFields"
+      :updateFields="updateFields"
       :has_delete="false"
     ></table-component>
   </q-page>
 </template>
 
 <script setup>
-import { required } from "@vuelidate/validators";
 import TableComponent from "components/shared/crud/table/TableComponent.vue";
 import { $t } from "src/services/i18n";
 
@@ -27,9 +26,9 @@ defineOptions({
 });
 
 const name = "user";
-const label_plural = $t("models.users");
-const label_singular = $t("models.user");
-const to_str = null;
+const labelPlural = $t("models.users");
+const labelSingular = $t("models.user");
+const toStr = null;
 const icon = "mdi-account-outline";
 
 const searchFields = [
@@ -109,7 +108,7 @@ const columns = [
   },
 ];
 
-const create_fields = [
+const createFields = [
   {
     name: "name",
     label: $t("fields.name"),
@@ -147,7 +146,7 @@ const create_fields = [
   },
 ];
 
-const update_fields = [
+const updateFields = [
   {
     name: "username",
     readonly: true,

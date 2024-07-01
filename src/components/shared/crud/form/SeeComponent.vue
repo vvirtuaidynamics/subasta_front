@@ -13,7 +13,7 @@
         :title="$t('titles.see')"
         closable
       />
-      <q-card-section>
+      <q-card-section style="max-height: 50vh" class="scroll">
         <div
           class="row"
           v-for="(f, index) in fields.filter((ff) => ff.name !== 'actions')"
@@ -27,6 +27,7 @@
           />
         </div>
       </q-card-section>
+      <q-separator />
       <q-card-actions align="right">
         <q-btn flat :label="$q.lang.label.close" color="red" v-close-popup />
       </q-card-actions>

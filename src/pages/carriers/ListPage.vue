@@ -2,17 +2,16 @@
   <q-page padding>
     <table-component
       :name="name"
-      :label_plural="label_plural"
-      :label_singular="label_singular"
-      :to_str="to_str"
+      :labelPlural="labelPlural"
+      :labelSingular="labelSingular"
+      :toStr="toStr"
       :icon="icon"
       :columns="columns"
       :rows="rows"
       :searchFields="searchFields"
       :filterFields="filterFields"
-      :create_fields="fields"
-      :update_fields="fields"
-      :has_delete="false"
+      :createFields="fields"
+      :updateFields="fields"
     ></table-component>
   </q-page>
 </template>
@@ -26,9 +25,9 @@ defineOptions({
 });
 
 const name = "carrier";
-const label_plural = $t("models.carriers");
-const label_singular = $t("models.carrier");
-const to_str = null;
+const labelPlural = $t("models.carriers");
+const labelSingular = $t("models.carrier");
+const toStr = null;
 const icon = "mdi-human-male";
 
 const searchFields = [

@@ -2,9 +2,9 @@
   <q-page padding>
     <table-component
       :name="name"
-      :label_plural="label_plural"
-      :label_singular="label_singular"
-      :to_str="to_str"
+      :labelPlural="labelPlural"
+      :labelSingular="labelSingular"
+      :toStr="toStr"
       :icon="icon"
       :columns="columns"
       :rows="rows"
@@ -24,9 +24,9 @@ defineOptions({
 });
 
 const name = "user";
-const label_plural = $t("models.history");
-const label_singular = $t("models.history");
-const to_str = null;
+const labelPlural = $t("models.history");
+const labelSingular = $t("models.history");
+const toStr = null;
 const icon = "mdi-account-clock-outline";
 
 const searchFields = [];

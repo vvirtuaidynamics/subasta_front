@@ -10,7 +10,6 @@
       row-key="id"
       selection="multiple"
       v-model:selected="selected"
-      @update:selected="(s) => (objects_selected = s)"
     >
       <template v-slot:loading>
         <q-inner-loading showing color="primary" />
@@ -20,31 +19,31 @@
         <q-toolbar>
           <section class="q-my-xs q-mr-sm cursor-pointer text-subtitle1">
             <div class="doc-card-title bg-primary text-white">
-              <q-icon :name="icon" size="22px" /> {{ label_plural }}
+              <q-icon :name="icon" size="22px" /> {{ labelPlural }}
             </div>
           </section>
           <q-space />
           <div class="col-auto">
             <form-component
               size="sm"
-              :object_label="label_singular"
-              :fields="create_fields"
-              v-if="create_fields.length > 0"
-            ></form-component>
+              :title="labelSingular"
+              :fields="createFields"
+              v-if="hasAdd && createFields.length > 0"
+            />
             <delete-component
-              :objects="objects_selected"
-              v-if="has_delete"
-            ></delete-component>
+              :objects="selected"
+              v-if="selected.length > 0 && hasDelete"
+            />
             <visible-columns-component
               :columns="columns"
               @change="(vc) => (visibleColumns = vc)"
-            ></visible-columns-component>
+            />
             <filter-component
               :fields="filterFields"
               @filter="onFilterTable"
               @reset="onFilterReset"
               v-if="filterFields.length > 0"
-            ></filter-component>
+            />
             <q-btn-component
               :tooltips="
                 $t(
@@ -140,22 +139,15 @@
           style="width: 0; position: sticky; right: 0"
           class="actions-def"
         >
-          <history-component
-            :object="[props.row]"
-            v-if="has_history"
-          ></history-component>
-          <see-component :fields="columns" :object="props.row" v-if="has_see" />
+          <history-component :object="[props.row]" v-if="hasHistory" />
+          <see-component :fields="columns" :object="props.row" v-if="hasSee" />
           <form-component
             :object="props.row"
-            :object_label="label_singular"
-            :fields="update_fields"
-            v-if="update_fields.length > 0"
-          ></form-component>
-          <delete-component
-            :objects="[props.row]"
-            size="xs"
-            v-if="has_delete"
-          ></delete-component>
+            :title="labelSingular"
+            :fields="updateFields"
+            v-if="hasEdit && updateFields.length > 0"
+          />
+          <delete-component :objects="[props.row]" size="xs" v-if="hasDelete" />
         </q-td>
       </template>
 
@@ -203,24 +195,24 @@
                   <div class="q-pa-sm q-gutter-sm text-right">
                     <history-component
                       :object="[props.row]"
-                      v-if="has_history"
-                    ></history-component>
+                      v-if="hasHistory"
+                    />
                     <see-component
                       :fields="columns"
                       :object="props.row"
-                      v-if="has_see"
+                      v-if="hasSee"
                     />
                     <form-component
                       :object="props.row"
-                      :object_label="label_singular"
-                      :fields="update_fields"
-                      v-if="update_fields.length > 0"
-                    ></form-component>
+                      :title="labelSingular"
+                      :fields="updateFields"
+                      v-if="hasEdit && updateFields.length > 0"
+                    />
                     <delete-component
                       :objects="[props.row]"
                       size="xs"
-                      v-if="has_delete"
-                    ></delete-component>
+                      v-if="hasDelete"
+                    />
                   </div>
                 </q-item-section>
               </q-item>
@@ -254,15 +246,15 @@ const props = defineProps({
     type: String,
     default: "object",
   },
-  label_plural: {
+  labelPlural: {
     type: String,
     default: "Objetos",
   },
-  label_singular: {
+  labelSingular: {
     type: String,
     default: "Objetos",
   },
-  to_str: {
+  toStr: {
     type: String,
     default: "id",
   },
@@ -286,31 +278,31 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
-  update_fields: {
+  updateFields: {
     type: Array,
     default: () => [],
   },
-  create_fields: {
+  createFields: {
     type: Array,
     default: () => [],
   },
-  has_add: {
+  hasAdd: {
     type: Boolean,
     default: true,
   },
-  has_edit: {
+  hasEdit: {
     type: Boolean,
     default: true,
   },
-  has_see: {
+  hasSee: {
     type: Boolean,
     default: true,
   },
-  has_delete: {
+  hasDelete: {
     type: Boolean,
     default: true,
   },
-  has_history: {
+  hasHistory: {
     type: Boolean,
     default: true,
   },
@@ -323,8 +315,6 @@ const selected = ref([]);
 const loadingTable = ref(false);
 
 const visibleColumns = ref([]);
-
-const objects_selected = ref([]);
 
 onMounted(() => {
   visibleColumns.value = props.columns
