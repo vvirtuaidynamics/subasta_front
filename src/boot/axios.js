@@ -1,13 +1,17 @@
-import { boot } from "quasar/wrappers";
+import {boot} from "quasar/wrappers";
 import axios from "axios";
-import app from "../config/app"
+
+const api_url = process.env.API_URL;
 const api = axios.create({
-  baseURL: app.api_url,
+  baseURL: api_url,
+  withXSRFToken: true,
+  withCredentials: true,
 });
+
 axios.defaults.withCredentials = true;
 axios.defaults.withXSRFToken = true;
 
-export default boot(({ app }) => {
+export default boot(({app}) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 
   app.config.globalProperties.$axios = axios;
@@ -19,4 +23,4 @@ export default boot(({ app }) => {
   //       so you can easily perform requests against your app's API
 });
 
-export { api };
+export {api, axios, api_url};

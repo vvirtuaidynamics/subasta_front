@@ -8,7 +8,7 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 
-const { configure } = require("quasar/wrappers");
+const {configure} = require("quasar/wrappers");
 const path = require("path");
 const fs = require("fs");
 const packageJSON = fs.readFileSync("./package.json");
@@ -22,7 +22,7 @@ module.exports = configure(function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ["main","i18n", "axios", "apexcharts"],
+    boot: ["main", "i18n", "axios", "apexcharts"],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ["app.scss"],
@@ -58,7 +58,7 @@ module.exports = configure(function (ctx) {
       // publicPath: '/',
       // analyze: true,
       env: {
-        API_URL: "http://localhost/api",
+        API_URL: "http://localhost:8000/api",
         APP_NAME: appContext.name.toUpperCase() || "Subasta",
         APP_AUTOR: appContext.author || "",
         APP_DESC: appContext.description || "",
@@ -98,7 +98,7 @@ module.exports = configure(function (ctx) {
               lintCommand: 'eslint "./**/*.{js,mjs,cjs,vue}"',
             },
           },
-          { server: false },
+          {server: false},
         ],
       ],
     },

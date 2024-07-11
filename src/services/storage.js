@@ -3,7 +3,7 @@
  *
  * Current implementation stores to sessionStorage or localStorage
  **/
-import { utils } from "src/helpers/utils";
+import {utils} from "src/helpers/utils";
 // a unique key that identifies app storage values
 const AppStoreKey = process.env.APP_NAME || "APP";
 
@@ -13,6 +13,7 @@ const TOKEN_KEY = AppStoreKey + "_TOKEN";
 
 // key to remember user locale
 const LOCALE_KEY = AppStoreKey + "_LOCALE";
+const LOCALE_KEY_DATA = AppStoreKey + "_LOCALE_DATA";
 const DARK_KEY = AppStoreKey + "_DARK";
 
 const encryptStore =
@@ -34,6 +35,7 @@ export const StorageService = {
 
     localStorage.setItem(keyUserConfig, data);
   },
+
   getUserConfig(user) {
     const keyUserConfig = `${AppStoreKey}_${utils.upper(user)}`;
     const predata = localStorage.getItem(keyUserConfig);
@@ -50,9 +52,18 @@ export const StorageService = {
   setLocale(locale) {
     localStorage.setItem(LOCALE_KEY, locale);
   },
+
   getLocale() {
     return localStorage.getItem(LOCALE_KEY);
   },
+  setLocaleData(data) {
+    localStorage.setItem(LOCALE_KEY_DATA, JSON.stringify(data));
+  },
+
+  getLocaleData() {
+    return JSON.parse(localStorage.getItem(LOCALE_KEY_DATA));
+  },
+
   getDark() {
     return localStorage.getItem(DARK_KEY);
   },
