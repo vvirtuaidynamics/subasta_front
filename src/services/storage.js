@@ -1,5 +1,7 @@
 import {utils} from "src/helpers/utils";
+import {LocalStorage, SessionStorage} from "quasar"
 import AppConfig from "src/config/app"
+
 
 // a unique key that identifies app storage values
 const AppStoreKey = process.env.APP_NAME || "APP";
@@ -20,36 +22,30 @@ const encryptStore =
 
 export const StorageService = {
   getDeviceId() {
-    return localStorage.getItem("_capuid") ?? "";
+    return LocalStorage.getItem("_capuid") ?? "";
   },
 
   set(key, value, remember = false) {
     let data = null;
-    if (encryptStore) {
-      data = utils.encrypt(value); //este metodo ya hace el JSON.stringify
+    data = encryptStore ? utils.encrypt(value) : value; //JSON.stringify(value); //este metodo ya hace el JSON.stringify
+    if (remember) {
+      LocalStorage.set(key, data);
     } else {
-      data = JSON.stringify(value);
+      SessionStorage.set(key, data);
     }
-    if (!remember) {
-      sessionStorage.setItem(key, data);
-    } else {
-      localStorage.setItem(key, data);
-    }
-
   },
 
   get(key) {
     const predata =
-      sessionStorage.getItem(key) || localStorage.getItem(key);
+      SessionStorage.getItem(key) || LocalStorage.getItem(key);
     let data = null;
-    if (encryptStore) data = utils.decrypt(predata);
-    else data = JSON.parse(predata);
+    data = encryptStore ? utils.decrypt(predata) : predata;//JSON.parse(predata);
     return data;
   },
 
   remove(key) {
-    sessionStorage.removeItem(key);
-    localStorage.removeItem(key);
+    SessionStorage.remove(key);
+    LocalStorage.remove(key);
   },
 
   setAuthStore(userData, remember) {
@@ -61,8 +57,8 @@ export const StorageService = {
   },
 
   removeAuthStore() {
-    sessionStorage.removeItem(AUTH_DATA);
-    localStorage.removeItem(AUTH_DATA);
+    this.remove(AUTH_DATA);
+    this.remove(AUTH_DATA);
   },
 
   setUserConfig(user, config, remember = false) {
