@@ -1,5 +1,5 @@
-import CryptoJS, { enc } from "crypto-js";
-import { Notify, Dialog } from "quasar";
+import CryptoJS, {enc} from "crypto-js";
+import {Notify, Dialog} from "quasar";
 
 Date.prototype.toString = function dateToString() {
   return this.toISOString().slice(0, 19).replace("T", " ");
@@ -52,6 +52,9 @@ String.prototype.isValidDate = function () {
   let date = this;
   return new Date(date) !== "Invalid Date" && !isNaN(new Date(date));
 };
+String.prototype.strIsNullOrEmpty = function (str) {
+  return str === undefined || str === null || str.trim() === '';
+}
 
 function normalizeObj(obj) {
   if (obj) {
@@ -61,7 +64,7 @@ function normalizeObj(obj) {
     } else if (Array.isArray(obj)) {
       return [...obj].map((e) => normalizeObj(e));
     } else if (obj !== null && typeof obj === "object") {
-      const payload = { ...obj };
+      const payload = {...obj};
       Object.keys(payload).forEach(function (key) {
         payload[key] = normalizeObj(payload[key]);
       });
@@ -71,7 +74,11 @@ function normalizeObj(obj) {
   }
   return null;
 }
+
 export const utils = {
+  strIsNullOrEmpty(str) {
+    return str === undefined || str === null || str.trim() === '';
+  },
   confirm(title, message, icon) {
     Dialog.create({
       title: title,
@@ -289,7 +296,7 @@ export const utils = {
     if (isNaN(date)) {
       return value;
     }
-    return new Intl.DateTimeFormat("es", { dateStyle: "medium" }).format(date);
+    return new Intl.DateTimeFormat("es", {dateStyle: "medium"}).format(date);
   },
   humanTime(value) {
     const date = new Date(value);
@@ -319,13 +326,13 @@ export const utils = {
     });
 
     const divisions = [
-      { amount: 60, name: "seconds" },
-      { amount: 60, name: "minutes" },
-      { amount: 24, name: "hours" },
-      { amount: 7, name: "days" },
-      { amount: 4.34524, name: "weeks" },
-      { amount: 12, name: "months" },
-      { amount: Number.POSITIVE_INFINITY, name: "years" },
+      {amount: 60, name: "seconds"},
+      {amount: 60, name: "minutes"},
+      {amount: 24, name: "hours"},
+      {amount: 7, name: "days"},
+      {amount: 4.34524, name: "weeks"},
+      {amount: 12, name: "months"},
+      {amount: Number.POSITIVE_INFINITY, name: "years"},
     ];
 
     let duration = (date - new Date()) / 1000;
@@ -415,11 +422,11 @@ export const utils = {
       ia[i] = byteString.charCodeAt(i);
     }
 
-    return new Blob([ia], { type: mimeString });
+    return new Blob([ia], {type: mimeString});
   },
 
   encrypt(data, str = "") {
-    const key = str && str.length > 0 ? str : process.env.STORAGE_KEY ?? "";
+    const key = str && str?.length > 0 ? str : process.env.STORAGE_KEY ?? "";
     const predata = JSON.stringify(data);
     const base64Data = CryptoJS.enc.Base64.stringify(
       CryptoJS.enc.Utf8.parse(predata)
@@ -430,8 +437,8 @@ export const utils = {
   },
 
   decrypt(data, str = "") {
-    if (data.length > 0) {
-      const key = str && str.length > 0 ? str : process.env.STORAGE_KEY ?? "";
+    if (data && data.length > 0) {
+      const key = str && str?.length > 0 ? str : process.env.STORAGE_KEY ?? "";
       const decrypted = CryptoJS.AES.decrypt(data, key).toString(
         CryptoJS.enc.Utf8
       );
@@ -517,40 +524,40 @@ export const utils = {
    * @param {msg: String, position?: String, timeout?: Number, avatar?: String, type?: String } props
    */
   sendMsg(props) {
-    let ico = "mdi-exclamation-thick";
+    let icon = "mdi-exclamation-thick";
     let bgColor = "bg-info";
     switch (props.type) {
       case "negative":
-        ico = "mdi-alert-octagram";
+        icon = "mdi-alert-octagram";
         bgColor = "negative";
         break;
       case "warning":
-        ico = "mdi-alert";
+        icon = "mdi-alert";
         bgColor = "warning";
         break;
       case "info":
-        ico = "mdi-bell";
+        icon = "mdi-bell";
         bgColor = "info";
         break;
       case "ongoing":
-        ico = "mdi-alert-rhombus";
+        icon = "mdi-alert-rhombus";
         bgColor = "ongoing";
         break;
       case "positive":
-        ico = "mdi-check-circle";
+        icon = "mdi-check-circle";
         bgColor = "positive";
         break;
     }
-    if (!props.avatar && props.ico) ico = props.ico;
+    if (!props.avatar && props.icon) icon = props.icon;
     if (props.avatar && typeof props.avatar === "string") {
-      ico = props.avatar;
+      icon = props.avatar;
     }
 
     const timeout = props.timeout ?? 3500;
     const pos = props.position ?? "bottom";
 
     if (props.avatar) {
-      // console.log("ico: ", ico);
+      // console.log("icon: ", icon);
 
       Notify.create({
         html: true,
@@ -559,7 +566,7 @@ export const utils = {
         }</span>`,
         progress: true,
         timeout: timeout,
-        avatar: `${ico}`,
+        avatar: `${icon}`,
         position: `${pos}`,
         color: `${bgColor}`,
         textColor: "white",
@@ -579,10 +586,10 @@ export const utils = {
         message: `<span class="${props.classMsg ?? ""}">${props.msg}</span>`,
         progress: true,
         timeout: timeout,
-        icon: `${ico}`,
+        icon: `${icon}`,
         color: `${props.type ?? "info"}`,
         position: `${pos}`,
-        textColor: "white",
+        textColor: props.textColor || "white",
         actions: [
           {
             icon: "close",
@@ -636,7 +643,8 @@ export const utils = {
       speaker.onboundary = function (event) {
         // console.log("Speech reached a boundary:", event.name);
       };
-      speaker.onpause = function (event) {};
+      speaker.onpause = function (event) {
+      };
       // console.log("voices: ", window.speechSynthesis.getVoices());
       window.speechSynthesis.speak(speaker);
     } else {
