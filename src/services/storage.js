@@ -1,15 +1,13 @@
-/**
- * Manage the how Access User Login data and Auth Tokens are being stored and retreived from storage.
- *
- * Current implementation stores to sessionStorage or localStorage
- **/
 import {utils} from "src/helpers/utils";
+import AppConfig from "src/config/app"
+
 // a unique key that identifies app storage values
 const AppStoreKey = process.env.APP_NAME || "APP";
 
 // key for user access token
-const AUTH_DATA = "AuthStore";
+const AUTH_DATA = AppStoreKey + "_AUTH_STORE";
 const TOKEN_KEY = AppStoreKey + "_TOKEN";
+
 
 // key to remember user locale
 const LOCALE_KEY = AppStoreKey + "_LOCALE";
@@ -24,66 +22,92 @@ export const StorageService = {
   getDeviceId() {
     return localStorage.getItem("_capuid") ?? "";
   },
-  setUserConfig(user, config) {
-    const keyUserConfig = `${AppStoreKey}_${utils.upper(user)}`;
+
+  set(key, value, remember = false) {
     let data = null;
     if (encryptStore) {
-      data = utils.encrypt(config);
+      data = utils.encrypt(value); //este metodo ya hace el JSON.stringify
     } else {
-      data = JSON.stringify(config);
+      data = JSON.stringify(value);
+    }
+    if (!remember) {
+      sessionStorage.setItem(key, data);
+    } else {
+      localStorage.setItem(key, data);
     }
 
-    localStorage.setItem(keyUserConfig, data);
   },
 
-  getUserConfig(user) {
-    const keyUserConfig = `${AppStoreKey}_${utils.upper(user)}`;
-    const predata = localStorage.getItem(keyUserConfig);
+  get(key) {
+    const predata =
+      sessionStorage.getItem(key) || localStorage.getItem(key);
     let data = null;
     if (encryptStore) data = utils.decrypt(predata);
     else data = JSON.parse(predata);
     return data;
   },
+
+  remove(key) {
+    sessionStorage.removeItem(key);
+    localStorage.removeItem(key);
+  },
+
+  setAuthStore(userData, remember) {
+    this.set(AUTH_DATA, userData, remember);
+  },
+
+  getAuthStore() {
+    return this.get(AUTH_DATA);
+  },
+
+  removeAuthStore() {
+    sessionStorage.removeItem(AUTH_DATA);
+    localStorage.removeItem(AUTH_DATA);
+  },
+
+  setUserConfig(user, config, remember = false) {
+    const keyUserConfig = `${AppStoreKey}_${utils.upper(user)}`;
+    this.set(keyUserConfig, config, remember);
+  },
+
+  getUserConfig(user) {
+    const keyUserConfig = `${AppStoreKey}_${utils.upper(user)}_CONFIG`;
+    return this.get(keyUserConfig);
+  },
+
   removeUserConfig(user) {
     const keyUserConfig = `${AppStoreKey}_${utils.upper(user)}`;
-    sessionStorage.removeItem(keyUserConfig);
-    localStorage.removeItem(keyUserConfig);
+    this.remove(keyUserConfig)
   },
+
+  setToken(token, remember = false) {
+    this.set(TOKEN_KEY, token, remember);
+  },
+
+  getToken() {
+    return this.get(TOKEN_KEY);
+  },
+
   setLocale(locale) {
-    localStorage.setItem(LOCALE_KEY, locale);
+    this.set(LOCALE_KEY, locale, true);
   },
 
   getLocale() {
-    return localStorage.getItem(LOCALE_KEY);
+    return this.get(LOCALE_KEY);
   },
-  setLocaleData(data) {
-    localStorage.setItem(LOCALE_KEY_DATA, JSON.stringify(data));
+
+  setLocaleData(data, remember = false) {
+    this.set(LOCALE_KEY_DATA, data, remember);
   },
 
   getLocaleData() {
-    return JSON.parse(localStorage.getItem(LOCALE_KEY_DATA));
+    return this.get(LOCALE_KEY_DATA);
   },
 
   getDark() {
-    return localStorage.getItem(DARK_KEY);
+    return this.get(DARK_KEY);
   },
   setDark(dark) {
-    localStorage.setItem(DARK_KEY, `${dark}`);
-  },
-  getAuthStore() {
-    let authData = null;
-    const predata =
-      sessionStorage.getItem(AUTH_DATA) || localStorage.getItem(AUTH_DATA);
-    if (encryptStore) authData = utils.decrypt(predata);
-    else authData = predata;
-    return authData;
-  },
-
-  removeLoginData() {
-    sessionStorage.removeItem(AUTH_DATA);
-    localStorage.removeItem(AUTH_DATA);
-
-    // uncomment to remove language locale when user logout
-    //localStorage.removeItem(LOCALE_KEY);
+    this.set(DARK_KEY, `${dark}`);
   },
 };
