@@ -1,8 +1,8 @@
-import { storeToRefs } from "pinia";
-import { useQuasar } from "quasar";
-import { useAppStore } from "src/stores/app-store";
-import { useRouter } from "vue-router";
-import { $t } from "src/services/i18n";
+import {storeToRefs} from "pinia";
+import {useQuasar} from "quasar";
+import {useAppStore} from "src/stores/app-store";
+import {useRouter} from "vue-router";
+import {$t} from "src/services/i18n";
 
 export function useApp() {
   const $q = useQuasar;
@@ -15,6 +15,7 @@ export function useApp() {
     theme,
     dark,
     user,
+    avatar,
     token,
     loading,
     leftDrawer,
@@ -50,12 +51,13 @@ export function useApp() {
       return accumulator;
     }, []);
 
-    unique_breadcrumb.unshift({ to: "/", label: $t("Home") });
+    unique_breadcrumb.unshift({to: "/", label: $t("Home")});
     $appStore.setBreadcrumbs(unique_breadcrumb);
     // console.log("unique_breadcrumb: ", unique_breadcrumb);
 
     return unique_breadcrumb;
   }
+
   /**
    * navigateTo
    *
@@ -68,7 +70,7 @@ export function useApp() {
       if (payload.startsWith("http") || payload.startsWith("https")) {
         window.open(payload, "_blank");
       } else {
-        $router.push({ name: payload }); // sino es link por defecto asumo que es name
+        $router.push({name: payload}); // sino es link por defecto asumo que es name
       }
     }
     if (payload && typeof payload === "object") {
@@ -76,8 +78,8 @@ export function useApp() {
       if (path && $router.path !== path) {
         $router.push(path);
       }
-      if (payload.name) $router.push({ name: payload.name });
-      if (payload.path) $router.push({ path: payload.path });
+      if (payload.name) $router.push({name: payload.name});
+      if (payload.path) $router.push({path: payload.path});
     }
   }
 
