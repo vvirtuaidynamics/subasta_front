@@ -521,7 +521,7 @@ export const utils = {
   },
   /**
    * sendMsg
-   * @param {msg: String, position?: String, timeout?: Number, avatar?: String, type?: String } props
+   * @param {{msg: String, position?: String, timeout?: Number, avatar?: String, type?: negative|warning|info|ongoing|positive }} props
    */
   sendMsg(props) {
     let icon = "mdi-exclamation-thick";
@@ -557,7 +557,6 @@ export const utils = {
     const pos = props.position ?? "bottom";
 
     if (props.avatar) {
-      // console.log("icon: ", icon);
 
       Notify.create({
         html: true,
@@ -569,7 +568,8 @@ export const utils = {
         avatar: `${icon}`,
         position: `${pos}`,
         color: `${bgColor}`,
-        textColor: "white",
+        textColor: props.textColor || "white",
+        caption: props.caption || "",
         actions: [
           {
             icon: "close",
@@ -589,6 +589,7 @@ export const utils = {
         icon: `${icon}`,
         color: `${props.type ?? "info"}`,
         position: `${pos}`,
+        caption: props.caption || "",
         textColor: props.textColor || "white",
         actions: [
           {
