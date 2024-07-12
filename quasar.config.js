@@ -65,6 +65,7 @@ module.exports = configure(function (ctx) {
         APP_KEY: "94736d52-77c8-410b-8416-07787d4312db",
         APP_VERSION: appContext.version || "1.0.0",
         NODE_ENV: "development", //development, production
+        STORAGE_KEY: "94736d5277c8410b841607787d4312db",
         STORAGE_CIPHER: false,   //Cifrar el estado
       },
       // rawDefine: {}
