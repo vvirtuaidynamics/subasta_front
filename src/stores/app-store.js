@@ -1,5 +1,6 @@
-import { defineStore } from "pinia";
+import {defineStore} from "pinia";
 import app from "src/config/app";
+
 export const useAppStore = defineStore(`${process.env.APP_NAME}_APP`, {
   state: () => ({
     appName: app.name,
@@ -7,6 +8,7 @@ export const useAppStore = defineStore(`${process.env.APP_NAME}_APP`, {
     theme: "",
     dark: false,
     user: null,
+    avatar: "",
     token: "",
     loading: false,
     leftDrawer: {
@@ -28,6 +30,7 @@ export const useAppStore = defineStore(`${process.env.APP_NAME}_APP`, {
       this.theme = "";
       this.dark = false;
       this.user = null;
+      this.avatar = "";
       this.token = "";
       this.loading = false;
       this.leftDrawer = {
@@ -45,6 +48,7 @@ export const useAppStore = defineStore(`${process.env.APP_NAME}_APP`, {
       if (data.locale) this.locale = data.locale;
       if (data.theme) this.theme = data.theme;
       if (data.user) this.user = data.user;
+      if (data.avatar) this.avatar = data.avatar;
       if (data.token) this.token = data.token;
       if (data.locale) this.locale = data.locale;
       if (data.breadcrumbs) this.breadcrumbs = data.breadcrumbs;
