@@ -6,10 +6,10 @@
   <q-btn-dropdown class="q-pa-sm text-body2" flat no-caps>
     <template #label>
       <q-img v-if="lang === 'es' || lang === 'en-US'" :src="lang === 'es' ? esSvg : lang === 'en-US' ? enSvg : ''"
-        class="q-mr-sm" style="width: 24px; height: auto" />
-      <span class="text-body2 text-weight-medium">{{
-        lang === "es" ? "ES" : lang === "en-US" ? "EN" : langName
-      }}</span>
+             class="q-mr-sm" style="width: 24px; height: auto"/>
+      <span class="text-body2 text-weight-medium" v-if="$q.screen.gt.sm">{{
+          lang === "es" ? "ES" : lang === "en-US" ? "EN" : langName
+        }}</span>
     </template>
     <q-list class="q-px-none q-mx-none text-uppercase lang-switch" dense>
       <q-item v-for="(locale, key) in locales" :key="key" v-close-popup clickable @click="handleChange(key)">
@@ -17,7 +17,7 @@
         <q-item-section>
           <div class="row q-px-sm">
             <q-img v-if="key === 'es' || key === 'en-US'" :src="key === 'es' ? esSvg : enSvg"
-              style="width: 24px; height: auto" />
+                   style="width: 24px; height: auto"/>
             <q-item-label class="q-ml-sm">{{ lang === "es" ? locale.es : locale.en }}
             </q-item-label>
           </div>
@@ -30,7 +30,7 @@
 <script setup>
 import {ref, onBeforeMount, onMounted, getCurrentInstance} from "vue";
 import {useRouter} from "vue-router";
-import { useQuasar } from "quasar";
+import {useQuasar} from "quasar";
 import flags from "../../i18n/flags";
 import {locales} from "../../boot/i18n.js"
 import {StorageService} from "../../services/storage.js"
@@ -40,52 +40,51 @@ defineOptions({
   name: "LangSwitcher",
 });
 
-const props = defineProps({
-
-})
+const props = defineProps({})
 const emits = defineEmits(['update']);
 
-const $q =  useQuasar();
+const $q = useQuasar();
 const $router = useRouter()
 
 const lang = ref($q.lang.isoName);
-const esSvg =  flags.es;
-const enSvg =  flags.en;
+const esSvg = flags.es;
+const enSvg = flags.en;
 
-const changeLocale = (locale)=>{
+const changeLocale = (locale) => {
   const Lang = locales[`${locale}`].locale
   $q.lang.set(Lang);
   lang.value = locale;
   StorageService.setLocale(locale);
   //TODO SI HAY USUARIO AUTH LO GUARDO EN SU CONFIG
 
-  emits('update',locale)
+  emits('update', locale)
 
- //
+  //
 
 }
-const getLocale = (locale)=>{
-  lang.value =  $q.lang.isoName
+const getLocale = (locale) => {
+  lang.value = $q.lang.isoName
   return lang.value;
 }
 
-const reload = ()=>{
+const reload = () => {
   $router.go(0)
 }
 
 const handleChange = (locale) => {
-  if(locale===getLocale()) return false;
+  if (locale === getLocale()) return false;
   changeLocale(locale);
   reload()
 }
 
-onBeforeMount(()=>{
+onBeforeMount(() => {
   let hasLang = StorageService.getLocale();
-  if(hasLang){
+  if (hasLang) {
     changeLocale(hasLang)
   }
 })
-onMounted(()=>{})
+onMounted(() => {
+})
 
 </script>
 <style scoped>

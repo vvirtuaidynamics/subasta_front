@@ -528,7 +528,7 @@ export const utils = {
     let bgColor = "bg-info";
     switch (props.type) {
       case "negative":
-        icon = "mdi-alert-octagram";
+        icon = "mdi-error";
         bgColor = "negative";
         break;
       case "warning":
@@ -661,4 +661,5 @@ export const utils = {
     link.click();
     document.body.removeChild(link);
   },
+
 };

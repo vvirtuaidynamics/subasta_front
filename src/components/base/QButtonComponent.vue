@@ -13,15 +13,15 @@
     <q-tooltip v-if="props.title"> {{ props.title }}</q-tooltip>
     <template #loading>
       <span class="text-caption text-uppercase q-gutter q-gutter-x-sm">{{
-        loadingMsg
-      }}</span>
-      <q-spinner-facebook size="xs" class="q-ml-sm" color="secondary" />
+          props.label
+        }}</span>
+      <q-spinner-facebook size="xs" class="q-ml-sm" color="accent"/>
     </template>
   </q-btn>
 </template>
 
 <script setup>
-import { forms } from "src/config/theme/forms";
+import {forms} from "src/config/theme/forms";
 
 defineOptions({
   name: "QButtonComponent",
@@ -30,10 +30,10 @@ defineOptions({
 const props = defineProps({
   label: String,
   title: String,
-  icon: { type: String, require: false },
-  class: { type: String, default: 'shadow-3 text-uppercase' },
-  color: { type: String, default: "primary" },
-  loading: { type: Boolean, require: false },
+  icon: {type: String, require: false},
+  class: {type: String, default: 'shadow-3 text-uppercase'},
+  color: {type: String, default: "primary"},
+  loading: {type: Boolean, require: false},
 });
 
 const emits = defineEmits(["handleClick", "handleDblClick"]);

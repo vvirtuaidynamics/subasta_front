@@ -1,42 +1,69 @@
 <template>
   <q-page padding>
-    <LoaderPage :show="false" :dark="false"></LoaderPage>
 
-    <div class="flex flex-center">
-      <div style="width: 500px">
-        <q-date-field
-          label="birthday"
-          name="birthday"
-          :model-value="data"
-          required
-          @update="(val) => (data = val)"
-          :options="{}"
-          multiple
-          range
-        >
-        </q-date-field>
-        <picture-field avatar @change="(val) => (data = val)"></picture-field>
-        {{ data }}
+    <div class="flex flex-center full-height q-gutter-x-md">
+
+      <q-btn label="login" @click="Login"></q-btn>
+      <q-btn label="profile" @click="Profile"></q-btn>
+      <q-btn label="logout" @click="Logout"></q-btn>
+      <div class="full-width  flex flex-center q-pa-lg">
+        {{ token || "No token." }}
+      </div>
+      <div class="full-width full-height flex flex-center q-pa-lg">
+        {{ data || "No data." }}
       </div>
     </div>
 
-    <radio-field label="radio"></radio-field>
-    <checkbox-field label="checkbox"></checkbox-field>
-    <range-field></range-field>
   </q-page>
 </template>
 
 <script setup>
-import { useQuasar } from "quasar";
-import { ref } from "vue";
+import {useQuasar} from "quasar";
+import {ref} from "vue";
 import IconPickerField from "src/components/base/IconPickerField.vue";
+import {$t} from "src/services/i18n";
+import LoaderPage from "components/base/LoaderPage.vue";
+import authService from "src/services/auth";
+import {StorageService} from "src/services/storage";
+
 const $q = useQuasar();
+const {login, profile} = authService();
 document.title = document.title + " - Debug";
 
 const text = ref("");
-const data = ref(
-  "2024-06-05|2024-06-05;2024-06-06|2024-06-21;2024-06-29|2024-06-29"
-);
+const data = ref();
+const token = ref('');
+
+function Login() {
+  data.value = "Login ...";
+
+  login({identity: "admin", password: "password", rememberMe: false}).then((res) => {
+    data.value = "Logged in successfully!";
+    data.value = res;
+    // token.value = StorageService.setToken()
+
+  }).catch((error) => {
+    data.value = "Error: " + error.message;
+  });
+}
+
+function Profile() {
+  profile().then((res) => {
+
+    data.value = "Logged in successfully!";
+    data.value = res;
+    // token.value = StorageService.setToken()
+
+  }).catch((error) => {
+    data.value = "Error: " + error.message;
+  });
+}
+
+function Logout() {
+  // StorageService.removeToken();
+  token.value = '';
+  data.value = "Logged out successfully!";
+}
 </script>
 
 <style scoped lang="css"></style>

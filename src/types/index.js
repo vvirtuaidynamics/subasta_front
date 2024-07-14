@@ -33,3 +33,4 @@ export function User(payload) {
     token: payload.token || null,
   }
 }
+

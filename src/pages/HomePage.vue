@@ -225,17 +225,44 @@ import {useQuasar} from "quasar";
 import {homeCarouselData} from "src/config/homeCarouselData";
 import appConfig from "src/config/app.js"
 import images from "src/config/theme/images"
+import {useRouter, useRoute} from "vue-router";
 
 const $q = useQuasar();
 const $app = useApp();
+const $router = useRouter();
+const route = useRoute();
 
 const year = new Date().getFullYear();
 const currentSlide = ref(0);
 const slider = ref();
-const {navigateTo} = $app;
+
 const carouselItems = ref();
 const scrollRef = ref();
 const isTop = ref(true);
+
+function navigateTo(payload) {
+  // console.log("payload: ", payload);
+  if (payload && typeof payload === "string") {
+    if (payload.startsWith("http") || payload.startsWith("https")) {
+      window.open(payload, "_blank");
+    }
+    if (payload.startsWith("#")) {
+      document.getElementById(payload).scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest'
+      });
+    }
+  }
+  if (payload && typeof payload === "object") {
+    const path = payload.path;
+    if (path && $route.path !== path) {
+      $router.push(path);
+    }
+    if (payload.name) $router.push({name: payload.name});
+    if (payload.path) $router.push({path: payload.path});
+  }
+}
 
 const scrollObserver = ({direction, position}) => {
   if (position.top === 0) {

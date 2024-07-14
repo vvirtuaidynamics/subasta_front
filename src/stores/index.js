@@ -1,18 +1,18 @@
-import { store } from "quasar/wrappers";
-import { createPinia } from "pinia";
-import { storePlugin } from "pinia-plugin-store";
-import { utils } from "src/helpers/utils";
-import { LocalStorage } from "quasar";
+import {store} from "quasar/wrappers";
+import {createPinia} from "pinia";
+import {storePlugin} from "pinia-plugin-store";
+import {utils} from "src/helpers/utils";
+import {LocalStorage} from "quasar";
 
-export default store((/* { ssrContext } */) => {
+export default store(({ssrContext}) => {
   const pinia = createPinia();
 
-  const { encrypt, decrypt } = utils;
+  const {encrypt, decrypt} = utils;
 
   const stores = storePlugin({
     stores: [
       {
-        name: "appStore",
+        name: `${process.env.APP_NAME}_STATE_APP`,
         ciphertext:
           process.env.NODE_ENV?.toString() === "production" ||
           process.env.STORAGE_CIPHER?.toString() === "true"

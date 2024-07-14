@@ -12,7 +12,7 @@ export default useTable(() => {
     {
       field: "actions",
       name: "actions",
-      label: "Acciones",
+      label: "Actions",
       type: "actions",
     },
   ];

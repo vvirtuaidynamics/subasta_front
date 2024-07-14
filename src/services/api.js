@@ -1,14 +1,29 @@
 import axios from 'axios';
 import {setupCache} from 'axios-cache-interceptor';
 import {StorageService} from './storage';
+import {utils} from 'src/helpers/utils';
+import {useApp} from "src/composables/useApp";
 
 axios.defaults.baseURL = process.env.API_URL;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
+axios.defaults.withXSRFToken = true;
+axios.defaults.withCredentials = true;
 
-let token = StorageService.getToken();
-if (token) {
+const {token, user, setAppState} = useApp();
+
+// let token = StorageService.getToken();
+if (token.value) {
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
 }
+
+axios.interceptors.response.use((response) => response, (error) => {
+  if (error.response && error.response.status === 401) {
+    utils.sendMsg({msg: `${$t('Invalid token')}`, type: 'negative'});
+    StorageService.removeAuthStore();
+  }
+  return Promise.reject(error);
+})
+
 export const ApiService = {
   init() {
     setupCache(axios, {interpretHeader: false});

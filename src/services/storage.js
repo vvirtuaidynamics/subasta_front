@@ -7,8 +7,8 @@ import AppConfig from "src/config/app"
 const AppStoreKey = process.env.APP_NAME || "APP";
 
 // key for user access token
-const AUTH_DATA = AppStoreKey + "_AUTH_STORE";
-const TOKEN_KEY = AppStoreKey + "_TOKEN";
+const AUTH_DATA_KEY = `${AppStoreKey}_AUTH_STORE`
+const TOKEN_KEY = `${AppStoreKey}_AUTH_TOKEN`;
 
 
 // key to remember user locale
@@ -49,16 +49,16 @@ export const StorageService = {
   },
 
   setAuthStore(userData, remember) {
-    this.set(AUTH_DATA, userData, remember);
+    this.set(AUTH_DATA_KEY, userData, remember);
   },
 
   getAuthStore() {
-    return this.get(AUTH_DATA);
+    return this.get(AUTH_DATA_KEY);
   },
 
   removeAuthStore() {
-    this.remove(AUTH_DATA);
-    this.remove(AUTH_DATA);
+    this.remove(AUTH_DATA_KEY);
+    this.remove(TOKEN_KEY);
   },
 
   setUserConfig(user, config, remember = false) {
@@ -66,13 +66,13 @@ export const StorageService = {
     this.set(keyUserConfig, config, remember);
   },
 
-  getUserConfig(user) {
-    const keyUserConfig = `${AppStoreKey}_${utils.upper(user)}_CONFIG`;
+  getUserConfig(username) {
+    const keyUserConfig = `${AppStoreKey}_${utils.upper(username)}_CONFIG`;
     return this.get(keyUserConfig);
   },
 
-  removeUserConfig(user) {
-    const keyUserConfig = `${AppStoreKey}_${utils.upper(user)}`;
+  removeUserConfig(username) {
+    const keyUserConfig = `${AppStoreKey}_${utils.upper(username)}`;
     this.remove(keyUserConfig)
   },
 

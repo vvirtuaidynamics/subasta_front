@@ -1,6 +1,8 @@
 import {boot} from "quasar/wrappers";
 import axios from "axios";
 
+
+const api_csrf_url = process.env.API_CSRF_URL;
 const api_url = process.env.API_URL;
 const api = axios.create({
   baseURL: api_url,

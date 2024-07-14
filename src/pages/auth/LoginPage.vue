@@ -1,43 +1,47 @@
 <script setup>
 import {reactive, ref, watch, onBeforeMount} from "vue";
 import {useQuasar} from "quasar";
+import {useRoute, useRouter} from "vue-router";
+
 import {useApp} from "src/composables/useApp";
 import {$t} from "src/services/i18n";
+import authService from "src/services/auth";
 
 // Component
 import QButtonComponent from "components/base/QButtonComponent.vue";
 import DarkSwitcher from "src/components/base/DarkSwitcher.vue";
 import LangSwitcher from "src/components/base/LangSwitcher.vue";
-import {createRouter as $router} from "vue-router";
 import {utils} from "src/helpers/utils";
 import {forms} from "src/config/theme/forms";
 import {texts} from "src/config/theme/texts";
 import images from "src/config/theme/images";
 import appConfig from "src/config/app";
 
-
 const year = new Date().getFullYear();
 const $app = useApp();
 const $q = useQuasar();
+const $router = useRouter();
+const $route = useRoute();
+
+const {login} = authService()
 
 const {
-  appData,
-  appDataLoaded,
-  Login,
   loading,
-  loginRedirect,
-  Auth,
-  Avatar,
-  navigateTo,
+  setAppState,
+  token,
+  dark,
+  isAuthenticated,
+  fullscreen,
+  handleDarkMode,
 } = $app;
-const UsernameRule = [(val) => !!val || $t("validations.required")];
+
+const IdentityRule = [(val) => !!val || $t("validations.required")];
 const PasswordRule = [(val) => !!val || $t("validations.required")];
-const fInputUsername = ref();
+const fInputIdentity = ref();
 const fInputPassword = ref();
 
-// Form Data
 const formData = reactive({
-  username: "",
+  identity: "",
   password: "",
   rememberMe: false,
 });
@@ -45,69 +49,82 @@ const formData = reactive({
 function Validate() {
   let result = false;
 
-  fInputUsername.value.validate();
+  fInputIdentity.value.validate();
   fInputPassword.value.validate();
-  if (fInputUsername.value.hasError || fInputPassword.value.hasError)
+  if (fInputIdentity.value.hasError || fInputPassword.value.hasError)
     return result;
-
   return true;
 }
 
 function frmReset() {
-  formData.username = "";
+  formData.identity = "";
   formData.password = "";
-  fInputUsername.value.focus();
-  fInputUsername.value.resetValidation();
+  fInputIdentity.value.focus();
+  fInputIdentity.value.resetValidation();
   fInputPassword.value.resetValidation();
 }
 
+function navigateTo(payload) {
+  // console.log("payload: ", payload);
+  if (payload && typeof payload === "string") {
+    if (payload.startsWith("http") || payload.startsWith("https")) {
+      window.open(payload, "_blank");
+    }
+    if (payload.startsWith("#")) {
+      document.getElementById(payload).scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest'
+      });
+    }
+  }
+  if (payload && typeof payload === "object") {
+    const path = payload.path;
+    if (path && $route.path !== path) {
+      $router.push(path);
+    }
+    if (payload.name) $router.push({name: payload.name});
+    if (payload.path) $router.push({path: payload.path});
+  }
+}
+
 async function onSubmit() {
-  $app.setLoading(true);
+  $app.setAppState({loading: true});
   if (Validate()) {
     let result = null;
     try {
-      result = await Login({
-        identity: formData.username.toLowerCase(),
+      result = await login({
+        identity: formData.identity.toLowerCase(),
         password: formData.password,
+        rememberMe: formData.rememberMe,
       });
-      // console.log("res: ", result);
 
       if (result) {
-        // auth.value.avatar = app_logo.value;
-        // $router.push({ name: "app" });
+        const {user, token, modules} = result;
+        $app.setAppState({loading: false, ...result});
+        navigateTo({name: "dashboard"});
       } else {
-        $app.setLoading();
-        //await Avatar("");
+        $app.setAppState({loading: false});
         frmReset();
-        // fInputUsername.value.focus();
       }
     } catch (error) {
       if (process.env.NODE_ENV === "development") console.log("error:", error);
-      $app.setLoading();
+      $app.setAppState({loading: false});
     }
   } else {
     utils.sendMsg({type: "negative", msg: `${$t("errorValidation")}`});
 
-    if (formData.username.length === 0) fInputUsername.value.focus();
-    else if (formData.password.length === 0) fInputPassword.value.focus();
-    $app.setLoading();
+    if (formData.identity?.length === 0) fInputIdentity.value.focus();
+    else if (formData.password?.length === 0) fInputPassword.value.focus();
+    $app.setAppState({loading: false});
     return false;
   }
 }
 
 onBeforeMount(() => {
-  // if (isAuth) {
-  //   loginRedirect();
-  // }
-  // if (!appDataLoaded.value) $app.setAppData();
+
 });
 
-// watch(
-//   () => avatar,
-//   (newAvatar) => {
-//     userAvatar.value = newAvatar;
-//   }
-// );
 </script>
 
 <template>
@@ -130,30 +147,13 @@ onBeforeMount(() => {
               style="border: 2px solid #c0c0c0"
             >
               <q-img
-                :src="Auth?.avatar ?? images.appLogo"
+                :src="images.appLogo"
                 fit="contain"
                 style="width: 110px; height: 110px"
               />
             </q-avatar>
 
-            <dark-switcher
-              class="absolute-top-right"
-              :model-value="$q.dark.isActive"
-              @update="(val) => $q.dark.set(val)"
-            />
-            <q-btn
-              id="home"
-              class="animated faa-pulse absolute-top-left q-mr-md"
-              dense
-              flat
-              round
-              to="/"
-            >
-              <q-icon name="mdi-home"></q-icon>
-              <q-tooltip class="info">
-                {{ $t("labelGoHome") }}
-              </q-tooltip>
-            </q-btn>
+
           </q-card-section>
 
           <q-card-section>
@@ -168,13 +168,12 @@ onBeforeMount(() => {
               <div class="q-py-xs"></div>
 
               <q-input
-                ref="fInputUsername"
-                v-model="formData.username"
-                :label="$t('fields.username',null,'first')"
-                :rules="UsernameRule"
+                ref="fInputIdentity"
+                v-model="formData.identity"
+                :label="$t('fields.identity',null,'first')"
+                :rules="IdentityRule"
                 lazy-rules
                 v-bind="forms.text"
-                @change="(user) => Avatar(user)"
               >
                 <template v-slot:prepend>
                   <q-icon name="fas fa-user-tie"/>
@@ -226,7 +225,6 @@ onBeforeMount(() => {
           </q-card-actions>
         </q-card>
       </div>
-
       <transition
         appear
         enter-active-class="animated slideInRight"
@@ -243,29 +241,32 @@ onBeforeMount(() => {
       </transition>
 
       <q-bar class="login-footer absolute-bottom " :class="texts.footer" dense style="height: 50px">
-        <div class="row login-footer-header">
+        <div class="row login-footer-header" style="min-width: 230px">
           <q-btn flat @click="navigateTo({path:'/'})" :title="$t('homeTip')">
             <img
               :src="images.appLogo"
               alt="SUBASTA"
               style=": 40px"
             />
-
-
             <div class="text-h6 text-uppercase">
-
               {{ appConfig.name }}
-
             </div>
           </q-btn>
         </div>
         <q-space/>
-        <div class="q-mx-sm">
+        <div class="q-mx-sm q-pr-sm" v-if="$q.screen.gt.xs">
           {{ $q.platform.is.desktop ? $t("copyright") : "Copyright " }} &copy;
           {{ year }}
         </div>
-        <q-separator vertical/>
+        <q-separator vertical v-if="$q.screen.gt.sm"/>
         <LangSwitcher/>
+        <dark-switcher
+          size="16px"
+          :model-value="$q.dark.isActive"
+          @update="(val) => handleDarkMode"
+        />
+
+
       </q-bar>
     </div>
   </q-page>
@@ -273,14 +274,14 @@ onBeforeMount(() => {
 
 <style lang="scss" scoped>
 #login {
-  min-width: 400px;
+  min-width: 350px;
   min-height: 100vh;
   overflow: hidden;
   background-image: linear-gradient(to bottom, #0e4b8a, #00c6ff);
 
   .login-card {
-    width: 350px;
-    border-radius: 15px;
+    width: 340px;
+    border-radius: 25px;
     border: 2px solid #c0c0c0;
   }
 
@@ -291,7 +292,7 @@ onBeforeMount(() => {
   }
 
   .login-footer-header {
-    min-width: 250px;
+    min-width: auto;
     transform: skewX(-10deg) translateX(-50px);
     background-color: $dark;
     margin: 0;

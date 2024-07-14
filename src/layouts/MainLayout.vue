@@ -19,10 +19,10 @@
 
         <q-toolbar-title style="padding-left: 2px">
           <span class="text-uppercase" v-if="!leftDrawerOpen">{{
-            appConfig.name
-          }}</span>
+              appConfig.name
+            }}</span>
         </q-toolbar-title>
-        <LangSwitcher class="z-max q-ml-sm" />
+        <LangSwitcher class="z-max q-ml-sm"/>
         <DarkSwitcher
           class="z-max"
           size="md"
@@ -41,11 +41,11 @@
       :mini="true"
       v-if="mini"
     >
-      <menu-component @change-url="(nav) => (currentNav = nav)" :mini="true" />
+      <menu-component @change-url="(nav) => (currentNav = nav)" :mini="true"/>
     </q-drawer>
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered v-else>
-      <menu-component @change-url="(nav) => (currentNav = nav)" />
+      <menu-component @change-url="(nav) => (currentNav = nav)"/>
     </q-drawer>
 
     <q-page-container>
@@ -54,13 +54,13 @@
         @change-url="currentNav = null"
         v-if="currentNav"
       />
-      <router-view />
+      <router-view/>
       <q-page-scroller
         position="bottom-right"
         :scroll-offset="150"
         :offset="[18, 18]"
       >
-        <q-btn fab icon="mdi-arrow-up" color="primary" padding="sm" />
+        <q-btn fab icon="mdi-arrow-up" color="primary" padding="sm"/>
       </q-page-scroller>
     </q-page-container>
 
@@ -76,15 +76,18 @@
           shrink
           style="font-size: 14px; padding-left: 2px"
         >
-          {{ appConfig.name }}</q-toolbar-title
+          {{ appConfig.name }}
+        </q-toolbar-title
         >
         <q-icon name="email" size="sm"></q-icon>
         <q-toolbar-title shrink style="font-size: 14px; padding-left: 2px">
-          {{ appConfig.email }}</q-toolbar-title
+          {{ appConfig.email }}
+        </q-toolbar-title
         >
         <q-icon name="phone" size="sm"></q-icon>
         <q-toolbar-title style="font-size: 14px; padding-left: 2px">
-          {{ appConfig.phone }}</q-toolbar-title
+          {{ appConfig.phone }}
+        </q-toolbar-title
         >
         <span>{{ $t("copyright") }} &copy; 2024</span>
       </q-toolbar>
@@ -93,22 +96,26 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import {ref} from "vue";
 import LangSwitcher from "src/components/base/LangSwitcher.vue";
 import DarkSwitcher from "src/components/base/DarkSwitcher.vue";
 import MenuComponent from "src/components/navigation/MenuComponent.vue";
 import BreadcrumbsComponent from "src/components/navigation/BreadcrumbsComponent.vue";
-import { useQuasar } from "quasar";
+import {useQuasar} from "quasar";
 import appConfig from "src/config/app.js";
-import { $t } from "src/services/i18n";
-import { useApp } from "src/composables/useApp";
-
-const $q = useQuasar();
-const $app = useApp();
+import {$t} from "src/services/i18n";
+import {useApp} from "src/composables/useApp";
+import {useRouter, useRoute} from "vue-router";
 
 defineOptions({
   name: "MainLayout",
 });
+
+const $q = useQuasar();
+const $app = useApp();
+const $router = useRouter();
+const $route = useRoute();
+
 const currentNav = ref(null);
 const mini = ref(false);
 const leftDrawerOpen = ref(false);
@@ -117,22 +124,51 @@ function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
   mini.value = !leftDrawerOpen.value;
 }
+
+function navigateTo(payload) {
+  // console.log("payload: ", payload);
+  if (payload && typeof payload === "string") {
+    if (payload.startsWith("http") || payload.startsWith("https")) {
+      window.open(payload, "_blank");
+    }
+    if (payload.startsWith("#")) {
+      document.getElementById(payload).scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest'
+      });
+    }
+  }
+  if (payload && typeof payload === "object") {
+    const path = payload.path;
+    if (path && $route.path !== path) {
+      $router.push(path);
+    }
+    if (payload.name) $router.push({name: payload.name});
+    if (payload.path) $router.push({path: payload.path});
+  }
+}
+
 </script>
 <style>
 ::-webkit-scrollbar-thumb {
   background: rgb(175, 174, 174) !important;
   border-radius: 8px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: grey !important;
 }
+
 ::-webkit-scrollbar-track {
   background: #fff !important;
   border-radius: 8px;
 }
+
 ::-webkit-scrollbar {
   width: 8px !important;
 }
+
 ::-webkit-scrollbar:horizontal {
   height: 8px !important;
 }

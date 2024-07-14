@@ -2,6 +2,7 @@ import {StorageService} from "src/services/storage";
 import es from "src/i18n/es";
 import en from "src/i18n/en-US";
 import {api, api_url} from "boot/axios";
+import {utils} from "src/helpers/utils";
 
 const locale = StorageService.getLocale() || "es";
 
@@ -15,9 +16,8 @@ try {
 
 export async function getAsyncBackendLocales() {
   try {
-    const locales = await api.get(`${api_url}/locales`);
-    const {data} = locales;
-
+    const response = await api.get(`${api_url}/locales`);
+    const {data} = response;
     return data;
   } catch (err) {
     console.error('Error: ', err)
@@ -60,9 +60,8 @@ export const i18n = () => {
         locale,
         messages: all_messages,
         t: function (key, args = {}) {
-
           let value = key.split(".").reduce((p, c) => p?.[c], all_messages);
-          if (value.includes(":")) value = normalizarTrans(value)
+          if (value && value.includes(":")) value = normalizarTrans(value)
           if (value && args) {
             const names = Object.keys(args);
             const vals = Object.values(args);
@@ -80,7 +79,7 @@ export const i18n = () => {
   return {
     locale,
     messages: all_messages,
-    t: function (key, args = {}) {
+    t: function (key, args = {}, textCase = "first") {
       let value = key.split(".").reduce((p, c) => p?.[c], all_messages);
       if (value.includes(":")) value = normalizarTrans(value)
       if (value && args) {
@@ -88,6 +87,19 @@ export const i18n = () => {
           return args[p1] !== undefined ? args[p1] : match;
         });
       }
+      if (textCase === "first") {
+        value = utils.capitalize(value);
+        key = utils.capitalize(key);
+      }
+      if (textCase === "lower") {
+        value = utils.lower(value);
+        key = utils.lower(key);
+      }
+      if (textCase === "upper") {
+        value = utils.upper(value);
+        key = utils.upper(key);
+      }
+
       return value || key;
     },
   }

@@ -1,107 +1,80 @@
 import {storeToRefs} from "pinia";
 import {useQuasar} from "quasar";
 import {useAppStore} from "src/stores/app-store";
-import {useRouter} from "vue-router";
 import {$t} from "src/services/i18n";
 
 export function useApp() {
   const $q = useQuasar;
-  const $router = useRouter();
-  const $app = useAppStore();
+  const $appStore = useAppStore();
 
   const {
     appName,
-    locale,
-    theme,
+    user,
+    avatar,
     dark,
+    token,
+    locale,
+    loading,
+    fullscreen,
+    leftDrawer,
+    breadcrumbs,
+    modules,
+    configuration,
+    messages,
+    notifications,
+    isAuthenticated,
+    theme,
+    notificationsPosition,
+  } = storeToRefs($appStore);
+
+  function resetAppState() {
+    $appStore.reset();
+  }
+
+  /**
+   * setState
+   * @param {{appName?: String, locale?: String, user?: Object, locale?: String, loading?:Boolean, rememberMe?:Boolean, dark?:Boolean, token?: String, avatar?: String, messages?: Array, breadcrumbs?: any, configuration?: Object, notifications?: Array }} data
+   */
+  function setAppState(data) {
+    $appStore.setState(data);
+  }
+
+
+  function handleDarkMode(darkValue) {
+    let data = {dark: darkValue}
+    let config = user && configuration
+      ? {...configuration, ...{dark: darkValue}}
+      : {}
+    data = {...data, ...{configuration: config}}
+    setAppState(data);
+  }
+
+
+  return {
+    $q,
+    $appStore,
+
+    appName,
     user,
     avatar,
     token,
     loading,
-    leftDrawer,
-    breadcrumbs,
-    config,
-    messages,
-    notifications,
-  } = storeToRefs($app);
-
-  function resetAppState() {
-    $app.reset();
-  }
-
-  function setAppState(data) {
-    $app.setState(data);
-  }
-
-  /**
-   * setBreadcrumbs   *
-   * @returns {{to: *, label}}
-   */
-  function setBreadcrumbs() {
-    const matchedRoutes = $route.matched;
-
-    const breadcrumb = matchedRoutes.map((route) => ({
-      to: route.path,
-      label: route.meta.breadcrumb || $t("Home"),
-    }));
-    const unique_breadcrumb = breadcrumb.reduce((accumulator, currentValue) => {
-      if (accumulator.filter((a) => a.to == currentValue.to).length === 0) {
-        accumulator.push(currentValue);
-      }
-      return accumulator;
-    }, []);
-
-    unique_breadcrumb.unshift({to: "/", label: $t("Home")});
-    $appStore.setBreadcrumbs(unique_breadcrumb);
-    // console.log("unique_breadcrumb: ", unique_breadcrumb);
-
-    return unique_breadcrumb;
-  }
-
-  /**
-   * navigateTo
-   *
-   * payload {name: string, path: string, to: string} | string
-   * @param payload
-   */
-  function navigateTo(payload) {
-    // console.log("payload: ", payload);
-    if (payload && typeof payload === "string") {
-      if (payload.startsWith("http") || payload.startsWith("https")) {
-        window.open(payload, "_blank");
-      } else {
-        $router.push({name: payload}); // sino es link por defecto asumo que es name
-      }
-    }
-    if (payload && typeof payload === "object") {
-      const path = payload.path ?? false;
-      if (path && $router.path !== path) {
-        $router.push(path);
-      }
-      if (payload.name) $router.push({name: payload.name});
-      if (payload.path) $router.push({path: payload.path});
-    }
-  }
-
-  return {
-    $q,
-    $app,
-
-    appName,
-    locale,
-    theme,
     dark,
-    user,
-    token,
-    loading,
+    locale,
+    fullscreen,
     leftDrawer,
     breadcrumbs,
-    config,
+    modules,
+    configuration,
     messages,
     notifications,
+    isAuthenticated,
+    theme,
+    notificationsPosition,
 
     // Methods
-    navigateTo,
     setAppState,
+    resetAppState,
+    handleDarkMode
   };
 }

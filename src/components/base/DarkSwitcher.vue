@@ -13,12 +13,13 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue";
+import {onBeforeMount, onMounted, ref} from "vue";
+import {useQuasar} from "quasar";
 
 defineOptions({
   name: "DarkSwitcher",
 });
-
+const $q = useQuasar();
 const props = defineProps({
   modelValue: {
     type: Boolean,
@@ -42,10 +43,14 @@ const colorDark = ref(props.colorDark);
 
 const handleUpdate = (val) => {
   isDark.value = val;
+  $q.dark.set(val);
   emits("update", val);
 };
 
-onBeforeMount(() => {});
+onBeforeMount(() => {
+});
 
-onMounted(() => {});
+onMounted(() => {
+
+});
 </script>

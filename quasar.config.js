@@ -58,6 +58,7 @@ module.exports = configure(function (ctx) {
       // publicPath: '/',
       // analyze: true,
       env: {
+        API_CSRF_URL: "http://localhost:8000/sanctum/csrf-cookie",
         API_URL: "http://localhost:8000/api",
         APP_NAME: appContext.name.toUpperCase() || "Subasta",
         APP_AUTOR: appContext.author || "",
