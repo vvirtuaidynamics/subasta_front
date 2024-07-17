@@ -6,7 +6,7 @@
     flat
     @click="handleUpdate(!isDark)"
   >
-    <q-tooltip class="bg-amber text-black text-caption text-center">
+    <q-tooltip class="bg-amber text-black text-caption text-center no-scroll">
       {{ `${isDark ? $t("darkDeactivateTip") : $t("darkActivateTip")}` }}
     </q-tooltip>
   </q-btn>
