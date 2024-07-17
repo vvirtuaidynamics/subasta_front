@@ -524,27 +524,27 @@ export const utils = {
    * @param {{msg: String, position?: String, timeout?: Number, avatar?: String, type?: negative|warning|info|ongoing|positive }} props
    */
   sendMsg(props) {
-    let icon = "mdi-exclamation-thick";
+    let icon = "fas fa-info-circle";
     let bgColor = "bg-info";
     switch (props.type) {
       case "negative":
-        icon = "mdi-error";
+        icon = "fas fa-exclamation-circle";
         bgColor = "negative";
         break;
       case "warning":
-        icon = "mdi-alert";
+        icon = "fas fa-exclamation-triangle";
         bgColor = "warning";
         break;
       case "info":
-        icon = "mdi-bell";
+        icon = "fas fa-info-circle";
         bgColor = "info";
         break;
       case "ongoing":
-        icon = "mdi-alert-rhombus";
+        icon = "fas fa-info";
         bgColor = "ongoing";
         break;
       case "positive":
-        icon = "mdi-check-circle";
+        icon = "fas fa-check-circle";
         bgColor = "positive";
         break;
     }
