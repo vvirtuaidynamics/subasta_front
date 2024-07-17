@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh LpR lff">
-    <q-header elevated :class="$q.dark.isActive ? 'bg-dark' : 'bg-primary'">
+    <q-header class="header" :elevated="!$q.dark.isActive" :class="$q.dark.isActive ? 'bg-dark' : 'bg-primary'">
       <q-toolbar>
         <q-btn
           flat
@@ -11,7 +11,7 @@
           @click="toggleLeftDrawer"
         />
         <img
-          alt="Quasar logo"
+          alt="Logo"
           src="~assets/images/default.png"
           style="width: 32px; height: 32px; margin-left: 10px"
           v-if="!leftDrawerOpen"
@@ -31,6 +31,8 @@
           :model-value="$q.dark.isActive"
           @update="(val) => $q.dark.set(val)"
         />
+
+        <user-menu></user-menu>
       </q-toolbar>
     </q-header>
 
@@ -64,7 +66,7 @@
       </q-page-scroller>
     </q-page-container>
 
-    <q-footer elevated :class="$q.dark.isActive ? 'bg-dark' : 'bg-primary'">
+    <q-footer class="footer" :elevated="!$q.dark.isActive" :class="$q.dark.isActive ? 'bg-dark' : 'bg-primary'">
       <q-toolbar>
         <img
           alt="Quasar logo"
@@ -96,7 +98,7 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {onBeforeMount, onMounted, ref} from "vue";
 import LangSwitcher from "src/components/base/LangSwitcher.vue";
 import DarkSwitcher from "src/components/base/DarkSwitcher.vue";
 import MenuComponent from "src/components/navigation/MenuComponent.vue";
@@ -106,6 +108,7 @@ import appConfig from "src/config/app.js";
 import {$t} from "src/services/i18n";
 import {useApp} from "src/composables/useApp";
 import {useRouter, useRoute} from "vue-router";
+import UserMenu from "components/base/UserMenu.vue";
 
 defineOptions({
   name: "MainLayout",
@@ -116,6 +119,8 @@ const $app = useApp();
 const $router = useRouter();
 const $route = useRoute();
 
+const {user, avatar, navigateTo, isAuthenticated} = $app;
+
 const currentNav = ref(null);
 const mini = ref(false);
 const leftDrawerOpen = ref(false);
@@ -125,32 +130,31 @@ function toggleLeftDrawer() {
   mini.value = !leftDrawerOpen.value;
 }
 
-function navigateTo(payload) {
-  // console.log("payload: ", payload);
-  if (payload && typeof payload === "string") {
-    if (payload.startsWith("http") || payload.startsWith("https")) {
-      window.open(payload, "_blank");
-    }
-    if (payload.startsWith("#")) {
-      document.getElementById(payload).scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-        inline: 'nearest'
-      });
-    }
-  }
-  if (payload && typeof payload === "object") {
-    const path = payload.path;
-    if (path && $route.path !== path) {
-      $router.push(path);
-    }
-    if (payload.name) $router.push({name: payload.name});
-    if (payload.path) $router.push({path: payload.path});
-  }
+const navigate = (payload) => {
+  navigateTo(payload, $router, $route);
 }
+
+onBeforeMount(() => {
+  if (!isAuthenticated.value) {
+    navigate({name: appConfig.page_login_name});
+  }
+})
+
+
+onMounted(() => {
+
+})
 
 </script>
 <style>
+.header {
+  border-bottom: 1px solid;
+}
+
+.footer {
+  border-top: 1px solid;
+}
+
 ::-webkit-scrollbar-thumb {
   background: rgb(175, 174, 174) !important;
   border-radius: 8px;

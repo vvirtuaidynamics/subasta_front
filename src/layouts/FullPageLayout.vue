@@ -15,33 +15,17 @@
 </template>
 <script setup>
 import {onBeforeMount, onMounted, ref, watch} from "vue";
-import {useRouter} from "vue-router";
+import {useRouter, useRoute} from "vue-router";
+import {useApp} from "src/composables/useApp";
+
 
 const $router = useRouter();
+const $route = useRoute();
 let breadcrumbs = ref();
+const {navigateTo} = useApp();
 
-function navigateTo(payload) {
-  // console.log("payload: ", payload);
-  if (payload && typeof payload === "string") {
-    if (payload.startsWith("http") || payload.startsWith("https")) {
-      window.open(payload, "_blank");
-    }
-    if (payload.startsWith("#")) {
-      document.getElementById(payload).scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-        inline: 'nearest'
-      });
-    }
-  }
-  if (payload && typeof payload === "object") {
-    const path = payload.path;
-    if (path && $route.path !== path) {
-      $router.push(path);
-    }
-    if (payload.name) $router.push({name: payload.name});
-    if (payload.path) $router.push({path: payload.path});
-  }
+const navigate = (payload) => {
+  navigateTo(payload, $router, $route);
 }
 
 const refresh = () => $router.go(0);
