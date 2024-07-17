@@ -347,7 +347,7 @@ const icons = computed(() => {
   if (data.value.iconSet === "fontawesome") return fontawesomeIcons.icons;
   if (data.value.iconSet === "mdi") return mdiIcons.icons;
   if (data.value.iconSet === "bootstrap-icons") return bootstrapIcons.icons;
-  if (data.value.iconSet === "ionicons") return ionIcons.icons;
+  if (data.value.iconSet === "ionicons-v4") return ionIcons.icons;
   if (data.value.iconSet === "themify") return themify.icons;
   return materialIcons.icons;
 });
@@ -372,7 +372,7 @@ const data = ref({
     {
       label: "Material Icons",
       value: "material-icons",
-      select: "bootstrap-icons" === props.iconSet,
+      select: "material-icons" === props.iconSet,
     },
     {
       label: "Material Disign Icons",
@@ -382,7 +382,7 @@ const data = ref({
     {
       label: "Ion Icons",
       value: "ionicons-v4",
-      select: "ionicons" === props.iconSet,
+      select: "ionicons-v4" === props.iconSet,
     },
     {
       label: "Themify Icons",
