@@ -6,12 +6,11 @@
           id="header-bar"
           class=" absolute-top" dense style="height: 50px">
           <div class="row login-header">
-            <q-btn flat @click="navigateTo({path:'/'})" :title="$t('homeTip')">
+            <q-btn flat @click="navigate({name: page_home_name})" :title="$t('homeTip')">
               <img class="z-top"
                    :src="images.appLogo"
                    alt=""
               />
-
               <div class="text-h6 text-uppercase">
                 {{ appConfig.name }}
               </div>
@@ -40,17 +39,17 @@
                   <q-item
                     v-if="!false"
                     clickable
-                    @click="navigateTo({ name: 'login' })"
+                    @click="navigate({ name: !isAuthenticated ? page_login_name : page_app_name})"
                   >
                     <q-item-section avatar>
-                      <q-icon name="mdi-login" size="md"/>
+                      <q-icon v-if="!isAuthenticated" name="fas fa-fingerprint" size="md"/>
+                      <q-icon v-else name="fas fa-user-check" size="sm" class="text-positive"/>
                     </q-item-section>
                     <q-item-section class="text-body1 text-uppercase"
-                    >{{ $t("login") }}
+                    >{{ !isAuthenticated ? $t("login") : $t("desktop") }}
                     </q-item-section>
                   </q-item>
-
-                  <q-item clickable @click="navigateTo({ name: 'register' })">
+                  <q-item clickable @click="navigate({ name: 'register' })" v-if="!isAuthenticated">
                     <q-item-section avatar>
                       <q-icon name="mdi-account-arrow-up-outline" size="md"/>
                     </q-item-section>
@@ -62,8 +61,6 @@
               </q-menu>
             </q-btn>
           </div>
-
-
           <q-space/>
           <div class="row login-header-right ">
 
@@ -75,7 +72,6 @@
               colorLight="yellow-6"
               :model-value="$q.dark.isActive"
               @update="(val) => $q.dark.set(val)"
-
             />
 
           </div>
@@ -167,28 +163,21 @@
             <q-img
               src="images/default.png"
               fit="scale-down"
-              style="height: 48px; width: 96px"
+              style="height: 40px; width: 40px; margin-right:20px"
             />
-            <q-btn
-              color="white"
-              dense
-              flat
-              icon="email"
-              round
-              disabled
-              :label="appConfig.email"
-            ></q-btn>
-            <q-btn
-              color="white"
-              dense
-              flat
-              disabled
 
-              icon="phone"
-              :label="appConfig.phone"
-
-              round
-            ></q-btn>
+            <a :href="`mailto:${appConfig.email}?subject=${appConfig.name}`">
+              <span class="text-caption text-uppercase text-white q-gutter q-gutter-x-sm">
+                <q-icon name="fas fa-envelope"/>
+                {{ appConfig.email }}
+              </span>
+            </a>
+            <a :href="`#`">
+              <span class="text-caption text-uppercase text-white q-gutter q-gutter-x-sm">
+                <q-icon name="fas fa-phone"/>
+                {{ appConfig.phone }}
+              </span>
+            </a>
           </div>
           <div
             class="col-xs-12 col-sm-12 col-md-6 col-lg-12 text-caption q-mt-sm text-white"
@@ -216,6 +205,7 @@
 </template>
 
 <script setup>
+
 import {ref, reactive, onBeforeMount, onMounted, watch, computed} from "vue";
 import {$t} from "src/services/i18n";
 import {useApp} from "src/composables/useApp";
@@ -230,7 +220,10 @@ import {useRouter, useRoute} from "vue-router";
 const $q = useQuasar();
 const $app = useApp();
 const $router = useRouter();
-const route = useRoute();
+const $route = useRoute();
+
+const {navigateTo, isAuthenticated} = $app
+const {page_app_name, page_home_name, page_login_name} = appConfig
 
 const year = new Date().getFullYear();
 const currentSlide = ref(0);
@@ -240,28 +233,8 @@ const carouselItems = ref();
 const scrollRef = ref();
 const isTop = ref(true);
 
-function navigateTo(payload) {
-  // console.log("payload: ", payload);
-  if (payload && typeof payload === "string") {
-    if (payload.startsWith("http") || payload.startsWith("https")) {
-      window.open(payload, "_blank");
-    }
-    if (payload.startsWith("#")) {
-      document.getElementById(payload).scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-        inline: 'nearest'
-      });
-    }
-  }
-  if (payload && typeof payload === "object") {
-    const path = payload.path;
-    if (path && $route.path !== path) {
-      $router.push(path);
-    }
-    if (payload.name) $router.push({name: payload.name});
-    if (payload.path) $router.push({path: payload.path});
-  }
+const navigate = (payload) => {
+  navigateTo(payload, $router, $route)
 }
 
 const scrollObserver = ({direction, position}) => {
@@ -276,7 +249,6 @@ const scrollObserver = ({direction, position}) => {
     scrollTo.value.top = position.top;
   }
 
-  // console.log({ direction, position });
 };
 const menuTip = ref(false);
 
@@ -352,6 +324,11 @@ onMounted(() => {
     max-width: 250px;
 
 
+  }
+
+  .page-footer a {
+    text-decoration: none;
+    color: inherit;
   }
 }
 </style>
