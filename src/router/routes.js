@@ -25,13 +25,13 @@ const routes = [
     ],
   },
   {
-    path: "/dashboard",
+    path: "/app",
     component: () => import("layouts/MainLayout.vue"),
     children: [
       {
-        name: "dashboard",
+        name: "app",
         path: "",
-        meta: {requiredAuth: true, breadcrumb: "Dashboard"},
+        meta: {requiredAuth: true, breadcrumb: "App"},
         component: () => import("pages/dashboard/DashboardPage.vue"),
       },
       {

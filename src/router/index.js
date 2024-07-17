@@ -8,12 +8,13 @@ import {
 import routes from "./routes";
 import {useAppStore} from "stores/app-store";
 import {publicRoutes, debugRoutes} from "src/config/publicRoutes";
+import {storeToRefs} from "pinia";
 
 export default route(function ({store}) {
   const $appStore = useAppStore();
   if (process.env.NODE_ENV !== "production") publicRoutes.push(...debugRoutes);
 
-  const {isAuthenticated} = $appStore;
+  const {isAuthenticated} = storeToRefs($appStore);
 
   const Router = createRouter({
     scrollBehavior: () => ({left: 0, top: 0}),
@@ -29,7 +30,7 @@ export default route(function ({store}) {
       // $appStore.setRouteData({ from: from, to: to });
     }
 
-    if (!publicRoutes.includes(to.name) && isAuthenticated) next({name: "login"});
+    if (!publicRoutes.includes(to.name) && !isAuthenticated.value) next({name: "login"});
     else next();
   });
 
