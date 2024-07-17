@@ -1,5 +1,6 @@
 <template>
   <q-btn
+    class="btn btn-component"
     :label="props.label"
     :class="props.class"
     v-bind="forms.button"
@@ -46,4 +47,8 @@ const onDblClick = () => {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.btn-component {
+  min-width: 150px;
+}
+</style>
