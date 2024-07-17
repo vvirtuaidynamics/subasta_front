@@ -81,7 +81,7 @@ export const i18n = () => {
     messages: all_messages,
     t: function (key, args = {}, textCase = "first") {
       let value = key.split(".").reduce((p, c) => p?.[c], all_messages);
-      if (value.includes(":")) value = normalizarTrans(value)
+      if (value && value.includes(":")) value = normalizarTrans(value)
       if (value && args) {
         value = value.replace(/{(\w+)}/g, (match, p1) => {
           return args[p1] !== undefined ? args[p1] : match;
