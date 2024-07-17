@@ -1,132 +1,3 @@
-<script setup>
-import {reactive, ref, watch, onBeforeMount} from "vue";
-import {useQuasar} from "quasar";
-import {useRoute, useRouter} from "vue-router";
-
-import {useApp} from "src/composables/useApp";
-import {$t} from "src/services/i18n";
-import authService from "src/services/auth";
-
-// Component
-import QButtonComponent from "components/base/QButtonComponent.vue";
-import DarkSwitcher from "src/components/base/DarkSwitcher.vue";
-import LangSwitcher from "src/components/base/LangSwitcher.vue";
-import {utils} from "src/helpers/utils";
-import {forms} from "src/config/theme/forms";
-import {texts} from "src/config/theme/texts";
-import images from "src/config/theme/images";
-import appConfig from "src/config/app";
-
-const year = new Date().getFullYear();
-const $app = useApp();
-const $q = useQuasar();
-const $router = useRouter();
-const $route = useRoute();
-
-const {login} = authService()
-
-const {
-  loading,
-  setAppState,
-  token,
-  dark,
-  isAuthenticated,
-  fullscreen,
-  handleDarkMode,
-} = $app;
-
-const IdentityRule = [(val) => !!val || $t("validations.required")];
-const PasswordRule = [(val) => !!val || $t("validations.required")];
-const fInputIdentity = ref();
-const fInputPassword = ref();
-
-const formData = reactive({
-  identity: "",
-  password: "",
-  rememberMe: false,
-});
-
-function Validate() {
-  let result = false;
-
-  fInputIdentity.value.validate();
-  fInputPassword.value.validate();
-  if (fInputIdentity.value.hasError || fInputPassword.value.hasError)
-    return result;
-  return true;
-}
-
-function frmReset() {
-  formData.identity = "";
-  formData.password = "";
-  fInputIdentity.value.focus();
-  fInputIdentity.value.resetValidation();
-  fInputPassword.value.resetValidation();
-}
-
-function navigateTo(payload) {
-  // console.log("payload: ", payload);
-  if (payload && typeof payload === "string") {
-    if (payload.startsWith("http") || payload.startsWith("https")) {
-      window.open(payload, "_blank");
-    }
-    if (payload.startsWith("#")) {
-      document.getElementById(payload).scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-        inline: 'nearest'
-      });
-    }
-  }
-  if (payload && typeof payload === "object") {
-    const path = payload.path;
-    if (path && $route.path !== path) {
-      $router.push(path);
-    }
-    if (payload.name) $router.push({name: payload.name});
-    if (payload.path) $router.push({path: payload.path});
-  }
-}
-
-async function onSubmit() {
-  $app.setAppState({loading: true});
-  if (Validate()) {
-    let result = null;
-    try {
-      result = await login({
-        identity: formData.identity.toLowerCase(),
-        password: formData.password,
-        rememberMe: formData.rememberMe,
-      });
-
-      if (result) {
-        const {user, token, modules} = result;
-        $app.setAppState({loading: false, ...result});
-        navigateTo({name: "dashboard"});
-      } else {
-        $app.setAppState({loading: false});
-        frmReset();
-      }
-    } catch (error) {
-      if (process.env.NODE_ENV === "development") console.log("error:", error);
-      $app.setAppState({loading: false});
-    }
-  } else {
-    utils.sendMsg({type: "negative", msg: `${$t("errorValidation")}`});
-
-    if (formData.identity?.length === 0) fInputIdentity.value.focus();
-    else if (formData.password?.length === 0) fInputPassword.value.focus();
-    $app.setAppState({loading: false});
-    return false;
-  }
-}
-
-onBeforeMount(() => {
-
-});
-
-</script>
-
 <template>
   <q-page>
     <div id="login" class="page row gradient-bg-blue">
@@ -220,7 +91,7 @@ onBeforeMount(() => {
               icon="mdi-account-arrow-up"
               :label="$t('register')"
               :title="$t('loginTip')"
-              @handleClick="navigateTo({ name: 'register' })"
+              @handleClick="navigate({ name: 'register' })"
             ></q-button-component>
           </q-card-actions>
         </q-card>
@@ -242,7 +113,7 @@ onBeforeMount(() => {
 
       <q-bar class="login-footer absolute-bottom " :class="texts.footer" dense style="height: 50px">
         <div class="row login-footer-header" style="min-width: 230px">
-          <q-btn flat @click="navigateTo({path:'/'})" :title="$t('homeTip')">
+          <q-btn flat @click="navigate({name: page_home_name})" :title="$t('homeTip')">
             <img
               :src="images.appLogo"
               alt="SUBASTA"
@@ -262,16 +133,153 @@ onBeforeMount(() => {
         <LangSwitcher/>
         <dark-switcher
           size="16px"
-          :model-value="$q.dark.isActive"
-          @update="(val) => handleDarkMode"
+          :model-value="dark"
+          @update="(val) => handleDarkMode(val)"
         />
-
-
       </q-bar>
     </div>
   </q-page>
 </template>
+<script setup>
+import {reactive, ref, watch, onBeforeMount, onMounted} from "vue";
+import {useQuasar} from "quasar";
+import {useRoute, useRouter} from "vue-router";
 
+import {useApp} from "src/composables/useApp";
+import useApi from "src/composables/useApi";
+import {$t} from "src/services/i18n";
+import authService from "src/services/authService";
+
+import QButtonComponent from "components/base/QButtonComponent.vue";
+import DarkSwitcher from "src/components/base/DarkSwitcher.vue";
+import LangSwitcher from "src/components/base/LangSwitcher.vue";
+import {utils} from "src/helpers/utils";
+import {forms} from "src/config/theme/forms";
+import {texts} from "src/config/theme/texts";
+import images from "src/config/theme/images";
+import appConfig from "src/config/app";
+
+const year = new Date().getFullYear();
+const $app = useApp();
+const {login, logout} = authService();
+const $q = useQuasar();
+const $router = useRouter();
+const $route = useRoute();
+
+const {
+  loading,
+  token,
+  dark,
+  locale,
+  isAuthenticated,
+  notificationsPosition,
+  fullscreen,
+  handleDarkMode,
+  navigateTo,
+  setAppState,
+} = $app;
+
+const {page_app_name, page_home_name} = appConfig;
+
+const IdentityRule = [(val) => !!val || $t("validations.required")];
+const PasswordRule = [(val) => !!val || $t("validations.required")];
+const fInputIdentity = ref();
+const fInputPassword = ref();
+
+const formData = reactive({
+  identity: "",
+  password: "",
+  rememberMe: false,
+});
+
+function Validate() {
+  let result = false;
+  fInputIdentity.value.validate();
+  fInputPassword.value.validate();
+  if (fInputIdentity.value.hasError || fInputPassword.value.hasError)
+    return result;
+  return true;
+}
+
+function frmReset() {
+  formData.identity = "";
+  formData.password = "";
+  fInputIdentity.value.focus();
+  fInputIdentity.value.resetValidation();
+  fInputPassword.value.resetValidation();
+}
+
+const navigate = (payload) => {
+  navigateTo(payload, $router, $route)
+}
+
+async function onSubmit() {
+  setAppState({loading: true});
+  if (Validate()) {
+    let result = null;
+    try {
+      result = await login({
+        identity: formData.identity.toLowerCase(),
+        password: formData.password,
+        rememberMe: formData.rememberMe
+      });
+      if (result && result.success) {
+        const {user, token, modules} = result.data;
+        setAppState({loading: false, user, token, modules});
+        let addAvatar = {}
+        if (user.avatar) addAvatar = {avatar: user.avatar}
+        utils.sendMsg({
+          msg: $t(result.message),
+          type: "positive",
+          position: notificationsPosition?.value || 'bottom',
+          ...addAvatar
+        });
+        navigate({name: page_app_name});
+      } else {
+        utils.sendMsg({
+          msg: $t(result?.message),
+          type: "negative",
+          position: notificationsPosition?.value || 'bottom',
+        });
+        frmReset();
+      }
+    } catch (error) {
+      console.log(error)
+      const {data} = error.response;
+      utils.sendMsg({
+        msg: error.message || `${error}`,
+        type: "negative",
+        position: notificationsPosition?.value || 'bottom',
+      });
+      frmReset();
+
+    } finally {
+      setAppState({loading: false});
+    }
+  } else {
+    utils.sendMsg({type: "negative", msg: `${$t("errorValidation")}`});
+    if (formData.identity?.length === 0) fInputIdentity.value.focus();
+    else if (formData.password?.length === 0) fInputPassword.value.focus();
+    $app.setAppState({loading: false});
+  }
+}
+
+onBeforeMount(async () => {
+  $q.dark.set(dark.value);
+  if (isAuthenticated.value)
+    navigate({name: page_app_name});
+
+});
+
+onMounted(() => {
+
+});
+
+watch(dark, (current) => {
+  $q.dark.set(current);
+  handleDarkMode(current);
+});
+</script>
 <style lang="scss" scoped>
 #login {
   min-width: 350px;
