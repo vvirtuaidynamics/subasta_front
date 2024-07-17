@@ -1,13 +1,30 @@
 import {boot} from "quasar/wrappers";
 import axios from "axios";
 
-
-const api_csrf_url = process.env.API_CSRF_URL;
 const api_url = process.env.API_URL;
 const api = axios.create({
   baseURL: api_url,
   withXSRFToken: true,
   withCredentials: true,
+});
+
+api.interceptors.response.use(response => {
+  return response;
+}, error => {
+
+  if (error.response.status === 419) {
+    axios.get(process.env.API_CSRF_URL).then((response) => {
+      api.defaults.headers.common['X-CSRF-TOKEN'] = response.data.csrf_token;
+      console.log('CSRF token updated successfully!')
+    }).catch((error) => {
+      console.log('Error updating CSRF token: ' + error);
+    })
+  }
+  if (error.response.status !== 200) {
+    const {data} = error.response
+    if (data) return data || error.response
+  }
+
 });
 
 axios.defaults.withCredentials = true;
