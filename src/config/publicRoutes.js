@@ -4,7 +4,6 @@ export const debugRoutes = [
   "icons",
   "dialog",
   "debug",
-  "crud",
   "users",
   "groups",
   "carriers",
