@@ -4,19 +4,19 @@ import AppConfig from "src/config/app"
 
 
 // a unique key that identifies app storage values
-const AppStoreKey = process.env.APP_NAME || "APP";
+export const AppStoreKey = process.env.APP_NAME || "APP";
 
 // key for user access token
-const AUTH_DATA_KEY = `${AppStoreKey}_AUTH_STORE`
-const TOKEN_KEY = `${AppStoreKey}_AUTH_TOKEN`;
+export const AUTH_DATA_KEY = `${AppStoreKey}_AUTH_STORE`
+export const TOKEN_KEY = `${AppStoreKey}_AUTH_TOKEN`;
 
 
 // key to remember user locale
-const LOCALE_KEY = AppStoreKey + "_LOCALE";
-const LOCALE_KEY_DATA = AppStoreKey + "_LOCALE_DATA";
-const DARK_KEY = AppStoreKey + "_DARK";
+export const LOCALE_KEY = AppStoreKey + "_LOCALE";
+export const LOCALE_KEY_DATA = AppStoreKey + "_LOCALE_DATA";
+export const DARK_KEY = AppStoreKey + "_DARK";
 
-const encryptStore =
+export const encryptStore =
   `${process.env.NODE_ENV}` === "production" ||
   `${process.env.STORAGE_CIPHER}` === "true";
 
