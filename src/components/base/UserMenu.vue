@@ -10,15 +10,15 @@ defineOptions({
 });
 
 const {logout} = authService()
-const {avatar, isAuthenticated, user, loading, setAppState, resetAppState, notificationsPosition, navigateTo} = useApp()
+const {avatar, isAuthenticated, user, loading, setAppState, notificationsPosition, navigateTo} = useApp()
 
 
 const handleLogout = async () => {
-  await logout()
   let addAvatar = {}
-  if (props.user && props.user.avatar) addAvatar = {avatar: props.user.avatar}
+  if (user && user.avatar) addAvatar = {avatar: user.avatar}
+  await logout()
   utils.sendMsg({
-    msg: $t('Logged out successfully'),
+    msg: $t('Logout success'),
     type: "positive",
     position: notificationsPosition?.value || 'bottom',
     ...addAvatar
@@ -115,7 +115,7 @@ const navigate = (payload) => {
             </div>
             <div>
               <q-chip
-                :label="user['username']"
+                :label="user && user.username ? user.username: ''"
                 class="text-uppercase text-bold shadow-2"
                 color="warning"
                 size="sm"
@@ -125,9 +125,9 @@ const navigate = (payload) => {
             <div>
               {{
                 user &&
-                user["full_name"] &&
-                typeof user["full_name"] === "string"
-                  ? user["full_name"]
+                user?.full_name &&
+                typeof user?.full_name === "string"
+                  ? user?.full_name
                   : "!"
               }}
             </div>
@@ -173,7 +173,7 @@ const navigate = (payload) => {
               clickable
               dense
               style="border-radius: 15px; max-height: 32px"
-              @click="logout()"
+              @click="handleLogout()"
             >
               <q-item-section avatar>
                 <q-avatar icon="exit_to_app"></q-avatar>
