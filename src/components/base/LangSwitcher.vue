@@ -29,22 +29,26 @@
 
 <script setup>
 import {ref, onBeforeMount, onMounted, getCurrentInstance} from "vue";
-import {useRouter} from "vue-router";
+import {useRouter, useRoute} from "vue-router";
 import {useQuasar} from "quasar";
-import flags from "../../i18n/flags";
-import {locales} from "../../boot/i18n.js"
-import {StorageService} from "../../services/storage.js"
+import flags from "src/i18n/flags";
+import {locales} from "src/boot/i18n.js"
+import {StorageService} from "src/services/storage.js"
+import {useApp} from "src/composables/useApp";
 
 
 defineOptions({
   name: "LangSwitcher",
 });
 
+const {locale} = useApp();
+
 const props = defineProps({})
 const emits = defineEmits(['update']);
 
 const $q = useQuasar();
 const $router = useRouter()
+const $route = useRoute()
 
 const lang = ref($q.lang.isoName);
 const esSvg = flags.es;
@@ -58,8 +62,6 @@ const changeLocale = (locale) => {
   //TODO SI HAY USUARIO AUTH LO GUARDO EN SU CONFIG
 
   emits('update', locale)
-
-  //
 
 }
 const getLocale = (locale) => {
@@ -78,7 +80,7 @@ const handleChange = (locale) => {
 }
 
 onBeforeMount(() => {
-  let hasLang = StorageService.getLocale();
+  let hasLang = locale.value || StorageService.getLocale();
   if (hasLang) {
     changeLocale(hasLang)
   }
