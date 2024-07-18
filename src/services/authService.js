@@ -37,20 +37,27 @@ export default function authService() {
     }
   };
 
+  const config = () => {
+    
+  }
+
   const register = async () => {
   };
 
   const refresh = async () => {
   };
-  const logout = async () => {
-    StorageService.removeAuthStore();
+
+  const logout = async (withNotification = false) => {
     $app.resetAppState();
-    utils.sendMsg({
-      msg: $t("Logout success"),
-      type: "positive",
-      position: notificationsPosition?.value || 'bottom',
-    });
-    
+    StorageService.removeAuthStore();
+    StorageService.remove(`${process.env.APP_NAME}_APP`)
+    if (withNotification)
+      utils.sendMsg({
+        msg: $t("Logout success"),
+        type: "positive",
+        position: notificationsPosition?.value || 'bottom',
+      });
+
 
   };
   const profile = async () => {
