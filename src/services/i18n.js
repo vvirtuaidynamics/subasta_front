@@ -24,7 +24,7 @@ export async function getAsyncBackendLocales() {
   }
 }
 
-const getMessages = () => {
+export const getMessages = () => {
   let all_messages = {};
   const save_locales = StorageService.getLocaleData();
   if (save_locales && Array.isArray(save_locales)) {
