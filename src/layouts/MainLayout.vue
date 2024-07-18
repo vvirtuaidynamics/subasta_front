@@ -50,7 +50,7 @@
       <menu-component @change-url="(nav) => (currentNav = nav)"/>
     </q-drawer>
 
-    <q-page-container class="page bg-red">
+    <q-page-container class="page">
       <breadcrumbs-component
         :nav="currentNav"
         @change-url="currentNav = null"
