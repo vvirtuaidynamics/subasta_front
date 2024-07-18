@@ -42,8 +42,8 @@
                     @click="navigate({ name: !isAuthenticated ? page_login_name : page_app_name})"
                   >
                     <q-item-section avatar>
-                      <q-icon v-if="!isAuthenticated" name="fas fa-fingerprint" size="md"/>
-                      <q-icon v-else name="fas fa-user-check" size="sm" class="text-positive"/>
+                      <q-icon v-if="!isAuthenticated" name="fas fa-door-closed" size="sm"/>
+                      <q-icon v-else name="fas fa-door-open" size="sm" class="text-positive"/>
                     </q-item-section>
                     <q-item-section class="text-body1 text-uppercase"
                     >{{ !isAuthenticated ? $t("login") : $t("desktop") }}
@@ -51,7 +51,7 @@
                   </q-item>
                   <q-item clickable @click="navigate({ name: 'register' })" v-if="!isAuthenticated">
                     <q-item-section avatar>
-                      <q-icon name="mdi-account-arrow-up-outline" size="md"/>
+                      <q-icon name="fas fa-id-badge" size="sm"/>
                     </q-item-section>
                     <q-item-section class="text-body1 text-uppercase"
                     >{{ $t("register") }}
