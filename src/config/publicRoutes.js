@@ -4,12 +4,5 @@ export const debugRoutes = [
   "icons",
   "dialog",
   "debug",
-  "users",
-  "groups",
-  "carriers",
-  "clients",
-  "bearings",
-  "history",
-  "validation_tasks",
   "components",
 ];
