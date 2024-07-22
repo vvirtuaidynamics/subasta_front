@@ -32,7 +32,7 @@ export default boot(({app}) => {
   const i18n = createI18n({
     locale: locale,
     globalInjection: true,
-    messages: {...all_messages, ...messages},
+    messages: {...messages, ...all_messages},
   });
 
   app.config.globalProperties.$i18n = i18n;

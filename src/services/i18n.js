@@ -78,7 +78,7 @@ export const i18n = () => {
 
   return {
     locale,
-    messages: all_messages,
+    messages: {...messages, ...all_messages},
     t: function (key, args = {}, textCase = "first") {
       let value = key.split(".").reduce((p, c) => p?.[c], all_messages);
       if (value && value.includes(":")) value = normalizarTrans(value)
