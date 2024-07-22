@@ -27,7 +27,7 @@ export default route(function ({store}) {
       console.log("nav: ", {from: from, to: to});
     }
     if (from && to) {
-      // $appStore.setRouteData({ from: from, to: to });
+      // $appStore.setRouteData({from: from, to: to});
     }
 
     if (!publicRoutes.includes(to.name) && !isAuthenticated.value) next({name: "login"});
