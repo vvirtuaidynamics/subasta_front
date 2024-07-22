@@ -5,16 +5,17 @@
         <q-icon name="img:/src/assets/images/default.png" size="28px"></q-icon>
       </q-item-section>
       <q-item-section class="text-uppercase">{{
-        appConfig.name
-      }}</q-item-section>
+          appConfig.name
+        }}
+      </q-item-section>
     </q-item>
     <q-item
       clickable
-      :active="isActive('crud')"
-      @click="navigateTo({ name: 'crud' })"
+      :active="isActive('app')"
+      @click="navigate({ name: 'app' })"
     >
       <q-item-section avatar>
-        <q-icon name="home" />
+        <q-icon name="home"/>
       </q-item-section>
       <q-item-section>{{ $t("models.home") }}</q-item-section>
       <q-tooltip-component
@@ -33,11 +34,11 @@
     <q-item
       clickable
       :active="isActive(o.url)"
-      @click="navigateTo({ name: o.url })"
-      v-if="!o.modules"
+      @click="navigate({ name: o.url })"
+      v-if="!o.modules?.length > 0"
     >
       <q-item-section avatar>
-        <q-icon :name="o.icon" />
+        <q-icon :name="o.icon"/>
       </q-item-section>
       <q-item-section>{{ o.label }}</q-item-section>
       <q-tooltip-component
@@ -51,13 +52,13 @@
       clickable
       :class="isActiveParent(o) ? 'text-primary' : ''"
       :id="`menu-mini-${indexOption}`"
-      v-else-if="o.modules && mini"
+      v-else-if="o.modules?.length > 0 && mini"
     >
       <q-item-section avatar>
-        <q-icon :name="o.icon" />
+        <q-icon :name="o.icon"/>
       </q-item-section>
       <q-tooltip-component
-        :title="o.label"
+        :title="o.title"
         anchor="center right"
         self="center left"
       ></q-tooltip-component>
@@ -71,7 +72,7 @@
         <q-list>
           <q-item class="bg-primary text-white">
             <q-item-section avatar>
-              <q-icon :name="o.icon" />
+              <q-icon :name="o.icon"/>
             </q-item-section>
             <q-item-section>{{ o.label }}</q-item-section>
           </q-item>
@@ -81,10 +82,10 @@
             clickable
             class="custom-item"
             :active="isActive(m.url)"
-            @click="navigateTo({ name: m.url })"
+            @click="navigate({ name: m.url })"
           >
             <q-item-section avatar>
-              <q-icon :name="m.icon" />
+              <q-icon :name="m.icon"/>
             </q-item-section>
             <q-item-section>{{ m.label }}</q-item-section>
           </q-item>
@@ -110,10 +111,10 @@
               class="custom-item"
               :active="isActive(m.url)"
               :inset-level="0.2"
-              @click="navigateTo({ name: m.url })"
+              @click="navigate({ name: m.url })"
             >
               <q-item-section avatar>
-                <q-icon :name="m.icon" />
+                <q-icon :name="m.icon"/>
               </q-item-section>
               <q-item-section>{{ m.label }}</q-item-section>
             </q-item>
@@ -125,11 +126,13 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
+import {onBeforeMount, onMounted, ref, watch} from "vue";
+import {useRoute, useRouter} from "vue-router";
 import QTooltipComponent from "../base/QTooltipComponent.vue";
 import appConfig from "src/config/app.js";
-import { $t } from "src/services/i18n";
+import {$t} from "src/services/i18n";
+import {useApp} from "src/composables/useApp";
+
 defineOptions({
   name: "MenuComponent",
 });
@@ -138,7 +141,7 @@ const props = defineProps({
   title: {
     type: String,
   },
-  class: { type: String, default: "bg-primary" },
+  class: {type: String, default: "bg-primary"},
   mini: {
     type: Boolean,
     default: false,
@@ -147,103 +150,19 @@ const props = defineProps({
 
 const emit = defineEmits(["change-url"]);
 
-const all_modules = [
-  {
-    label: $t("models.administration"),
-    icon: "mdi-account-cog-outline",
-    modules: [
-      {
-        label: $t("models.groups"),
-        icon: "mdi-account-multiple-outline",
-        url: "groups",
-        model: "group",
-        permissions: [],
-      },
-      {
-        label: $t("models.users"),
-        icon: "mdi-account-outline",
-        url: "users",
-        model: "user",
-        permissions: [],
-      },
-      {
-        label: $t("models.history"),
-        icon: "mdi-account-clock-outline",
-        url: "history",
-        model: "history",
-        permissions: [],
-      },
-    ],
-  },
-  {
-    label: $t("models.persons"),
-    icon: "mdi-account-multiple-outline",
-    modules: [
-      {
-        label: $t("models.carriers"),
-        icon: "mdi-human-male",
-        url: "carriers",
-        model: "carrier",
-        permissions: [],
-      },
-      {
-        label: $t("models.clients"),
-        icon: "mdi-briefcase-variant-outline",
-        url: "clients",
-        model: "client",
-        permissions: [],
-      },
-    ],
-  },
-  {
-    label: $t("models.bearings"),
-    icon: "mdi-cube-outline",
-    url: "bearings",
-    model: "bearing",
-    permissions: [],
-  },
-  {
-    label: $t("models.validationtasks"),
-    icon: "mdi-calendar-multiple-check",
-    url: "validation_tasks",
-    model: "validationtasks",
-    permissions: [],
-  },
-];
+const {modules, navigateTo} = useApp();
 
 const $router = useRouter();
+const $route = useRoute();
+
 
 const permissions = ["user:create", "user:edit", "group:view"];
 
 const current_modules = ref([]);
 
-onBeforeMount(() => {
-  // all_modules.forEach((m) => {
-  //   current_modules.value.push(m);
-  // });
 
-  current_modules.value = all_modules;
-});
-
-onMounted(() => {
-  let name = $router.currentRoute.value.name;
-  emit("change-url", name ? getCurrentModuleByRoute(name) : null);
-});
-
-function navigateTo(payload) {
-  if (payload) {
-    if (typeof payload === "string") {
-      if (payload.startsWith("http") || payload.startsWith("https")) {
-        window.open(payload, "_blank");
-      } else {
-        $router.push({ name: payload });
-        emit("change-url", getCurrentModuleByRoute(payload));
-      }
-    } else if (typeof payload === "object") {
-      $router.push({ name: payload.name });
-      emit("change-url", getCurrentModuleByRoute(payload.name));
-    }
-  }
+const navigate = (payload) => {
+  navigateTo(payload, $router, $route)
 }
 
 const isActive = (name) => {
@@ -253,13 +172,13 @@ const isActive = (name) => {
 const isActiveParent = (module) => {
   let routes = [];
   module.modules.forEach((m) => {
-    routes.push(`/crud/${m.url}`);
+    routes.push(`/app/${m.url}`);
   });
   return routes.includes($router.currentRoute.value.path);
 };
 
 const getCurrentModuleByRoute = (route) => {
-  if (route === "crud") return null;
+  if (route === "app") return null;
   let modules = current_modules.value;
   for (let i = 0; i < modules.length; i++) {
     if (modules[i].url === route) {
@@ -274,6 +193,46 @@ const getCurrentModuleByRoute = (route) => {
   }
   return null;
 };
+
+const getParentModules = () => {
+
+  let parentModules = [];
+  parentModules = modules.value.filter((m) => m.parent === '').sort((a, b) => a.order - b.order);
+  if (parentModules.length) parentModules.forEach((m) => {
+    m.modules = getChildrenModules(m.name).sort((a, b) => a.order - b.order);
+  })
+  parentModules.forEach((m) => {
+    m.title = $t(m.title)
+    m.label = $t(m.label)
+  });
+  return parentModules;
+}
+
+const getChildrenModules = (parent) => {
+  if (!parent) return [];
+  let childrenModules = modules.value.filter((m) => m.parent === parent).sort((a, b) => a.order - b.order);
+  if (childrenModules?.length === 0) return [];
+  childrenModules.forEach((m) => {
+    m.title = $t(m.title);
+    m.label = $t(m.label);
+    m.modules = getChildrenModules(m.name);
+  });
+  return childrenModules;
+}
+
+onBeforeMount(() => {
+  current_modules.value = getParentModules();
+});
+
+onMounted(() => {
+  let name = $router.currentRoute.value.name;
+  emit("change-url", name ? getCurrentModuleByRoute(name) : null);
+});
+
+watch(() => modules.value, (newValue) => {
+  current_modules.value = getParentModules();
+})
+
 </script>
 
 <style>
