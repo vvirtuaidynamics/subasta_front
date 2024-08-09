@@ -301,7 +301,7 @@ defineOptions({
 const props = defineProps({
   iconSet: {
     type: String,
-    default: "fontawesome", //fontawesome,mdi,material-icons,bootstrap-icons
+    default: "fontawesome-v6", //fontawesome,mdi,material-icons,bootstrap-icons
   },
   picker: {
     type: Boolean,
@@ -344,7 +344,7 @@ onBeforeMount(() => {
 const selectedIconset = ref();
 const showIconPicker = ref(false);
 const icons = computed(() => {
-  if (data.value.iconSet === "fontawesome") return fontawesomeIcons.icons;
+  if (data.value.iconSet === "fontawesome-v6") return fontawesomeIcons.icons;
   if (data.value.iconSet === "mdi") return mdiIcons.icons;
   if (data.value.iconSet === "bootstrap-icons") return bootstrapIcons.icons;
   if (data.value.iconSet === "ionicons-v4") return ionIcons.icons;
@@ -357,7 +357,7 @@ const data = ref({
   iconName: "",
   filter: "",
   iconsPerPageOptions: [50, 100, 250, 500],
-  iconSet: "fontawesome",
+  iconSet: "fontawesome-v6",
   iconSets: [
     {
       label: "Bootstrap Icons",
@@ -366,8 +366,8 @@ const data = ref({
     },
     {
       label: "Fontawesome Icons",
-      value: "fontawesome",
-      select: "fontawesome" === props.iconSet,
+      value: "fontawesome-v6",
+      select: "fontawesome-v6" === props.iconSet,
     },
     {
       label: "Material Icons",
