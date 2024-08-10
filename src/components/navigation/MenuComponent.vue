@@ -195,7 +195,6 @@ const getCurrentModuleByRoute = (route) => {
 };
 
 const getParentModules = () => {
-
   let parentModules = [];
   parentModules = modules.value.filter((m) => m.parent === '').sort((a, b) => a.order - b.order);
   if (parentModules.length) parentModules.forEach((m) => {
