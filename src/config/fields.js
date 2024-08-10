@@ -5,9 +5,9 @@ export default function useFields() {
   const {field, fieldTypes} = useField();
 
   return {
-    user_name: field({name: 'user_name', label: 'user_name'}),
+    username: field({name: 'username', label: 'Username'}),
     name: field({name: 'name', label: 'name'}),
-    last_name: field({name: 'last_name', label: 'last_name'}),
+    surname: field({name: 'last_name', label: 'surname'}),
     email: field({name: 'email', label: 'email'}),
     phone: field({name: 'phone', label: 'phone'}),
     company: field({name: 'company', label: 'company'}),

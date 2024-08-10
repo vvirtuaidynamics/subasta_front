@@ -1,5 +1,5 @@
 import CryptoJS, {enc} from "crypto-js";
-import {Notify, Dialog} from "quasar";
+import {Dialog, Notify} from "quasar";
 
 Date.prototype.toString = function dateToString() {
   return this.toISOString().slice(0, 19).replace("T", " ");
@@ -375,9 +375,9 @@ export const utils = {
     });
     return formatter.format(value ?? 0);
   },
-  formatSize(bytes) {
+  formatSize(bytes = 0) {
     let sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-    if (bytes == 0) return "0 Byte";
+    if (bytes === 0) return "0 Byte";
     let i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
     return Math.round(bytes / Math.pow(1024, i), 2) + " " + sizes[i];
   },
@@ -397,14 +397,14 @@ export const utils = {
   base64Encode(data) {
     // PROCESS
     const encodedWord = enc.Utf8.parse(data); // encodedWord Array object
-    const encoded = enc.Base64.stringify(encodedWord); // string: 'NzUzMjI1NDE='
-    return encoded;
+     // string: 'NzUzMjI1NDE='
+    return enc.Base64.stringify(encodedWord);
   },
   base64Decode(data) {
     // PROCESS
     const encodedWord = enc.Base64.parse(data); // encodedWord via Base64.parse()
-    const decoded = enc.Utf8.stringify(encodedWord); // decode encodedWord via Utf8.stringify() '75322541'
-    return decoded;
+     // decode encodedWord via Utf8.stringify() '75322541'
+    return enc.Utf8.stringify(encodedWord);
   },
   dataURItoBlob(dataURI) {
     // convert base64/URLEncoded data component to raw binary data held in a string
