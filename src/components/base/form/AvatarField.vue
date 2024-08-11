@@ -2,7 +2,7 @@
 import VuePictureCropper, {cropper} from 'vue-picture-cropper'
 import {onBeforeMount, reactive, ref, watch} from "vue";
 import {$t} from "src/services/i18n";
-import LoaderPage from "components/base/LoaderPage.vue";
+import {uid} from 'quasar'
 
 defineOptions({
   name: 'AvatarField'
@@ -11,7 +11,7 @@ defineOptions({
 const props = defineProps({
   name: {
     type: String,
-    default: 'avatar',
+    default: `avatar_${uid().split('-')[0]}`,
   },
   square: {
     type: Boolean,
@@ -35,90 +35,96 @@ const props = defineProps({
   },
   size: {
     type: Number,
-    default: 120
+    default: 150
   },
   editable: {
     type: Boolean,
     default: true
   },
+  display: {type: String, default: 'row'}, //row || col
   default_image: {
     type: String,
-    default: '/images/avatar.png'
+    default: 'icon:fas fa-user-tie'
+    //default: 'img:/images/avatar.png' //img:  || icon: icon_name
   }
 
 })
-const isShowModal = ref(true)
-const isMaximizedModal = ref(true)
-const loading = ref(true)
-const file = ref(null);
+const isShowModal = ref(false)
+const isMaximizedModal = ref(false)
+const default_avatar = reactive({
+  key: props.default_image.split(':')[0],
+  value: props.default_image.split(':')[1]
+})
 const filePicker = ref(null)
-
-const hotPicture = ref('');
+const fileOriginal = ref(null)
 const result = reactive({
   dataURL: '',
   blobURL: '',
+  file: null,
 })
 
+const $emits = defineEmits(['update'])
 
 function filePickerClick() {
-  filePicker.value.pickFiles();
+  if (!result.dataURL || result.dataURL === '') filePicker.value.pickFiles();
+  else selectFile()
 }
 
 function filePickerClear() {
-  file.value = null;
+  fileOriginal.value = null
+  result.file = null
+  result.blobURL = ''
+  result.dataURL = ''
+
 }
 
 function selectFile() {
-  // Reset last selection and results
-  hotPicture.value = ''
   result.dataURL = ''
   result.blobURL = ''
-
-  // Get selected files
-  if (!file.value) return
-
-  // Convert to dataURL and pass to the cropper component
-
+  if (!result.file) return
   const reader = new FileReader()
-  reader.readAsDataURL(file.value)
+  reader.readAsDataURL(result.file)
   reader.onload = () => {
-    // Update the picture source of the `img` prop
-    hotPicture.value = String(reader.result)
-
-    // Show the modal
+    result.dataURL = String(reader.result)
     isShowModal.value = true
-
-    // Clear selected files of input element
-    // if (!uploadInput.value) return
-    // uploadInput.value.value = ''
   }
 }
 
-/**
- * Clear the crop box
- */
 function clear() {
   if (!cropper) return
   cropper.clear()
 }
 
-/**
- * Reset the default cropping area
- */
 function reset() {
   if (!cropper) return
   cropper.reset()
+  result.file = fileOriginal
+}
+
+function rotate(pos = false) {
+  if (!cropper) return;
+  if (!pos)
+    cropper.rotate(90);
+  else
+    cropper.rotate(-90);
 }
 
 /**
  * The ready event passed to Cropper.js
  */
 function ready() {
-  console.log('Cropper is ready.')
+  if (process.env.NODE_ENV !== 'production')
+    console.log('Cropper is ready.')
 }
 
 function handleClose() {
-  console.log('Dialog close.')
+  if (process.env.NODE_ENV !== 'production')
+    console.log('Dialog close.')
+}
+
+function handleClick() {
+  if (!result.dataURL || result.dataURL === '') filePickerClick()
+  else selectFile()
 }
 
 /**
@@ -129,59 +135,65 @@ async function getResult() {
   const base64 = cropper.getDataURL()
   const blob = await cropper.getBlob()
   if (!blob) return
-  const file = await cropper.getFile(
+  const cropFile = await cropper.getFile(
     {
-      fileName: 'avatar',
+      fileName: props.name,
     }
   )
-
-  console.log({base64, blob, file})
+  if (process.env.NODE_ENV !== 'production')
+    console.log({base64, blob, file: cropFile})
   result.dataURL = base64
+  result.file = cropFile
   result.blobURL = URL.createObjectURL(blob)
+  $emits('update', {base64, blob, file: result.file});
   isShowModal.value = false
 }
 
-watch(() => hotPicture.value, (newValue, oldValue) => {
-  console.log('hotPicture: ', newValue);
-})
-
-watch(() => file.value, (newValue, oldValue) => {
+watch(() => result.file, (newValue, oldValue) => {
   if (newValue) selectFile();
-  console.log('file: ', {newValue, hotPicture});
+  if (!fileOriginal.value) fileOriginal.value = newValue
+  if (process.env.NODE_ENV !== 'production')
+    console.log('file: ', {newValue});
 })
 
 onBeforeMount(() => {
-//  filePicker.value = `${props.name}`
+  if (props.default_image) {
+    if (props.default_image.includes(':')) {
+      const [key, value] = props.default_image.split(':')
+      default_avatar.key = key;
+      default_avatar.value = value;
+    }
+  }
 })
 </script>
 
 <template>
-  <div class="row">
-    <q-file id="filePicker" ref="filePicker" class="hidden" v-model="file" :accept="props.accept"></q-file>
-    <q-avatar :square="props.square" class="avatar-img" :size="`${props.size}px`" :class="props.classAvatar"
-              :style="`${props.square? 'border-radius: 15px': ''}`">
-
-      <q-img fit="cover" style="max-width: 90%"
-             :src="hotPicture.value && hotPicture.value !=='' ? hotPicture.value :  props.default_image"></q-img>
-      <div class="absolute" style="right: -20px; top: calc( 25%  ) " v-if="file && props.editable">
+  <div :class="`${props.display}`">
+    <q-file id="filePicker" ref="filePicker" class="hidden" v-model="result.file" :accept="props.accept"></q-file>
+    <q-avatar :square="props.square" :size="`${props.size}px`" :class="props.classAvatar"
+              :style="`${props.square? 'border-radius: 15px': ''};border: 3px double #eee`">
+      <q-icon v-if="default_avatar.key==='icon' && (!result.dataURL || result.dataURL ==='' )"
+              :name="default_avatar.value" :size="`${size-60}px`"/>
+      <q-img fit="cover" v-if="default_avatar.key==='img' && (!result.dataURL || result.dataURL ==='')"
+             :src="result.dataURL && result.dataURL !=='' ? result.dataURL :  default_avatar.value"
+      />
+      <q-img fit="cover" v-if="(result.dataURL && result.dataURL !=='')"
+             :src=" result.dataURL "
+      />
+      <div class="absolute" style="right: -20px; top: calc( 25%  ) "
+           v-if="result.file && props.editable && !isShowModal">
         <q-btn flat :rounded="props.size > 100" :round="props.size <= 100" icon="fas fa-trash"
-               class="text-negative bg-grey-5 shadow-2"
+               class="text-negative bg-grey-5 shadow-2 z-top"
                style="border: 1px solid #eee"
                size="xs"
-               @click="filePickerClear"></q-btn>
-
+               @click="filePickerClear()"></q-btn>
       </div>
-      <div class="absolute" style="right: -20px; top: calc( 25% + 30px  )" v-if="props.editable">
+      <div class="absolute" style="right: -20px; top: calc( 25% + 30px  )" v-if="props.editable && !isShowModal">
         <q-btn flat :rounded="props.size > 100" :round="props.size <= 100" icon="fas fa-edit"
-               class="text-positive bg-grey-5 shadow-2" style="border: 1px solid #eee"
+               class="text-positive bg-grey-5 shadow-2 z-top" style="border: 1px solid #eee"
                size="xs" @click="filePickerClick"></q-btn>
-
       </div>
-
-
     </q-avatar>
-
-
     <q-dialog
       v-model="isShowModal"
       :maximized="isMaximizedModal"
@@ -198,7 +210,7 @@ onBeforeMount(() => {
       >
         <q-bar class="">
           <q-icon name="fas fa-edit" size="sm"/>
-          <span class="q-ml-xs text-body1 text-bold text-uppercase">{{
+          <span class="q-ml-xs text-body1 text-uppercase">{{
               $t("avatarEditorModalTitle")
             }}</span>
           <q-space/>
@@ -207,7 +219,7 @@ onBeforeMount(() => {
               :class="
                 !isMaximizedModal
                   ? 'bg-indigo-8 text-white'
-                  : 'bg-teal-8 text-negative'
+                  : 'bg-green-8 text-negative'
               "
               :icon="
                 !isMaximizedModal
@@ -240,45 +252,99 @@ onBeforeMount(() => {
           </div>
         </q-bar>
         <q-bar class="">
-
           <q-space/>
-          <div class="q-gutter q-gutter-x-xs">
+          <div class="q-gutter q-gutter-x-sm">
             <q-btn
-              class="bg-negative text-white"
+              :label="$t('labels.reset')"
+              dense
+              icon="fas fa-redo"
+              size="sm"
+              @click="reset()"
+            >
+
+              <q-tooltip class="bg-warning text-white">
+                <q-icon name="fas fa-redo" size="xs"/>
+                {{ $t("labels.reset") }}
+              </q-tooltip>
+            </q-btn>
+            <q-btn
+              :label="$t('labels.rotateLeft')"
+              dense
+              icon="mdi-file-rotate-left"
+              size="sm"
+              @click="rotate()"
+            >
+
+              <q-tooltip class="bg-warning text-white">
+                <q-icon name="mdi-file-rotate-left" size="xs"/>
+                {{ $t("labels.rotateLeft") }}
+              </q-tooltip>
+            </q-btn>
+            <q-btn
+              :label="$t('labels.rotateRight')"
+              dense
+              icon="mdi-file-rotate-right"
+              size="sm"
+              @click="rotate(true)"
+            >
+
+              <q-tooltip class="bg-warning text-white">
+                <q-icon name="mdi-file-rotate-right" size="xs"/>
+                {{ $t("labels.rotateRight") }}
+              </q-tooltip>
+            </q-btn>
+            <q-btn
+              :label="$t('labels.crop')"
               dense
               icon="fas fa-crop"
-              size="xs"
+              size="sm"
               @click="getResult()"
             >
-              <q-tooltip>{{ $t("labels.close") }}</q-tooltip>
+              <q-tooltip class="bg-warning text-white">
+                <q-icon name="fas fa-crop" size="xs"/>
+                {{ $t("labels.crop") }}
+              </q-tooltip>
             </q-btn>
+            <q-btn
+              :label="$t('labels.save')"
+              dense
+              push
+              class="text-positive"
+              icon="fas fa-save"
+              size="sm"
+              @click="()=>isShowModal=false"
+            >
+              <q-tooltip class="bg-warning text-white">
+                <q-icon name="fas fa-save" size="xs"/>
+                {{ $t("labels.save") }}
+              </q-tooltip>
+            </q-btn>
+
 
           </div>
           <q-space/>
 
         </q-bar>
 
-        <q-card-section class="q-pa-none">
+        <q-card-section class="q-pa-xs">
           <q-scroll-area
             :style="`${
               !isMaximizedModal
-                ? 'height: calc(100vh - 90px)'
-                : 'height: calc(100vh - 43px)'
+                ? 'height: calc(100vh - 124px);'
+                : 'height: calc(100vh - 74px);'
             }`"
           >
-            <div class="full-width q-pa-none q-ma-none">
-              <slot v-if="!loading">
-                <q-inner-loading></q-inner-loading>
-              </slot>
-              <VuePictureCropper v-if="file"
+            <div class="flex flex-center q-pa-none q-ma-none">
+
+              <VuePictureCropper v-if="result.file"
                                  :boxStyle="{
-                    width: '100%',
+                    width: 'calc( 100% - 100)',
                     height: '100%',
-                    maxHeight: '100%',
+                    borderRadius: '15px',
                     backgroundColor: '#f8f8f8',
-                    margin: 'auto',
+                    margin: '0px',
                   }"
-                                 :img="hotPicture"
+                                 :img="result.dataURL"
                                  :options="{
                     viewMode: 2,
                     dragMode: 'crop',
