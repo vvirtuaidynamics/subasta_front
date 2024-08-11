@@ -49,8 +49,8 @@ const props = defineProps({
   display: {type: String, default: 'row'}, //row || col
   default_image: {
     type: String,
-    default: 'icon:fas fa-user-tie'
-    //default: 'img:/images/avatar.png' //img:  || icon: icon_name
+    //default: 'icon:fas fa-user-tie'
+    default: 'img:/images/avatar.png' //img:  || icon: icon_name
   }
 })
 const isShowModal = ref(false)
@@ -228,12 +228,24 @@ onMounted(async () => {
                class="text-negative bg-grey-5 shadow-2 z-max"
                style="border: 1px solid #eee"
                size="xs"
-               @click="filePickerClear()"></q-btn>
+               @click="filePickerClear()">
+          <q-tooltip class="bg-warning text-negative text-caption"
+                     anchor="center right" self="center left" :offset="[10, 10]">
+            <q-icon name="fas fa-trash" size="13px"/>
+            {{ $t("labels.dropPicture") + '!' }}
+          </q-tooltip>
+        </q-btn>
       </div>
       <div class="absolute" style="right: -20px; top: calc( 25% + 30px  )" v-if="props.editable && !isShowModal">
         <q-btn flat :rounded="props.size > 140" :round="props.size <= 140" icon="fas fa-edit"
                class="text-positive bg-grey-5 shadow-2 z-max" style="border: 1px solid #eee"
-               size="xs" @click="filePickerClick"></q-btn>
+               size="xs" @click="filePickerClick">
+          <q-tooltip class="bg-warning text-white text-caption"
+                     anchor="center right" self="center left" :offset="[10, 10]">
+            <q-icon name="fas fa-edit" size="13px"/>
+            {{ $t("labels.selectPicture") }}
+          </q-tooltip>
+        </q-btn>
       </div>
     </q-avatar>
 
