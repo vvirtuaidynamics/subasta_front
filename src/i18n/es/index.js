@@ -40,6 +40,9 @@ export default {
   width: "Ancho",
   height: "Alto",
 
+  avatarEditorModalTitle: "Recortar o editar el avatar",
+
+
   modelLabel: "Modelo",
   modelPlural: "Modelos",
   modelAppLabel: "Aplicacion",
@@ -201,6 +204,9 @@ export default {
     female: "Femenino",
     other: "Otro",
     age: "Edad",
+    crop: "Cortar",
+    rotateLeft: "Rotar izquierda 90º",
+    rotateRight: "Rotar derecha 90º",
   },
   language: "Idioma",
   loginErrorMsg: "Error al iniciar sesión. Usuario o contraseña incorrecto",

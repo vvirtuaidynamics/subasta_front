@@ -33,6 +33,8 @@ export default {
   width: "Width",
   height: "Height",
 
+  avatarEditorModalTitle: "Crop or edit your avatar",
+
   modelLabel: "Model",
   modelPlural: "Models",
   modelAppLabel: "Aplication",
@@ -200,6 +202,10 @@ export default {
     female: "Female",
     other: "Other",
     age: "Age",
+    crop: "Crop",
+    rotateLeft: "Rotate left 90º",
+    rotateRight: "Rotate right 90º",
+
   },
   language: "Language",
   loginErrorMsg: "Login failed. Bad user or password, try again",
