@@ -1,14 +1,19 @@
 <script setup>
 import VuePictureCropper, {cropper} from 'vue-picture-cropper'
-import {onBeforeMount, reactive, ref, watch} from "vue";
+import {onBeforeMount, onMounted, reactive, ref, watch} from "vue";
 import {$t} from "src/services/i18n";
 import {uid} from 'quasar'
+import axios from 'axios'
 
 defineOptions({
   name: 'AvatarField'
 })
 
 const props = defineProps({
+  modelValue: {
+    type: String,
+    required: false
+  },
   name: {
     type: String,
     default: `avatar_${uid().split('-')[0]}`,
@@ -23,7 +28,7 @@ const props = defineProps({
   },
   accept: {
     type: String,
-    default: '.jpg, .jpeg, image/*'
+    default: 'image/*'
   },
   classAvatar: {
     type: String,
@@ -39,7 +44,7 @@ const props = defineProps({
   },
   editable: {
     type: Boolean,
-    default: true
+    default: false
   },
   display: {type: String, default: 'row'}, //row || col
   default_image: {
@@ -47,14 +52,15 @@ const props = defineProps({
     default: 'icon:fas fa-user-tie'
     //default: 'img:/images/avatar.png' //img:  || icon: icon_name
   }
-
 })
 const isShowModal = ref(false)
 const isMaximizedModal = ref(false)
+const isMounted = ref(false)
 const default_avatar = reactive({
   key: props.default_image.split(':')[0],
   value: props.default_image.split(':')[1]
 })
+
 const filePicker = ref(null)
 const fileOriginal = ref(null)
 const result = reactive({
@@ -78,17 +84,6 @@ function filePickerClear() {
 
 }
 
-function selectFile() {
-  result.dataURL = ''
-  result.blobURL = ''
-  if (!result.file) return
-  const reader = new FileReader()
-  reader.readAsDataURL(result.file)
-  reader.onload = () => {
-    result.dataURL = String(reader.result)
-    isShowModal.value = true
-  }
-}
 
 function clear() {
   if (!cropper) return
@@ -99,6 +94,26 @@ function reset() {
   if (!cropper) return
   cropper.reset()
   result.file = fileOriginal
+  selectFile()
+}
+
+
+async function fetchImage() {
+  let getFile = null
+  if (props.modelValue) {
+    try {
+      const response = await axios.get(props.modelValue, {
+        responseType: 'blob',
+      })
+      const blob = response.data;
+      getFile = new File([blob], props.name, {type: blob.type})
+      result.file = getFile
+    } catch (e) {
+      if (process.env.NODE_ENV !== 'production')
+        console.log('fetchImage error: ', e)
+    }
+
+  }
 }
 
 function rotate(pos = false) {
@@ -127,9 +142,31 @@ function handleClick() {
   else selectFile()
 }
 
-/**
- * Get cropping results
- */
+function loadFile() {
+  result.dataURL = ''
+  result.blobURL = ''
+  if (!result.file) return
+  const reader = new FileReader()
+  reader.readAsDataURL(result.file)
+  reader.onload = () => {
+    result.dataURL = String(reader.result)
+  }
+
+}
+
+function selectFile() {
+  result.dataURL = ''
+  result.blobURL = ''
+  if (!result.file) return
+  const reader = new FileReader()
+  reader.readAsDataURL(result.file)
+  reader.onload = () => {
+    result.dataURL = String(reader.result)
+    isShowModal.value = true
+  }
+
+}
+
 async function getResult() {
   if (!cropper) return
   const base64 = cropper.getDataURL()
@@ -150,50 +187,56 @@ async function getResult() {
 }
 
 watch(() => result.file, (newValue, oldValue) => {
-  if (newValue) selectFile();
+  if (newValue) loadFile();
   if (!fileOriginal.value) fileOriginal.value = newValue
   if (process.env.NODE_ENV !== 'production')
     console.log('file: ', {newValue});
 })
 
-onBeforeMount(() => {
-  if (props.default_image) {
-    if (props.default_image.includes(':')) {
-      const [key, value] = props.default_image.split(':')
-      default_avatar.key = key;
-      default_avatar.value = value;
-    }
+onBeforeMount(async () => {
+  if (props.modelValue) {
+    result.dataURL = await fetchImage()
   }
+
+})
+onMounted(async () => {
+  if (process.env.NODE_ENV !== 'production')
+    console.log('AvatarField Mounted!');
+
 })
 </script>
 
 <template>
+
   <div :class="`${props.display}`">
     <q-file id="filePicker" ref="filePicker" class="hidden" v-model="result.file" :accept="props.accept"></q-file>
     <q-avatar :square="props.square" :size="`${props.size}px`" :class="props.classAvatar"
-              :style="`${props.square? 'border-radius: 15px': ''};border: 3px double #eee`">
+              :style="`${props.square? 'border-radius: 15px': ''};`">
       <q-icon v-if="default_avatar.key==='icon' && (!result.dataURL || result.dataURL ==='' )"
               :name="default_avatar.value" :size="`${size-60}px`"/>
       <q-img fit="cover" v-if="default_avatar.key==='img' && (!result.dataURL || result.dataURL ==='')"
              :src="result.dataURL && result.dataURL !=='' ? result.dataURL :  default_avatar.value"
+
       />
       <q-img fit="cover" v-if="(result.dataURL && result.dataURL !=='')"
-             :src=" result.dataURL "
+             :src=" result.dataURL"
+
       />
       <div class="absolute" style="right: -20px; top: calc( 25%  ) "
            v-if="result.file && props.editable && !isShowModal">
-        <q-btn flat :rounded="props.size > 100" :round="props.size <= 100" icon="fas fa-trash"
-               class="text-negative bg-grey-5 shadow-2 z-top"
+        <q-btn flat :rounded="props.size > 140" :round="props.size <= 140" icon="fas fa-trash"
+               class="text-negative bg-grey-5 shadow-2 z-max"
                style="border: 1px solid #eee"
                size="xs"
                @click="filePickerClear()"></q-btn>
       </div>
       <div class="absolute" style="right: -20px; top: calc( 25% + 30px  )" v-if="props.editable && !isShowModal">
-        <q-btn flat :rounded="props.size > 100" :round="props.size <= 100" icon="fas fa-edit"
-               class="text-positive bg-grey-5 shadow-2 z-top" style="border: 1px solid #eee"
+        <q-btn flat :rounded="props.size > 140" :round="props.size <= 140" icon="fas fa-edit"
+               class="text-positive bg-grey-5 shadow-2 z-max" style="border: 1px solid #eee"
                size="xs" @click="filePickerClick"></q-btn>
       </div>
     </q-avatar>
+
     <q-dialog
       v-model="isShowModal"
       :maximized="isMaximizedModal"
