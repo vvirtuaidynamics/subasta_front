@@ -37,7 +37,7 @@
           v-if="searched"
           name="close"
           class="cursor-pointer"
-          @click="resetSearch()"
+          @click="reset"
         >
           <q-tooltip class="bg-brown">{{ $q.lang.label.reset }}</q-tooltip>
         </q-icon>
@@ -64,7 +64,7 @@
       size="md"
       @click="showDialog = true"
     />
-    <q-btn color="brown" icon="close" v-if="searched" @click="resetSearch()">
+    <q-btn color="brown" icon="close" v-if="searched" @click="reset">
       <q-tooltip class="bg-brown">{{ $q.lang.label.reset }}</q-tooltip>
     </q-btn>
   </q-btn-group>
@@ -122,7 +122,7 @@
           flat
           :label="$q.lang.label.reset"
           color="brown"
-          @click="resetSearch()"
+          @click="reset"
           v-if="searched"
         />
         <q-btn flat :label="$q.lang.label.close" color="red" v-close-popup />
@@ -148,26 +148,24 @@ const props = defineProps({
     required: true,
     default: () => [],
   },
-  searched: {
-    type: Boolean,
-    default: false,
-  },
 });
 
 const $q = useQuasar();
 
 const emit = defineEmits(["search", "reset"]);
 
+const searched = ref(false);
+
 const showDialog = ref(false);
 
 const conditions = [
   {
     label: $t("conditions.equal"),
-    value: "equal",
+    value: "=",
   },
   {
     label: $t("conditions.distinct"),
-    value: "nequal",
+    value: "!=",
   },
   {
     label: $t("conditions.start"),
@@ -179,17 +177,17 @@ const conditions = [
   },
   {
     label: $t("conditions.contains"),
-    value: "contains",
+    value: "~",
   },
   {
     label: $t("conditions.not_contains"),
-    value: "ncontains",
+    value: "!~",
   },
 ];
 const column = ref(null);
 const condition = ref({
   label: $t("conditions.contains"),
-  value: "contains",
+  value: "~",
 });
 
 const query = ref("");
@@ -198,16 +196,16 @@ const querySearchError = ref(false);
 const querySearchMsg = ref($t("validations.required"));
 
 onMounted(() => {
-  refreshSearch();
+  init();
 });
 
-watch(() => props.fields, refreshSearch);
+watch(() => props.fields, init);
 
 watch(
   () => props.searched,
   () => {
     if (!props.searched) {
-      refreshSearch();
+      init();
     }
   }
 );
@@ -216,18 +214,35 @@ const onChangeQuery = (val) => {
   querySearchError.value = false;
 };
 
-function refreshSearch() {
+function init() {
   condition.value = {
     label: $t("conditions.contains"),
-    value: "contains",
+    value: "~",
   };
   column.value = props.fields[0].value;
   query.value = "";
+  searched.value = false;
 }
 
 function search() {
   if (query.value?.trim() !== "") {
-    emit("search", config.value.current);
+    let c = condition.value.value;
+    let q = query.value;
+    if (c === "start") {
+      c = "~";
+      q = `%${q}`;
+    } else if (c === "end") {
+      c = "~";
+      q = `${q}%`;
+    } else if (c === "~") {
+      q = `%${q}%`;
+    }
+    emit("search", {
+      column: column.value,
+      condition: c,
+      query: `'${q}'`,
+    });
+    searched.value = true;
   } else {
     querySearchError.value = true;
     $q.notify({
@@ -238,7 +253,8 @@ function search() {
     });
   }
 }
-function resetSearch() {
+function reset() {
+  init();
   emit("reset");
 }
 </script>

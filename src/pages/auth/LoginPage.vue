@@ -1,127 +1,15 @@
-<script setup>
-import {reactive, ref, watch, onBeforeMount} from "vue";
-import {useQuasar} from "quasar";
-import {useApp} from "src/composables/useApp";
-import {$t} from "src/services/i18n";
-
-// Component
-import QButtonComponent from "components/base/QButtonComponent.vue";
-import DarkSwitcher from "src/components/base/DarkSwitcher.vue";
-import LangSwitcher from "src/components/base/LangSwitcher.vue";
-import {createRouter as $router} from "vue-router";
-import {utils} from "src/helpers/utils";
-import {forms} from "src/config/theme/forms";
-import {texts} from "src/config/theme/texts";
-import images from "src/config/theme/images";
-import appConfig from "src/config/app";
-
-
-const year = new Date().getFullYear();
-const $app = useApp();
-const $q = useQuasar();
-
-const {
-  appData,
-  appDataLoaded,
-  Login,
-  loading,
-  loginRedirect,
-  Auth,
-  Avatar,
-  navigateTo,
-} = $app;
-const UsernameRule = [(val) => !!val || $t("validations.required")];
-const PasswordRule = [(val) => !!val || $t("validations.required")];
-const fInputUsername = ref();
-const fInputPassword = ref();
-
-// Form Data
-const formData = reactive({
-  username: "",
-  password: "",
-  rememberMe: false,
-});
-
-function Validate() {
-  let result = false;
-
-  fInputUsername.value.validate();
-  fInputPassword.value.validate();
-  if (fInputUsername.value.hasError || fInputPassword.value.hasError)
-    return result;
-
-  return true;
-}
-
-function frmReset() {
-  formData.username = "";
-  formData.password = "";
-  fInputUsername.value.focus();
-  fInputUsername.value.resetValidation();
-  fInputPassword.value.resetValidation();
-}
-
-async function onSubmit() {
-  $app.setLoading(true);
-  if (Validate()) {
-    let result = null;
-    try {
-      result = await Login({
-        identity: formData.username.toLowerCase(),
-        password: formData.password,
-      });
-      // console.log("res: ", result);
-
-      if (result) {
-        // auth.value.avatar = app_logo.value;
-        // $router.push({ name: "app" });
-      } else {
-        $app.setLoading();
-        //await Avatar("");
-        frmReset();
-        // fInputUsername.value.focus();
-      }
-    } catch (error) {
-      if (process.env.NODE_ENV === "development") console.log("error:", error);
-      $app.setLoading();
-    }
-  } else {
-    utils.sendMsg({type: "negative", msg: `${$t("errorValidation")}`});
-
-    if (formData.username.length === 0) fInputUsername.value.focus();
-    else if (formData.password.length === 0) fInputPassword.value.focus();
-    $app.setLoading();
-    return false;
-  }
-}
-
-onBeforeMount(() => {
-  // if (isAuth) {
-  //   loginRedirect();
-  // }
-  // if (!appDataLoaded.value) $app.setAppData();
-});
-
-// watch(
-//   () => avatar,
-//   (newAvatar) => {
-//     userAvatar.value = newAvatar;
-//   }
-// );
-</script>
-
 <template>
   <q-page>
     <div id="login" class="page row gradient-bg-blue">
       <div
         id="form"
         :class="
-            $q.screen.gt.sm
-              ? 'form-div col-6 flex flex-center'
-              : 'form-div col-12 flex flex-center'
-          "
+          $q.screen.gt.sm
+            ? 'form-div col-6 flex flex-center'
+            : 'form-div col-12 flex flex-center'
+        "
       >
-        <q-card bordered class="shadow-5  login-card q-pb-md">
+        <q-card bordered class="shadow-5 login-card q-pb-md">
           <q-card-section class="q-mb-xs">
             <q-avatar
               :style="`${'background: #2c2c2c99'}`"
@@ -130,17 +18,12 @@ onBeforeMount(() => {
               style="border: 2px solid #c0c0c0"
             >
               <q-img
-                :src="Auth?.avatar ?? images.appLogo"
+                :src="images.appLogo"
                 fit="contain"
                 style="width: 110px; height: 110px"
               />
             </q-avatar>
 
-            <dark-switcher
-              class="absolute-top-right"
-              :model-value="$q.dark.isActive"
-              @update="(val) => $q.dark.set(val)"
-            />
             <q-btn
               id="home"
               class="animated faa-pulse absolute-top-left q-mr-md"
@@ -164,37 +47,38 @@ onBeforeMount(() => {
               autocorrect="off"
               class="q-gutter q-gutter-y-sm q-mt-md q-px-md"
               spellcheck="false"
+              greedy
             >
               <div class="q-py-xs"></div>
 
               <q-input
-                ref="fInputUsername"
                 v-model="formData.username"
-                :label="$t('fields.username',null,'first')"
-                :rules="UsernameRule"
-                lazy-rules
-                v-bind="forms.text"
-                @change="(user) => Avatar(user)"
+                label="usuario"
+                :rules="[(val) => !!val || 'Requerido.']"
+                @keyup.enter="onSubmit"
               >
                 <template v-slot:prepend>
-                  <q-icon name="fas fa-user-tie"/>
+                  <q-icon name="fas fa-user-tie" />
                 </template>
               </q-input>
               <q-input
-                ref="fInputPassword"
                 v-model="formData.password"
-                :label="$t('fields.password',null,'first')"
-                :rules="PasswordRule"
-                lazy-rules
-                type="password"
-                v-bind="forms.text"
-                @keyup.enter="onSubmit()"
+                label="Contraseña"
+                :type="hidePassword ? 'password' : 'text'"
+                :rules="[(val) => !!val || 'Requerido.']"
+                @keyup.enter="onSubmit"
               >
                 <template v-slot:prepend>
-                  <q-icon name="mdi-lock"/>
+                  <q-icon name="mdi-lock" />
+                </template>
+                <template v-slot:append>
+                  <q-icon
+                    :name="hidePassword ? 'visibility_off' : 'visibility'"
+                    class="cursor-pointer"
+                    @click="hidePassword = !hidePassword"
+                  />
                 </template>
               </q-input>
-
             </q-form>
           </q-card-section>
 
@@ -203,26 +87,20 @@ onBeforeMount(() => {
               v-model="formData.rememberMe"
               checked-icon="check"
               color="positive"
-              :label="$t('rememberMe')"
+              label="Recuérdame"
               unchecked-icon="clear"
             />
           </q-card-section>
 
           <q-card-actions class="justify-around items-center">
-            <q-button-component
-              icon="mdi-login"
-              :label="$t('login')"
-              :title="$t('loginTip')"
-              @handleClick="onSubmit()"
-              :loading="loading"
-            ></q-button-component>
-
-            <q-button-component
-              icon="mdi-account-arrow-up"
-              :label="$t('register')"
-              :title="$t('loginTip')"
-              @handleClick="navigateTo({ name: 'register' })"
-            ></q-button-component>
+            <q-btn-component
+              label="Autenticarse"
+              class="full-width"
+              square
+              size="md"
+              :loading="wait"
+              @click="onSubmit"
+            ></q-btn-component>
           </q-card-actions>
         </q-card>
       </div>
@@ -242,34 +120,111 @@ onBeforeMount(() => {
         </div>
       </transition>
 
-      <q-bar class="login-footer absolute-bottom " :class="texts.footer" dense style="height: 50px">
+      <q-bar
+        class="login-footer absolute-bottom"
+        :class="texts.footer"
+        dense
+        style="height: 50px"
+      >
         <div class="row login-footer-header">
-          <q-btn flat @click="navigateTo({path:'/'})" :title="$t('homeTip')">
-            <img
-              :src="images.appLogo"
-              alt="SUBASTA"
-              style=": 40px"
-            />
-
+          <q-btn flat @click="navigateTo({ path: '/' })" :title="$t('homeTip')">
+            <img :src="images.appLogo" alt="SUBASTA" style=":40px " />
 
             <div class="text-h6 text-uppercase">
-
               {{ appConfig.name }}
-
             </div>
           </q-btn>
         </div>
-        <q-space/>
+        <q-space />
         <div class="q-mx-sm">
           {{ $q.platform.is.desktop ? $t("copyright") : "Copyright " }} &copy;
           {{ year }}
         </div>
-        <q-separator vertical/>
-        <LangSwitcher/>
+        <q-separator vertical />
       </q-bar>
     </div>
   </q-page>
 </template>
+
+<script setup>
+import { reactive, ref } from "vue";
+import { useQuasar } from "quasar";
+import { $t } from "src/services/i18n";
+
+import QBtnComponent from "src/components/base/QBtnComponent.vue";
+import { texts } from "src/config/theme/texts";
+import images from "src/config/theme/images";
+import appConfig from "src/config/app";
+
+import { useAuthStore } from "src/stores/auth";
+import { useRouter } from "vue-router";
+
+const year = new Date().getFullYear();
+const $q = useQuasar();
+
+const wait = ref(false);
+const loginForm = ref(null);
+const hidePassword = ref(true);
+// Form Data
+const formData = reactive({
+  username: "maricela",
+  password: "maricela",
+  rememberMe: false,
+});
+
+const router = useRouter();
+const authStore = useAuthStore();
+
+async function onSubmit() {
+  loginForm.value.validate().then(async (success) => {
+    if (success) {
+      try {
+        wait.value = true;
+        await authStore.login(formData.username, formData.password);
+        if (authStore.user.active) {
+          if (router.currentRoute.value.query.next) {
+            router.replace(router.currentRoute.value.query.next);
+          } else {
+            router.replace({ name: "crud" });
+          }
+        } else {
+          $q.notify({
+            position: "top-right",
+            closeBtn: true,
+            icon: "fa fa-times-circle",
+            message: "Su cuenta ha sido bloqueda, consulte al administrador.",
+            type: "negative",
+            progress: true,
+          });
+        }
+      } catch (error) {
+        $q.notify({
+          position: "top-right",
+          closeBtn: true,
+          icon: "fa fa-times-circle",
+          message:
+            error.response.message !== undefined
+              ? "Usuario o contraseña incorrecta"
+              : "No hay conexión con el servidor de base de datos",
+          type: "negative",
+          progress: true,
+        });
+      } finally {
+        wait.value = false;
+      }
+    } else {
+      $q.notify({
+        position: "top-right",
+        closeBtn: true,
+        icon: "fa fa-times-circle",
+        message: "Rectifique los errores",
+        type: "negative",
+        progress: true,
+      });
+    }
+  });
+}
+</script>
 
 <style lang="scss" scoped>
 #login {
@@ -302,7 +257,6 @@ onBeforeMount(() => {
       margin: 0 10px 0 0;
       max-height: 40px;
     }
-
   }
 
   .form-div {

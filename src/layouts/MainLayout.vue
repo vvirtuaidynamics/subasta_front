@@ -31,6 +31,13 @@
           :model-value="$q.dark.isActive"
           @update="(val) => $q.dark.set(val)"
         />
+        <q-btn
+          stretch
+          flat
+          label="Logout"
+          v-if="auth.authenticated"
+          @click="logout"
+        />
       </q-toolbar>
     </q-header>
 
@@ -101,10 +108,13 @@ import BreadcrumbsComponent from "src/components/navigation/BreadcrumbsComponent
 import { useQuasar } from "quasar";
 import appConfig from "src/config/app.js";
 import { $t } from "src/services/i18n";
-import { useApp } from "src/composables/useApp";
+import { useAuthStore } from "src/stores/auth";
+import { useRouter } from "vue-router";
 
 const $q = useQuasar();
-const $app = useApp();
+
+const auth = useAuthStore();
+const router = useRouter();
 
 defineOptions({
   name: "MainLayout",
@@ -117,6 +127,11 @@ function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
   mini.value = !leftDrawerOpen.value;
 }
+
+const logout = async () => {
+  await auth.logout();
+  router.push({ name: "home" });
+};
 </script>
 <style>
 ::-webkit-scrollbar-thumb {

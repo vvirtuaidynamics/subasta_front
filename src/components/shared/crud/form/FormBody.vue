@@ -4,7 +4,7 @@
       :label="f.label"
       :name="f.name"
       :modelValue="object ? object[f.name] : null"
-      :options="f.props"
+      :options="f.options"
       @update="onUpdate"
       v-if="f.type === 'text'"
     />

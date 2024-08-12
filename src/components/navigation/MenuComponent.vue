@@ -16,9 +16,9 @@
       <q-item-section avatar>
         <q-icon name="home" />
       </q-item-section>
-      <q-item-section>{{ $t("models.home") }}</q-item-section>
+      <q-item-section>{{ $t("modules.home") }}</q-item-section>
       <q-tooltip-component
-        :title="$t('models.home')"
+        :title="$t('modules.home')"
         anchor="center right"
         self="center left"
         v-if="mini"
@@ -34,14 +34,14 @@
       clickable
       :active="isActive(o.url)"
       @click="navigateTo({ name: o.url })"
-      v-if="!o.modules"
+      v-if="!o.models"
     >
       <q-item-section avatar>
-        <q-icon :name="o.icon" />
+        <q-icon :name="o.ico" />
       </q-item-section>
-      <q-item-section>{{ o.label }}</q-item-section>
+      <q-item-section>{{ $t(`models.${o.name}`) }}</q-item-section>
       <q-tooltip-component
-        :title="o.label"
+        :title="$t(`models.${o.name}`)"
         anchor="center right"
         self="center left"
         v-if="mini"
@@ -51,13 +51,13 @@
       clickable
       :class="isActiveParent(o) ? 'text-primary' : ''"
       :id="`menu-mini-${indexOption}`"
-      v-else-if="o.modules && mini"
+      v-else-if="o.models && mini"
     >
       <q-item-section avatar>
-        <q-icon :name="o.icon" />
+        <q-icon :name="o.ico" />
       </q-item-section>
       <q-tooltip-component
-        :title="o.label"
+        :title="$t(`modules.${o.name}`)"
         anchor="center right"
         self="center left"
       ></q-tooltip-component>
@@ -71,12 +71,12 @@
         <q-list>
           <q-item class="bg-primary text-white">
             <q-item-section avatar>
-              <q-icon :name="o.icon" />
+              <q-icon :name="o.ico" />
             </q-item-section>
-            <q-item-section>{{ o.label }}</q-item-section>
+            <q-item-section>{{ $t(`modules.${o.name}`) }}</q-item-section>
           </q-item>
           <q-item
-            v-for="(m, indexSubOpt) in o.modules"
+            v-for="(m, indexSubOpt) in o.models"
             :key="`menu_suboption-${indexSubOpt}`"
             clickable
             class="custom-item"
@@ -84,17 +84,19 @@
             @click="navigateTo({ name: m.url })"
           >
             <q-item-section avatar>
-              <q-icon :name="m.icon" />
+              <q-icon :name="m.ico" />
             </q-item-section>
-            <q-item-section>{{ m.label }}</q-item-section>
+            <q-item-section>{{
+              $t(`models.${m.plural_label}`)
+            }}</q-item-section>
           </q-item>
         </q-list>
       </q-menu>
     </q-item>
     <q-expansion-item
       group="somegroup"
-      :icon="o.icon"
-      :label="o.label"
+      :icon="o.ico"
+      :label="$t(`modules.${o.name}`)"
       :default-opened="isActiveParent(o)"
       :header-class="isActiveParent(o) ? 'text-primary' : ''"
       class="custom-expansion"
@@ -104,7 +106,7 @@
         <q-card-section style="padding: 0">
           <q-list>
             <q-item
-              v-for="(m, indexSubOpt) in o.modules"
+              v-for="(m, indexSubOpt) in o.models"
               :key="`menu_suboption-${indexSubOpt}`"
               clickable
               class="custom-item"
@@ -113,9 +115,11 @@
               @click="navigateTo({ name: m.url })"
             >
               <q-item-section avatar>
-                <q-icon :name="m.icon" />
+                <q-icon :name="m.ico" />
               </q-item-section>
-              <q-item-section>{{ m.label }}</q-item-section>
+              <q-item-section>{{
+                $t(`models.${m.plural_label}`)
+              }}</q-item-section>
             </q-item>
           </q-list>
         </q-card-section>
@@ -130,6 +134,7 @@ import { useRouter } from "vue-router";
 import QTooltipComponent from "../base/QTooltipComponent.vue";
 import appConfig from "src/config/app.js";
 import { $t } from "src/services/i18n";
+import { useAuthStore } from "src/stores/auth";
 defineOptions({
   name: "MenuComponent",
 });
@@ -147,82 +152,14 @@ const props = defineProps({
 
 const emit = defineEmits(["change-url"]);
 
-const all_modules = [
-  {
-    label: $t("models.administration"),
-    icon: "mdi-account-cog-outline",
-    modules: [
-      {
-        label: $t("models.groups"),
-        icon: "mdi-account-multiple-outline",
-        url: "groups",
-        model: "group",
-        permissions: [],
-      },
-      {
-        label: $t("models.users"),
-        icon: "mdi-account-outline",
-        url: "users",
-        model: "user",
-        permissions: [],
-      },
-      {
-        label: $t("models.history"),
-        icon: "mdi-account-clock-outline",
-        url: "history",
-        model: "history",
-        permissions: [],
-      },
-    ],
-  },
-  {
-    label: $t("models.persons"),
-    icon: "mdi-account-multiple-outline",
-    modules: [
-      {
-        label: $t("models.carriers"),
-        icon: "mdi-human-male",
-        url: "carriers",
-        model: "carrier",
-        permissions: [],
-      },
-      {
-        label: $t("models.clients"),
-        icon: "mdi-briefcase-variant-outline",
-        url: "clients",
-        model: "client",
-        permissions: [],
-      },
-    ],
-  },
-  {
-    label: $t("models.bearings"),
-    icon: "mdi-cube-outline",
-    url: "bearings",
-    model: "bearing",
-    permissions: [],
-  },
-  {
-    label: $t("models.validationtasks"),
-    icon: "mdi-calendar-multiple-check",
-    url: "validation_tasks",
-    model: "validationtasks",
-    permissions: [],
-  },
-];
+const authStore = useAuthStore();
 
 const $router = useRouter();
-
-const permissions = ["user:create", "user:edit", "group:view"];
 
 const current_modules = ref([]);
 
 onBeforeMount(() => {
-  // all_modules.forEach((m) => {
-  //   current_modules.value.push(m);
-  // });
-
-  current_modules.value = all_modules;
+  current_modules.value = authStore.user.app_list;
 });
 
 onMounted(() => {
@@ -252,7 +189,7 @@ const isActive = (name) => {
 
 const isActiveParent = (module) => {
   let routes = [];
-  module.modules.forEach((m) => {
+  module.models.forEach((m) => {
     routes.push(`/crud/${m.url}`);
   });
   return routes.includes($router.currentRoute.value.path);
@@ -264,10 +201,10 @@ const getCurrentModuleByRoute = (route) => {
   for (let i = 0; i < modules.length; i++) {
     if (modules[i].url === route) {
       return modules[i];
-    } else if (modules[i].modules) {
-      for (let j = 0; j < modules[i].modules.length; j++) {
-        if (modules[i].modules[j].url === route) {
-          return modules[i].modules[j];
+    } else if (modules[i].models) {
+      for (let j = 0; j < modules[i].models.length; j++) {
+        if (modules[i].models[j].url === route) {
+          return modules[i].models[j];
         }
       }
     }

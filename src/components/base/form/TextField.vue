@@ -6,7 +6,6 @@
     :rules="fieldRules"
     hide-bottom-space
     bottom-slots
-    hide-hint
     lazy-rules
     reactive-rules
     v-bind="fieldOptions"

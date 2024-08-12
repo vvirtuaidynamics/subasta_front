@@ -1,5 +1,4 @@
 import { $t } from "src/services/i18n";
-import { utils } from "src/helpers/utils";
 import { testPattern } from "src/helpers/patterns";
 import { date } from "quasar";
 
@@ -26,6 +25,9 @@ export const validations = {
       if (field.required) {
         result = [...result, rules.required];
         help = [...help, $t("helpField.required")];
+      }
+      if (field.unique) {
+        help = [...help, $t("helpField.unique")];
       }
       if (field.type && field.type === "email") {
         result = [...result, rules.email];

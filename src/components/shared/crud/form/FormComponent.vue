@@ -24,13 +24,13 @@
           outline
           :label="$t('labels.save')"
           color="primary"
-          @click="save(false)"
+          @click="save(true)"
         />
         <q-btn
           outline
           :label="$t('labels.saveAndAddOther')"
           color="primary"
-          @click="save(true)"
+          @click="save(false)"
           v-if="!object"
         />
         <q-btn
@@ -55,8 +55,16 @@ import QBtnComponent from "src/components/base/QBtnComponent.vue";
 import FormBody from "./FormBody.vue";
 import { $t } from "src/services/i18n";
 import { useQuasar } from "quasar";
+import { useCollectionsStore } from "src/stores/collections";
+import {
+  success,
+  info,
+  error,
+  errorException,
+} from "src/helpers/notifications";
 
 const props = defineProps({
+  collection: String,
   fields: {
     type: Array,
     default: () => [],
@@ -83,7 +91,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["save"]);
+const emit = defineEmits(["created", "updated"]);
 
 const fullTitle = ref(null);
 const icon = ref(null);
@@ -95,6 +103,8 @@ const form = ref(null);
 const $q = useQuasar();
 
 let formData = {};
+
+const store = useCollectionsStore();
 
 onBeforeMount(() => {
   setDefaultData();
@@ -126,29 +136,42 @@ const onUpdateField = (name, val) => {
   formData[name] = val;
 };
 
-const save = (add) => {
+const save = async (hide) => {
   form.value.validate().then((success) => {
     if (success) {
       if (Object.keys(formData).length === 0) {
-        $q.notify({
-          position: "top-right",
-          message: $t("alerts.noChanges"),
-          type: "info",
-          progress: true,
-        });
+        info($t("notifications.noChanges"));
         showDialog.value = false;
       } else {
-        console.log(formData);
+        saveRecord(hide);
       }
     } else {
-      $q.notify({
-        position: "top-right",
-        message: $t("errorValidation"),
-        type: "negative",
-        progress: true,
-      });
+      error($t("notifications.errorValidation"));
     }
   });
+};
+
+const saveRecord = async (hide) => {
+  try {
+    let record = null;
+    if (props.object !== null) {
+      record = await store.update(props.collection, props.object.id, formData);
+    } else {
+      record = await store.create(props.collection, formData);
+    }
+    emit(props.object !== null ? "updated" : "created", record);
+    success(
+      $t(`notifications.${props.object !== null ? "updated" : "created"}`, {
+        model: $t(`models.${props.title}`),
+      })
+    );
+    if (hide) {
+      showDialog.value = false;
+    }
+  } catch (e) {
+    errorException(e);
+  } finally {
+  }
 };
 
 const onShow = () => {

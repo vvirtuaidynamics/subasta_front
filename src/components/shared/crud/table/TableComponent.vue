@@ -1,37 +1,46 @@
 <template>
   <q-card flat bordered>
     <q-table
-      :rows="rows"
+      :rows="records"
       :columns="columns"
       :grid="$q.screen.lt.sm"
-      :loading="loadingTable"
+      :loading="loading"
       :visible-columns="visibleColumns"
       :rows-per-page-options="[10, 20, 30, 50, 100]"
       row-key="id"
       selection="multiple"
       v-model:selected="selected"
+      v-model:pagination="pagination"
+      binary-state-sort
+      @request="onRequest"
     >
-      <template v-slot:loading>
+      <!-- <template v-slot:loading>
         <q-inner-loading showing color="primary" />
-      </template>
+      </template> -->
 
       <template v-slot:top="props">
         <q-toolbar>
           <section class="q-my-xs q-mr-sm cursor-pointer text-subtitle1">
             <div class="doc-card-title bg-primary text-white">
-              <q-icon :name="icon" size="22px" /> {{ labelPlural }}
+              <q-icon :name="current_collection.ico" size="22px" />
+              {{ $t(`models.${current_collection.plural_label}`) }}
             </div>
           </section>
           <q-space />
           <div class="col-auto">
             <form-component
-              size="sm"
-              :title="labelSingular"
+              :title="current_collection.singular_label"
               :fields="createFields"
+              :collection="current_collection.collection"
+              size="sm"
+              @created="onCreated"
               v-if="hasAdd && createFields.length > 0"
             />
             <delete-component
               :objects="selected"
+              :collection="current_collection.collection"
+              :modelName="current_collection.singular_label"
+              @deleted="onDeleted"
               v-if="selected.length > 0 && hasDelete"
             />
             <visible-columns-component
@@ -40,8 +49,8 @@
             />
             <filter-component
               :fields="filterFields"
-              @filter="onFilterTable"
-              @reset="onFilterReset"
+              @filter="onFilter"
+              @clear="onFilterClear"
               v-if="filterFields.length > 0"
             />
             <q-btn-component
@@ -67,7 +76,11 @@
           v-if="searchFields.length > 0 || filterFields.length > 0"
         >
           <div class="col" v-if="searchFields.length > 0">
-            <search-component :fields="searchFields"></search-component>
+            <search-component
+              :fields="searchFields"
+              @search="onSearch"
+              @reset="onSearchClear"
+            ></search-component>
           </div>
         </div>
       </template>
@@ -140,14 +153,23 @@
           class="actions-def"
         >
           <history-component :object="[props.row]" v-if="hasHistory" />
-          <see-component :fields="columns" :object="props.row" v-if="hasSee" />
+          <see-component :fields="columns" :object="props.row" v-if="hasView" />
           <form-component
             :object="props.row"
-            :title="labelSingular"
+            :collection="current_collection.collection"
+            :title="current_collection.singular_label"
             :fields="updateFields"
+            @updated="onUpdated"
             v-if="hasEdit && updateFields.length > 0"
           />
-          <delete-component :objects="[props.row]" size="xs" v-if="hasDelete" />
+          <delete-component
+            :objects="[props.row]"
+            :collection="current_collection.collection"
+            :modelName="current_collection.singular_label"
+            size="xs"
+            @deleted="onDeleted"
+            v-if="hasDelete"
+          />
         </q-td>
       </template>
 
@@ -200,17 +222,22 @@
                     <see-component
                       :fields="columns"
                       :object="props.row"
-                      v-if="hasSee"
+                      v-if="hasView"
                     />
                     <form-component
                       :object="props.row"
-                      :title="labelSingular"
+                      :collection="current_collection.collection"
+                      :title="current_collection.singular_label"
                       :fields="updateFields"
+                      @updated="onUpdated"
                       v-if="hasEdit && updateFields.length > 0"
                     />
                     <delete-component
                       :objects="[props.row]"
+                      :collection="current_collection.collection"
+                      :modelName="current_collection.singular_label"
                       size="xs"
+                      @deleted="onDeleted"
                       v-if="hasDelete"
                     />
                   </div>
@@ -225,8 +252,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onBeforeMount, onMounted } from "vue";
 import { useQuasar } from "quasar";
+import { useRouter } from "vue-router";
 import FilterComponent from "./actions/FilterComponent.vue";
 import SearchComponent from "./actions/SearchComponent.vue";
 import DeleteComponent from "./actions/DeleteComponent.vue";
@@ -236,24 +264,15 @@ import HistoryComponent from "../form/HistoryComponent.vue";
 import SeeComponent from "../form/SeeComponent.vue";
 import QBtnComponent from "src/components/base/QBtnComponent.vue";
 import { $t } from "src/services/i18n";
+import { useCollectionsStore } from "src/stores/collections";
+import { useAuthStore } from "src/stores/auth";
+import { errorException } from "src/helpers/notifications";
 
 defineOptions({
   name: "TableComponent",
 });
 
 const props = defineProps({
-  name: {
-    type: String,
-    default: "object",
-  },
-  labelPlural: {
-    type: String,
-    default: "Objetos",
-  },
-  labelSingular: {
-    type: String,
-    default: "Objetos",
-  },
   toStr: {
     type: String,
     default: "id",
@@ -269,6 +288,10 @@ const props = defineProps({
   rows: {
     type: Array,
     default: () => [],
+  },
+  rowsFromDB: {
+    type: Boolean,
+    default: true,
   },
   searchFields: {
     type: Array,
@@ -286,47 +309,168 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
-  hasAdd: {
-    type: Boolean,
-    default: true,
-  },
-  hasEdit: {
-    type: Boolean,
-    default: true,
-  },
-  hasSee: {
-    type: Boolean,
-    default: true,
-  },
-  hasDelete: {
-    type: Boolean,
-    default: true,
-  },
-  hasHistory: {
-    type: Boolean,
-    default: true,
-  },
 });
 
 const $q = useQuasar();
 
+const $router = useRouter();
+
+const loading = ref(false);
+
+const current_collection = ref(null);
+
+const hasAdd = ref(false);
+const hasEdit = ref(false);
+const hasView = ref(false);
+const hasDelete = ref(false);
+const hasHistory = ref(false);
+
+const pagination = ref({
+  descending: false,
+  page: 1,
+  rowsPerPage: 10,
+  max: 1,
+  rowsNumber: 1,
+  search: null,
+  filters: [],
+});
+
 const selected = ref([]);
 
-const loadingTable = ref(false);
-
 const visibleColumns = ref([]);
+
+const records = ref([]);
+
+const store = useCollectionsStore();
+
+onBeforeMount(() => {
+  current_collection.value = getCurrentCollection();
+  const permissions = current_collection.value.permissions;
+  hasAdd.value = permissions.includes("create");
+  hasEdit.value = permissions.includes("update");
+  hasDelete.value = permissions.includes("delete");
+  hasHistory.value = permissions.includes("history");
+  hasView.value = permissions.includes("view");
+});
+
+const getCurrentCollection = () => {
+  const current_route = $router.currentRoute.value.name;
+  const authStore = useAuthStore();
+  const applications = authStore.user.app_list;
+  for (let i = 0; i < applications.length; i++) {
+    if (applications[i].url === current_route) {
+      return applications[i];
+    } else {
+      const models = applications[i].models ? applications[i].models : [];
+      for (let j = 0; j < models.length; j++) {
+        if (models[j].url === current_route) {
+          return models[j];
+        }
+      }
+    }
+  }
+  return null;
+};
 
 onMounted(() => {
   visibleColumns.value = props.columns
     .filter((c) => c.type !== "hidden" && !c.required)
     .map((c) => c.field);
+  if (props.rowsFromDB) {
+    onRequest();
+  } else {
+    records.value = props.rows;
+  }
 });
 
-const onFilterTable = (filters) => {
-  console.log(filters);
+const onFilter = (filters) => {
+  pagination.value.filters = filters;
+  onRequest();
 };
 
-const onFilterReset = () => {};
+const onFilterClear = () => {
+  pagination.value.filters = [];
+  pagination.value.page = 1;
+  onRequest();
+};
+
+const onSearch = (attrs) => {
+  const { column, condition, query } = attrs;
+  pagination.value.search = {
+    column,
+    condition,
+    query,
+  };
+  pagination.value.page = 1;
+  onRequest();
+};
+
+const onSearchClear = () => {
+  pagination.value.search = null;
+  pagination.value.page = 1;
+  onRequest();
+};
+
+const onCreated = (record) => {
+  onRequest();
+};
+
+const onUpdated = (record) => {
+  onRequest();
+};
+
+const onDeleted = (objects) => {
+  objects.forEach((d) => {
+    selected.value = selected.value.filter((s) => s.id !== d.id);
+  });
+  onRequest();
+};
+
+const onRequest = async (attrs) => {
+  const { page, rowsPerPage, sortBy, descending, search, filters } = attrs
+    ? attrs.pagination
+    : pagination.value;
+  try {
+    loading.value = true;
+    let config = {};
+    if (sortBy) {
+      config["sort"] = `${descending ? "-" : ""}${sortBy}`;
+      pagination.value.sortBy = sortBy;
+      pagination.value.descending = descending;
+    }
+    if (search) {
+      config["filter"] = `${search.column} ${search.condition} ${search.query}`;
+    }
+    if (filters.length > 0) {
+      if (config["filter"]) {
+        config["filter"] += " && ";
+      } else {
+        config["filter"] = `${filters[0].name} = ${filters[0].value}`;
+      }
+      for (let index = 1; index < filters.length; index++) {
+        config[
+          "filter"
+        ] += ` && ${filters[index].name} = ${filters[index].value}`;
+      }
+    }
+    const result = await store.fetch(
+      current_collection.value.collection,
+      page,
+      rowsPerPage,
+      config
+    );
+    records.value = result.items;
+    pagination.value.max = result.totalPages;
+    pagination.value.rowsNumber = result.totalItems;
+    pagination.value.rowsPerPage = rowsPerPage;
+    pagination.value.page = page;
+    pagination.value.rowsPerPage = rowsPerPage;
+  } catch (e) {
+    errorException(e);
+  } finally {
+    loading.value = false;
+  }
+};
 </script>
 <style>
 .q-table__top {

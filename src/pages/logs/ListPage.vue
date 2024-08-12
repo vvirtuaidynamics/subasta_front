@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
     <table-component
-      :name="name"
+      :collection="collection"
       :labelPlural="labelPlural"
       :labelSingular="labelSingular"
       :toStr="toStr"
@@ -23,7 +23,7 @@ defineOptions({
   name: "ListPage",
 });
 
-const name = "user";
+const collection = "logs";
 const labelPlural = $t("models.history");
 const labelSingular = $t("models.history");
 const toStr = null;

@@ -1,3 +1,6 @@
+import { useAuthStore } from "src/stores/auth";
+import { useQuasar } from "quasar";
+
 const routes = [
   {
     path: "/",
@@ -27,6 +30,7 @@ const routes = [
   {
     name: "crud",
     path: "/crud",
+    meta: { requiresAuth: true },
     component: () => import("layouts/MainLayout.vue"),
     children: [
       //{ path: "", component: () => import("pages/IndexPage.vue") },
@@ -41,9 +45,9 @@ const routes = [
         component: () => import("pages/groups/ListPage.vue"),
       },
       {
-        name: "history",
-        path: "history",
-        component: () => import("pages/history/ListPage.vue"),
+        name: "logs",
+        path: "logs",
+        component: () => import("pages/logs/ListPage.vue"),
       },
       {
         name: "clients",
@@ -64,6 +68,11 @@ const routes = [
         name: "validation_tasks",
         path: "validation_tasks",
         component: () => import("pages/validation_tasks/ListPage.vue"),
+      },
+      {
+        name: "products",
+        path: "products",
+        component: () => import("pages/products/ListPage.vue"),
       },
     ],
   },

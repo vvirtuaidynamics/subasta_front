@@ -6,7 +6,11 @@
     :tooltips="$q.lang.label.filter"
     icon="filter_alt"
     @click="showDialog = true"
-  />
+  >
+    <q-badge color="red" floating transparent v-if="currentFilters.length > 0">
+      {{ currentFilters.length }}
+    </q-badge>
+  </q-btn-component>
 
   <q-dialog v-model="showDialog" position="right" full-height>
     <q-card style="width: 320px">
@@ -23,7 +27,7 @@
           style="padding-bottom: 10px"
         >
           <select-field
-            :name="f.scope"
+            :name="f.name"
             :label="f.label"
             :options="f.options"
             :modelValue="f.value"
@@ -32,21 +36,21 @@
             v-if="f.type === 'select'"
           />
           <boolean-select-field
-            :name="f.scope"
+            :name="f.name"
             :label="f.label"
             :modelValue="f.value"
             @update="onUpdate"
             v-if="f.type === 'boolean'"
           />
           <date-range-field
-            :name="f.scope"
+            :name="f.name"
             :label="f.label"
             :modelValue="f.value"
             @update="onUpdate"
             v-if="f.type === 'date'"
           />
           <range-field
-            :name="f.scope"
+            :name="f.name"
             :label="f.label"
             :modelValue="f.value"
             :min="f.min"
@@ -61,8 +65,8 @@
           flat
           :label="$q.lang.label.reset"
           color="brown"
-          @click="reset"
-          v-if="filteredBy && filteredBy.length > 0"
+          @click="clear"
+          v-if="currentFilters.length > 0"
         />
         <q-btn flat :label="$q.lang.label.close" color="red" v-close-popup />
       </q-card-actions>
@@ -71,7 +75,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import DialogHeaderComponent from "src/components/base/DialogHeaderComponent.vue";
 import QBtnComponent from "src/components/base/QBtnComponent.vue";
 import SelectField from "src/components/base/form/SelectField.vue";
@@ -96,7 +100,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["filter", "reset"]);
+const emit = defineEmits(["filter", "clear"]);
 
 const config = ref({
   show: false,
@@ -112,16 +116,16 @@ onMounted(() => {
   filters.value = props.fields;
 });
 
-function filter(f) {
-  emit("filter", f);
-}
-
-function reset() {
-  emit("reset");
+function clear() {
+  filters.value.forEach((f) => {
+    f.value = null;
+  });
+  currentFilters.value = [];
+  emit("clear");
 }
 
 const onUpdate = (name, val) => {
-  let current = filters.value.find((f) => f.scope === name);
+  let current = filters.value.find((f) => f.name === name);
   current.value =
     val !== null
       ? current.type === "select" || current.type === "boolean"

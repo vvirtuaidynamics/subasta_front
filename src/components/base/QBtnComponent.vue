@@ -15,6 +15,8 @@
     :padding="padding"
     :text-color="text_color"
     :label="label"
+    :class="props.class"
+    :loading="loading"
     @click="onClick"
   >
     <q-tooltip-component
@@ -60,6 +62,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
   square: {
     type: Boolean,
     default: false,
@@ -88,5 +94,3 @@ const onClick = () => {
   emits("click");
 };
 </script>
-
-<style lang="scss" scoped></style>

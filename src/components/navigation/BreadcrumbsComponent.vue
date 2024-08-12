@@ -13,12 +13,15 @@
         />
       </template>
       <q-breadcrumbs-el
-        :label="$t('models.home')"
+        :label="$t('modules.home')"
         icon="home"
         class="cursor-pointer"
         @click="setHome"
       />
-      <q-breadcrumbs-el :label="nav.label" :icon="nav.icon" />
+      <q-breadcrumbs-el
+        :label="$t(`models.${nav.plural_label}`)"
+        :icon="nav.ico"
+      />
     </q-breadcrumbs>
   </div>
   <q-separator></q-separator>

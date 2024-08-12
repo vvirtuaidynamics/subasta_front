@@ -7,11 +7,17 @@
     :label="props.label"
     v-bind="fieldOptions"
     class="full-width"
+    cleareable
     @update:model-value="onUpdate"
   >
     <template v-slot:append>
       <q-icon name="event" class="cursor-pointer">
-        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+        <q-popup-proxy
+          cover
+          transition-show="scale"
+          transition-hide="scale"
+          @before-show="onBeforeShowProxy"
+        >
           <q-date v-model="proxy" mask="DD/MM/YYYY">
             <div class="row items-center justify-end q-gutter-sm">
               <q-btn-component
@@ -102,6 +108,10 @@ function validate() {
 function resetValidation() {
   refEl.value.resetValidation();
 }
+
+const onBeforeShowProxy = () => {
+  proxy.value = model.value;
+};
 
 const ok = (val) => {
   model.value = val;

@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 
 defineOptions({
   name: "SelectField",
@@ -76,6 +76,13 @@ const allOptions = ref([]);
 onMounted(() => {
   setData();
 });
+
+watch(
+  () => props.modelValue,
+  (n, o) => {
+    setModelValue();
+  }
+);
 
 const setData = async () => {
   await setDataFromServer(props.url_to_options);

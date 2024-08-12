@@ -1,11 +1,16 @@
 <template>
   <q-page padding>
     <table-component
+      :collection="collection"
+      :labelPlural="labelPlural"
+      :labelSingular="labelSingular"
       :toStr="toStr"
+      :icon="icon"
       :columns="columns"
       :searchFields="searchFields"
       :createFields="fields"
       :updateFields="fields"
+      :has_delete="false"
     ></table-component>
   </q-page>
 </template>
@@ -18,7 +23,11 @@ defineOptions({
   name: "ListPage",
 });
 
+const collection = "products";
+const labelPlural = $t("models.products");
+const labelSingular = $t("models.product");
 const toStr = null;
+const icon = "mdi-account-multiple-outline";
 
 const searchFields = [
   {
@@ -38,6 +47,15 @@ const columns = [
     type: "text",
   },
   {
+    field: "price",
+    required: true,
+    name: "price",
+    label: $t("fields.price"),
+    align: "left",
+    sortable: true,
+    type: "text",
+  },
+  {
     field: "actions",
     name: "actions",
     label: "Acciones",
@@ -50,11 +68,6 @@ const fields = [
     name: "name",
     label: $t("fields.name"),
     type: "text",
-    options: {
-      maxLength: 30,
-      required: true,
-      unique: true,
-    },
   },
 ];
 </script>

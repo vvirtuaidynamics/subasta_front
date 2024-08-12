@@ -1,13 +1,12 @@
 <template>
   <q-page padding>
     <table-component
-      :name="name"
+      :collection="collection"
       :labelPlural="labelPlural"
       :labelSingular="labelSingular"
       :toStr="toStr"
       :icon="icon"
       :columns="columns"
-      :rows="rows"
       :searchFields="searchFields"
       :filterFields="filterFields"
       :createFields="createFields"
@@ -25,7 +24,7 @@ defineOptions({
   name: "ListPage",
 });
 
-const name = "user";
+const collection = "users";
 const labelPlural = $t("models.users");
 const labelSingular = $t("models.user");
 const toStr = null;
@@ -52,7 +51,7 @@ const searchFields = [
 
 const filterFields = [
   {
-    scope: "active",
+    name: "active",
     label: $t("fields.active"),
     type: "boolean",
     value: null,

@@ -6,8 +6,8 @@ import {
   createWebHistory,
 } from "vue-router";
 import routes from "./routes";
-import { useAppStore } from "stores/app-store";
-import { publicRoutes, debugRoutes } from "./../config/publicRoutes";
+import { useAuthStore } from "src/stores/auth";
+import { Notify } from "quasar";
 
 /*
  * If not building with SSR mode, you can
@@ -19,11 +19,6 @@ import { publicRoutes, debugRoutes } from "./../config/publicRoutes";
  */
 
 export default route(function ({ store }) {
-  const $appStore = useAppStore();
-  if (process.env.NODE_ENV !== "production") publicRoutes.push(...debugRoutes);
-
-  const { isAuth } = $appStore;
-
   const createHistory = process.env.SERVER
     ? createMemoryHistory
     : process.env.VUE_ROUTER_MODE === "history"
@@ -43,16 +38,27 @@ export default route(function ({ store }) {
   /**
    * Maneja que el usuario este autenticado antes de acceder a las rutas distintas de login y home
    */
-  Router.beforeEach((to, from, next) => {
-    if (process.env.NODE_ENV !== "production") {
-      console.log("nav: ", { from: from, to: to });
+  Router.beforeEach(async (to, from, next) => {
+    if (to.meta.requiresAuth) {
+      const authStore = useAuthStore(store);
+      await authStore.ready;
+      if (!authStore.authenticated) {
+        Notify.create({
+          position: "top-right",
+          closeBtn: true,
+          icon: "fa fa-times-circle",
+          message:
+            "Acceso denegado. Debe autenticarse para acceder a esta dirección",
+          type: "negative",
+          progress: true,
+        });
+        next({ name: "login", query: { next: to.fullPath } });
+      } else {
+        next();
+      }
+    } else {
+      next();
     }
-    if (from && to) {
-      // $appStore.setRouteData({ from: from, to: to });
-    }
-    //&& !pbService.isAutenticated()
-    if (!publicRoutes.includes(to.name)) next({ name: "login" });
-    else next();
   });
 
   return Router;
