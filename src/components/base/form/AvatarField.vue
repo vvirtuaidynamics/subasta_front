@@ -191,6 +191,8 @@ watch(() => result.file, (newValue, oldValue) => {
   if (!fileOriginal.value) fileOriginal.value = newValue
   if (process.env.NODE_ENV !== 'production')
     console.log('file: ', {newValue});
+  $emits('update', {base64: result.base64, blob: result.blob, file: result.file});
+
 })
 
 onBeforeMount(async () => {
@@ -237,7 +239,8 @@ onMounted(async () => {
         </q-btn>
       </div>
       <div class="absolute" style="right: -20px; top: calc( 25% + 30px  )" v-if="props.editable && !isShowModal">
-        <q-btn flat :rounded="props.size > 140" :round="props.size <= 140" icon="fas fa-edit"
+        <q-btn flat :rounded="props.size > 140" :round="props.size <= 140"
+               :icon="!result.file ?'fas fa-file-upload':'fas fa-edit'"
                class="text-positive bg-grey-5 shadow-2 z-max" style="border: 1px solid #eee"
                size="xs" @click="filePickerClick">
           <q-tooltip class="bg-warning text-white text-caption"
