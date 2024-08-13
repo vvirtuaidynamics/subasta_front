@@ -66,7 +66,7 @@
         />
         <q-btn v-else size="lg" color="white" flat dense @click="onClick">
           <q-avatar square class="shadow-3" size="100px">
-            <q-img fit="cover" :src="files[index]" style="border-radius: 5px" />
+            <q-img fit="cover" :src="files[index]" style="border-radius: 5px"/>
           </q-avatar>
         </q-btn>
       </div>
@@ -77,10 +77,10 @@
     fit="cover"
     :src="files[0]"
   />
-  <q-img v-if="typeof files === 'string'" fit="cover" :src="files" />
+  <q-img v-if="typeof files === 'string'" fit="cover" :src="files"/>
 </template>
 <script setup>
-import { computed, onBeforeMount, ref } from "vue";
+import {computed, onBeforeMount, ref} from "vue";
 
 const props = defineProps({
   files: {
@@ -108,7 +108,8 @@ let slide = ref(0);
 let fullscreen = ref(false);
 let multiple = computed(() => props.files?.length > 1);
 
-onBeforeMount(() => {});
+onBeforeMount(() => {
+});
 </script>
 <style lang="sass" scoped>
 .custom-caption
