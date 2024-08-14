@@ -126,6 +126,8 @@ export default {
     select: "Seleccionar archivo(s)",
   },
   labels: {
+    accept: "Aceptar",
+    submit: "Enviar",
     actions: "Acciones",
     add: "Adicionar",
     addFiles: "Adicionar fichero(s)",
