@@ -53,7 +53,7 @@
     <template v-slot:no-option>
       <q-item>
         <q-item-section avatar>
-          <q-icon name="mdi-alert-outline" />
+          <q-icon name="mdi-alert-outline"/>
         </q-item-section>
         <q-item-section class="text-grey">
           {{ $t("noOptions") }}
@@ -61,16 +61,16 @@
       </q-item>
     </template>
     <template v-slot:prepend v-if="props.prependIcon">
-      <q-icon :name="props.prependIcon" />
+      <q-icon :name="props.prependIcon"/>
     </template>
   </q-select>
 </template>
 
 <script setup>
-import { computed, onBeforeMount, onMounted, ref, watch } from "vue";
-import { forms } from "src/config/theme/forms";
-import { required } from "src/services/validators";
-import { useQuasar } from "quasar";
+import {computed, onBeforeMount, onMounted, ref, watch} from "vue";
+import {forms} from "src/config/theme/forms";
+import {required} from "src/services/validators";
+import {useQuasar} from "quasar";
 
 defineOptions({
   name: "SelectField",
@@ -101,7 +101,7 @@ const props = defineProps({
     type: Boolean,
     required: false,
   },
-  data_url: { type: String, required: false },
+  data_url: {type: String, required: false},
   data: {
     type: Object,
     required: false,
@@ -118,9 +118,10 @@ const $q = useQuasar();
 const refEl = ref(null);
 let textValue = ref("");
 const rules = ref([]);
-const fieldOptions = ref({ ...forms.select, ...props.options });
+const fieldOptions = ref({...forms.select, ...props.options});
 const fieldRules = [...rules.value, ...(props.options?.rules ?? [])];
 const loading = ref(false);
+
 /** Variables */
 const selectedModel = ref();
 const Options = ref([]); //Total de <options>
@@ -161,7 +162,6 @@ async function getDataFromUrl() {
       return response.json();
     } catch (e) {
       setLoading();
-
       console.error(e);
     }
   }
