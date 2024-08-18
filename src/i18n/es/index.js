@@ -89,7 +89,7 @@ export default {
     email: "Correo",
     first_name: "Nombre",
     gender: "Género",
-    id: "",
+    id: "id",
     industry: "Industria",
     last_name: "Apellidos",
     name: "Nombre",
@@ -116,6 +116,7 @@ export default {
     message: "Mensaje",
     type: "Tipo",
     validated_by: "Validado por",
+    date_of_birth: "Fecha de nacimiento",
   },
   file: {
     add: "Adicionar archivo",

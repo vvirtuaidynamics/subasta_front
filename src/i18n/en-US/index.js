@@ -114,6 +114,8 @@ export default {
     message: "Message",
     type: "Type",
     validated_by: "Validated by",
+    date_of_birth: "Birth date",
+
   },
   file: {
     add: "File add",
