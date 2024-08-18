@@ -1,7 +1,6 @@
 import axios from 'axios';
 import appConfig from 'src/config/app'
 import {$t} from 'src/services/i18n'
-import {validations} from 'src/helpers/validations'
 
 export default function () {
   const checkUnique = async (table, column, value) => {
