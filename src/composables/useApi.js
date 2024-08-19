@@ -1,7 +1,6 @@
 import appConfig from "src/config/app";
 import {useApp} from "src/composables/useApp";
 import {api} from "boot/axios";
-import axios from "axios";
 
 export default function useApi() {
   const {table_default_rows} = appConfig;
@@ -51,7 +50,7 @@ export default function useApi() {
 
   const refresh = async () => {
     try {
-      return await api.post('refresh');
+      return await api.post('/refresh');
     } catch (error) {
       return error?.message || error;
     }
@@ -59,8 +58,7 @@ export default function useApi() {
 
   const logout = async () => {
     try {
-      await api.post('logout');
-
+      await api.post('/logout');
 
     } catch (error) {
       return error?.message || error;
@@ -69,7 +67,17 @@ export default function useApi() {
 
   const profile = async () => {
     try {
-      return await api.get('profile');
+      return await api.get('/profile');
+    } catch (error) {
+      return error?.message || error;
+    }
+  }
+
+  const get = async (url, params = null) => {
+    try {
+      let requestUrl = `${url}`;
+      let data = params ? {...params} : {}
+      return await api.get(requestUrl, {params: data});
     } catch (error) {
       return error?.message || error;
     }
@@ -78,41 +86,80 @@ export default function useApi() {
   const list = async (url, params = null) => {
     try {
       let requestUrl = `${url}`;
-      if (params && params.id) {
-        requestUrl = `${url}/${params.id}`;
-        return await api.post(requestUrl);
-      }
-
-      return await api.get(requestUrl);
+      let data = params ? {...params} : {}
+      return await api.get(requestUrl, {params: data});
     } catch (error) {
       return error?.message || error;
     }
-
   }
+
   const view = async (url, id, params = null) => {
     try {
-      let requestUrl = `${url}`;
-      if (params && params.id) {
-        requestUrl = `${url}/${params.id}`;
-        return await api.post(requestUrl);
-      }
-
-      return await api.get(requestUrl);
+      let requestUrl = `${url}/${id}`;
+      return await api.get(requestUrl, {params: params});
     } catch (error) {
       return error?.message || error;
     }
   }
 
-  const create = async (url, data, options = null) => {
-
+  const create = async (url, data, config) => {
+    try {
+      let requestUrl = `${url}`;
+      let $config = config || {};
+      return await api.post(requestUrl, data, {...$config});
+    } catch (error) {
+      return error?.message || error;
+    }
   }
 
-  const update = async (url, data, id, options = null) => {
-
+  const post = async (url, data, config = null) => {
+    try {
+      let requestUrl = `${url}`;
+      let $config = config || {};
+      return await api.post(requestUrl, data, {...$config});
+    } catch (error) {
+      return error?.message || error;
+    }
   }
 
-  const destroy = async (url, id, options = null) => {
+  const update = async (url, id, data, config = null) => {
+    try {
+      let requestUrl = `${url}/${id}`;
+      let $config = config || {};
+      return await api.put(requestUrl, data, {...$config});
+    } catch (error) {
+      return error?.message || error;
+    }
+  }
 
+  const patch = async (url, id, data, config = null) => {
+    try {
+      let requestUrl = `${url}/${id}`;
+      let $config = config || {};
+      return await api.patch(requestUrl, data, {...$config});
+    } catch (error) {
+      return error?.message || error;
+    }
+  }
+
+  const put = async (url, id, data, config = null) => {
+    try {
+      let requestUrl = `${url}/${id}`;
+      let $config = config || {};
+      return await api.patch(requestUrl, data, {...$config});
+    } catch (error) {
+      return error?.message || error;
+    }
+  }
+
+  const destroy = async (url, id, config = null) => {
+    try {
+      let requestUrl = `${url}/${id}`;
+      let $config = config || {};
+      return await api.delete(requestUrl, {...$config});
+    } catch (error) {
+      return error?.message || error;
+    }
   }
 
   init()
