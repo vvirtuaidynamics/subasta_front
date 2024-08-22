@@ -155,7 +155,7 @@ const navigate = (payload) => {
               class="text-uppercase text-white bg-positive shadow-1"
               clickable
               style="border-radius: 15px; max-height: 32px"
-              to="/me"
+              to="/app/profile"
             >
               <q-item-section avatar>
                 <q-avatar
