@@ -17,9 +17,9 @@
       <q-item-section avatar>
         <q-icon name="home"/>
       </q-item-section>
-      <q-item-section>{{ $t("models.home") }}</q-item-section>
+      <q-item-section>{{ $t("Home") }}</q-item-section>
       <q-tooltip-component
-        :title="$t('models.home')"
+        :title="$t('Home')"
         anchor="center right"
         self="center left"
         v-if="mini"
@@ -230,6 +230,11 @@ onMounted(() => {
 
 watch(() => modules.value, (newValue) => {
   current_modules.value = getParentModules();
+})
+
+watch(() => $router.currentRoute.value.name, () => {
+  let name = $router.currentRoute.value.name;
+  emit("change-url", name ? getCurrentModuleByRoute(name) : null);
 })
 
 </script>
