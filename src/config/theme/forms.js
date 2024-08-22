@@ -7,7 +7,6 @@ export const forms = {
     square: false,
     outlined: false,
     dense: true,
-    readonly: false,
   },
   date: {
     filled: false,
@@ -17,7 +16,6 @@ export const forms = {
     square: false,
     outlined: false,
     dense: false,
-    readonly: true,
   },
   editor: {
     filled: false,
