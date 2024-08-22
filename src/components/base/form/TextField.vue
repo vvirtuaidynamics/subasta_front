@@ -3,6 +3,7 @@
     :ref="refEl"
     :name="props.name"
     :label="props.label"
+    :readonly="props.readonly"
     :rules="rules"
     hide-bottom-space
     lazy-rules
@@ -13,21 +14,21 @@
     @update:model-value="(val) => update(val)"
   >
     <template #append v-if="props.options && props.options?.appendIcon">
-      <q-icon :name="props.options?.appendIcon" />
+      <q-icon :name="props.options?.appendIcon"/>
     </template>
     <template #prepend v-if="props.options && props.options?.prependIcon">
-      <q-icon :name="props.options?.prependIcon" />
+      <q-icon :name="props.options?.prependIcon"/>
     </template>
     <template #loading="props" v-if="props.data && props.data['loading']">
-      <q-spinner-facebook color="info" />
+      <q-spinner-facebook color="info"/>
     </template>
   </q-input>
 </template>
 
 <script setup>
-import { computed, onBeforeMount, onMounted, ref } from "vue";
-import { forms } from "src/config/theme/forms";
-import { $t } from "src/services/i18n";
+import {computed, onBeforeMount, onMounted, ref} from "vue";
+import {forms} from "src/config/theme/forms";
+import {$t} from "src/services/i18n";
 
 defineOptions({
   name: "TextField",
@@ -43,6 +44,10 @@ const props = defineProps({
     type: String, //name, label, title
     required: true,
   },
+  readonly: {
+    type: Boolean, //name, label, title
+    default: false,
+  },
   options: {
     type: Object,
     default: () => ({}),
@@ -54,8 +59,8 @@ const emits = defineEmits(["update", "error"]);
 const refEl = ref();
 let textValue = ref("");
 const rules = ref([]);
-const fieldOptions = { ...forms.text, ...props.options };
-const fieldRules = { ...rules.value, ...(props.options?.rules ?? []) };
+const fieldOptions = {...forms.text, ...props.options};
+const fieldRules = {...rules.value, ...(props.options?.rules ?? [])};
 
 onBeforeMount(() => {
   if (props.options?.required) {

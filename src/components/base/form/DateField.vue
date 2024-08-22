@@ -4,6 +4,7 @@
     v-model="model"
     :rules="rules"
     :name="props.name"
+    :readonly="props.readonly"
     :label="props.label"
     v-bind="fieldOptions"
     class="full-width"
@@ -45,9 +46,9 @@
 </template>
 
 <script setup>
-import { computed, onBeforeMount, onMounted, ref } from "vue";
-import { forms } from "src/config/theme/forms";
-import { required } from "src/services/validators";
+import {computed, onBeforeMount, onMounted, ref} from "vue";
+import {forms} from "src/config/theme/forms";
+import {required} from "src/services/validators";
 import QBtnComponent from "../QBtnComponent.vue";
 
 defineOptions({
@@ -64,6 +65,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  readonly: {
+    type: Boolean,
+    default: false,
+  },
   options: {
     type: Object,
     default: () => ({}),
@@ -76,8 +81,8 @@ const refEl = ref();
 const model = ref(null);
 const proxy = ref(null);
 const rules = ref([]);
-const fieldOptions = { ...forms.date, ...props.options };
-const fieldRules = { ...rules.value, ...(props.options?.rules ?? []) };
+const fieldOptions = {...forms.date, ...props.options};
+const fieldRules = {...rules.value, ...(props.options?.rules ?? [])};
 
 onBeforeMount(() => {
   if (props.field && props.field?.options) {
