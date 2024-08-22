@@ -35,6 +35,12 @@ const routes = [
         component: () => import("pages/dashboard/DashboardPage.vue"),
       },
       {
+        name: "profile",
+        path: "profile",
+        meta: {requiredAuth: true, breadcrumb: "Profile"},
+        component: () => import("pages/auth/ProfilePage.vue"),
+      },
+      {
         name: "users",
         path: "users",
         meta: {requiredAuth: true, breadcrumb: "Users"},
@@ -44,13 +50,25 @@ const routes = [
         name: "roles",
         path: "roles",
         meta: {requiredAuth: true, breadcrumb: "Roles"},
-        component: () => import("pages/groups/ListPage.vue"),
+        component: () => import("pages/roles/ListPage.vue"),
       },
       {
         name: "permissions",
         path: "permissions",
         meta: {requiredAuth: true, breadcrumb: "Permissions"},
-        component: () => import("pages/groups/ListPage.vue"),
+        component: () => import("pages/roles/ListPage.vue"),
+      },
+      {
+        name: "forms",
+        path: "forms",
+        meta: {requiredAuth: true, breadcrumb: "Forms"},
+        component: () => import("pages/forms/ListPage.vue"),
+      },
+      {
+        name: "fields",
+        path: "fields",
+        meta: {requiredAuth: true, breadcrumb: "Fields"},
+        component: () => import("pages/fields/ListPage.vue"),
       },
       {
         name: "activities",
