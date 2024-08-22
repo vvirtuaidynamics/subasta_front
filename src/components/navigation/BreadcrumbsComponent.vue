@@ -13,17 +13,18 @@
         />
       </template>
       <q-breadcrumbs-el
-        :label="$t('models.home')"
+        :label="$t('Home')"
         icon="home"
         class="cursor-pointer"
         @click="setHome"
       />
-      <q-breadcrumbs-el :label="nav.label" :icon="nav.icon"/>
+      <q-breadcrumbs-el :label="$t(currentNav.label)" :icon="currentNav.icon"/>
     </q-breadcrumbs>
   </div>
   <q-separator/>
 </template>
 <script setup>
+import {onBeforeMount, ref, watch} from "vue"
 import {useRouter} from "vue-router";
 import {$t} from "src/services/i18n";
 import {useQuasar} from "quasar";
@@ -39,14 +40,24 @@ const props = defineProps({
     },
   },
 });
-const emit = defineEmits(["change-url"]);
+const emit = defineEmits(["change-url", "home"]);
 const $router = useRouter();
 const $q = useQuasar();
+const currentNav = ref(null)
 
 function setHome() {
   $router.push({name: "app"});
   emit("change-url", null);
 }
+
+onBeforeMount(() => {
+  currentNav.value = props.nav
+})
+
+watch(() => props.nav, (newValue) => {
+  currentNav.value = newValue;
+})
+
 </script>
 <style lang="scss" scoped>
 * {
