@@ -43,13 +43,12 @@
       :mini="true"
       v-if="mini"
     >
-      <menu-component @change-url="(nav) => (currentNav = nav)" :mini="true"/>
+      <menu-component @change-url="(nav) => handleNavigate(nav)" :mini="true"/>
     </q-drawer>
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered v-else>
-      <menu-component @change-url="(nav) => (currentNav = nav)"/>
+      <menu-component @change-url="(nav)=>handleNavigate(nav)"/>
     </q-drawer>
-
     <q-page-container class="page">
       <breadcrumbs-component
         :nav="currentNav"
@@ -142,6 +141,9 @@ const navigate = (payload) => {
   navigateTo(payload, $router, $route);
 }
 
+const handleNavigate = (nav) => {
+  currentNav.value = nav
+}
 
 watch(() => isAuthenticated.value, (newValue) => {
   if (!newValue) navigate(appConfig.page_login_name)
@@ -152,7 +154,6 @@ onBeforeMount(() => {
     navigate({name: appConfig.page_login_name});
   }
 })
-
 
 onMounted(() => {
 
