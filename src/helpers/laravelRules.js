@@ -50,8 +50,9 @@ export default function () {
     }
   }
 
-  function parseLaravelRules(laravelRulesString) {
-    const rulesMapping = {
+  //TODO: VER PORQUE LAS REGLAS GENERADAS NO SE ASOCIAN.
+  const parseLaravelRules = (laravelRulesString) => {
+    const rulesMappings = {
       required: () => (val) => !!val || $t('validations.required'),
       email: () => (val) => /.+@.+\..+/.test(val) || $t('validations.email'),
       lt: (param) => (val) => (val && val > param) || $t('validations.lt'),
@@ -77,8 +78,6 @@ export default function () {
       hexOrHexa: () => (val) => /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(val) || $t('validations.hexOrHexa'),
       rgb: () => (val) => /^rgb\(((0|[1-9][\d]?|1[\d]{0,2}|2[\d]?|2[0-4][\d]|25[0-5]),){2}(0|[1-9][\d]?|1[\d]{0,2}|2[\d]?|2[0-4][\d]|25[0-5])\)$/.test(val) || $t('validations.rgb'),
       rgba: () => (val) => /^rgba\(((0|[1-9][\d]?|1[\d]{0,2}|2[\d]?|2[0-4][\d]|25[0-5]),){2}(0|[1-9][\d]?|1[\d]{0,2}|2[\d]?|2[0-4][\d]|25[0-5]),(0|0\.[0-9]+[1-9]|0\.[1-9]+|1)\)$/.test(val) || $t('validations.rgba'),
-
-
       // Agrega más reglas según sea necesario
     }
 
@@ -93,24 +92,23 @@ export default function () {
       }
       if (ruleName === 'unique' && typeof param === 'string' && (isNaN(param) || param.includes(','))) {
         const [table, column] = param.split(',');
-        quasarRules.push(checkUnique(table, column, val));
+        quasarRules.push((val) => checkUnique(table, column, val));
       }
       if (ruleName === 'exist' && typeof param === 'string' && (isNaN(param) || param.includes(','))) {
         const [table, column] = param.split(',');
-        quasarRules.push(checkExist(table, column, val));
+        quasarRules.push((val) => checkExist(table, column, val));
       }
       if (!isNaN(param)) {
         param = param && !isNaN(param) ? parseInt(param, 10) : null;
       }
       // Verificar si la regla existe en el mapeo
-      if (ruleMappings[ruleName]) {
-        const mappedRule = ruleMappings[ruleName];
+      if (rulesMappings[ruleName]) {
+        const mappedRule = rulesMappings[ruleName];
         quasarRules.push(mappedRule(param));
       }
+      console.log({quasarRules})
       return quasarRules;
     });
-
-
   }
 
   return {
