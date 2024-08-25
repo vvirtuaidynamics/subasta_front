@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import {computed, onBeforeMount, onMounted, ref} from "vue";
+import {computed, onBeforeMount, onMounted, ref, watch} from "vue";
 import {forms} from "src/config/theme/forms";
 import {$t} from "src/services/i18n";
 
@@ -100,12 +100,17 @@ function reset() {
 
 function update(val) {
   textValue.value = val;
-  emits("update", props.name, textValue.value);
+  emits("update", textValue.value);
 }
 
 const value = computed(() => {
   return textValue.value;
 });
+
+watch(() => props.modelValue, (newValue) => {
+  textValue.value = newValue
+})
+
 defineExpose({
   reset,
   value,
