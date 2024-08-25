@@ -157,8 +157,8 @@ export const utils = {
   },
   //return javascript date object in iso date (YYYY-MM-DD)
   formatDate(value) {
-    var date = new Date(value);
-    var month = "" + (date.getMonth() + 1),
+    let date = new Date(value);
+    let month = "" + (date.getMonth() + 1),
       day = "" + date.getDate(),
       year = date.getFullYear();
     if (month.length < 2) month = "0" + month;
@@ -397,13 +397,13 @@ export const utils = {
   base64Encode(data) {
     // PROCESS
     const encodedWord = enc.Utf8.parse(data); // encodedWord Array object
-     // string: 'NzUzMjI1NDE='
+    // string: 'NzUzMjI1NDE='
     return enc.Base64.stringify(encodedWord);
   },
   base64Decode(data) {
     // PROCESS
     const encodedWord = enc.Base64.parse(data); // encodedWord via Base64.parse()
-     // decode encodedWord via Utf8.stringify() '75322541'
+    // decode encodedWord via Utf8.stringify() '75322541'
     return enc.Utf8.stringify(encodedWord);
   },
   dataURItoBlob(dataURI) {
