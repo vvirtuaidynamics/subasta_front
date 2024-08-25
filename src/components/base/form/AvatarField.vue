@@ -40,7 +40,7 @@ const props = defineProps({
   },
   size: {
     type: Number,
-    default: 150
+    default: 120
   },
   editable: {
     type: Boolean,
@@ -81,7 +81,6 @@ function filePickerClear() {
   result.file = null
   result.blobURL = ''
   result.dataURL = ''
-
 }
 
 
@@ -224,13 +223,13 @@ onMounted(async () => {
              :src=" result.dataURL"
 
       />
+
       <div class="absolute" style="right: -20px; top: calc( 25%  ) "
            v-if="result.file && props.editable && !isShowModal">
-        <q-btn flat :rounded="props.size > 140" :round="props.size <= 140" icon="fas fa-trash"
-               class="text-negative bg-grey-5 shadow-2 z-max"
-               style="border: 1px solid #eee"
-               size="xs"
-               @click="filePickerClear()">
+        <q-btn flat :rounded="props.size > 100" :round="props.size <= 100"
+               :icon="'fas fa-trash'"
+               class="text-negative bg-grey-5 shadow-2 z-max" style="border: 1px solid #eee"
+               size="xs" @click="filePickerClear()">
           <q-tooltip class="bg-warning text-negative text-caption"
                      anchor="center right" self="center left" :offset="[10, 10]">
             <q-icon name="fas fa-trash" size="13px"/>
@@ -239,9 +238,9 @@ onMounted(async () => {
         </q-btn>
       </div>
       <div class="absolute" style="right: -20px; top: calc( 25% + 30px  )" v-if="props.editable && !isShowModal">
-        <q-btn flat :rounded="props.size > 140" :round="props.size <= 140"
+        <q-btn flat :rounded="props.size > 100" :round="props.size <= 100"
                :icon="!result.file ?'fas fa-file-upload':'fas fa-edit'"
-               class="text-positive bg-grey-5 shadow-2 z-max" style="border: 1px solid #eee"
+               class="text-primary bg-grey-5 shadow-2 z-max" style="border: 1px solid #eee"
                size="xs" @click="filePickerClick">
           <q-tooltip class="bg-warning text-white text-caption"
                      anchor="center right" self="center left" :offset="[10, 10]">
