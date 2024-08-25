@@ -16,11 +16,29 @@ export default function useApi() {
     api.defaults.headers.post["Content-Type"] = "application/json";
   }
 
-  const sendResponse = (code, message = '') => {
+  const sendResponse = (success, message = '', code = 200) => {
     return {
-      success: code === 200,
-      message: message,
+      success,
+      message,
+      code,
     }
+  }
+
+  const getForm = async (formName) => {
+    try {
+      if (formName) {
+        const result = await api.get(`/form_by_name/${formName}`);
+        if (result && result.status && result.data) {
+          const {data} = result;
+          return data;
+        }
+        return result;
+
+      }
+    } catch (error) {
+      return error;
+    }
+
   }
 
   const download = async (url, callback) => {
@@ -169,6 +187,9 @@ export default function useApi() {
     login,
     logout,
     profile,
+    download,
+    getForm,
+    sendResponse,
     list,
     view,
     create,
