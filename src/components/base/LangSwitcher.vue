@@ -41,6 +41,7 @@ defineOptions({
   name: "LangSwitcher",
 });
 
+const $app = useApp();
 const {locale} = useApp();
 
 const props = defineProps({})
@@ -58,6 +59,7 @@ const changeLocale = (locale) => {
   const Lang = locales[`${locale}`].locale
   $q.lang.set(Lang);
   lang.value = locale;
+  $app.setAppState({locale: locale, dateLocale: Lang})
   StorageService.setLocale(locale);
   //TODO SI HAY USUARIO AUTH LO GUARDO EN SU CONFIG
 
