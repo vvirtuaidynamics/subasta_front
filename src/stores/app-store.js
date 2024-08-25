@@ -7,6 +7,7 @@ export const useAppStore = defineStore(`${process.env.APP_NAME}_APP`, {
     user: null,
     token: null,
     locale: 'es',
+    dateLocale: null,
     dark: false,
     loading: false,
     rememberMe: false,
@@ -38,6 +39,7 @@ export const useAppStore = defineStore(`${process.env.APP_NAME}_APP`, {
     reset() {
       this.user = null;
       this.locale = 'es';
+      this.dateLocale = null;
       this.token = null;
       this.rememberMe = false;
       this.loading = false;
@@ -65,6 +67,7 @@ export const useAppStore = defineStore(`${process.env.APP_NAME}_APP`, {
     setState(data) {
       if (data.appName) this.appName = data.appName;
       if (data.locale) this.locale = data.locale;
+      if (data.dateLocale) this.dateLocale = data.dateLocale;
       if (data.user) this.user = data.user;
       if (data.locale) this.user = data.locale;
       if (data.token) this.token = data.token;
