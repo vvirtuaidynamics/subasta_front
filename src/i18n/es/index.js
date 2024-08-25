@@ -25,7 +25,6 @@ export default {
   passwordChangeError: "Error al cambiar la contraseña!",
   register: "Registrarse",
   rememberMe: "Acuérdate de mi.",
-
   error400ListMsg: "No se pudo completar la acción ejecutada. { error }",
   error400CreateMsg: "Error al crear el registro. { error }",
   error400DeleteMsg: "Error al eliminar el registro. { error }",
@@ -36,13 +35,9 @@ export default {
   error666Msg: "La licencia ha expirado! Obtenga una nueva.",
   errorValidation:
     "No se puede enviar el formulario, existen errores de validación",
-
   width: "Ancho",
   height: "Alto",
-
   avatarEditorModalTitle: "Recortar o editar el avatar",
-
-
   modelLabel: "Modelo",
   modelPlural: "Modelos",
   modelAppLabel: "Aplicacion",
@@ -72,7 +67,15 @@ export default {
   disable: "Desactivar",
 
   myaccount: "Mi cuenta",
-
+  date: {
+    days: 'Domingo_Lunes_Martes_Miércoles_Jueves_Viernes_Sábado'.split('_'),
+    daysShort: 'Dom_Lun_Mar_Mié_Jue_Vie_Sáb'.split('_'),
+    months: 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'.split('_'),
+    monthsShort: 'Ene_Feb_Mar_Abr_May_Jun_Jul_Ago_Sep_Oct_Nov_Dic'.split('_'),
+    firstDayOfWeek: 1, // 0-6, 0 - Sunday, 1 Monday, ...
+    format24h: true,
+    pluralDay: 'días'
+  },
   fields: {
     identity: "Usuario o Correo",
     date: "Fecha",
@@ -93,6 +96,7 @@ export default {
     industry: "Industria",
     last_name: "Apellidos",
     name: "Nombre",
+    surname: "Apellidos",
     note: "nota",
     password: "contraseña",
     password_confirm: "confirmar la contraseña",
@@ -102,7 +106,7 @@ export default {
     permissions: "permisos",
     phone: "Teléfono",
     photo: "foto",
-    profile: "perfil",
+    profile: "Perfil",
     role: "rol",
     roles: "roles",
     status: "Estado",
@@ -133,6 +137,10 @@ export default {
     add: "Adicionar",
     addFiles: "Adicionar fichero(s)",
     all: "Todos",
+    form: "Formulario",
+    forms: "Formularios",
+    field: "Atributo",
+    fields: "Atributos",
     apps: "Aplicaciones",
     archive: "Archivar",
     cancel: "Cancelar",
@@ -188,7 +196,7 @@ export default {
     retry: "Reintentar",
     rol: "Rol",
     rolCaption: "Roles del usuario",
-    rols: "Roles",
+    roles: "Roles",
     rotate: "Rotar",
     save: "Guardar",
     saveAndAddOther: "Guardar y crear otro",
@@ -224,24 +232,32 @@ export default {
   logoutMsg: "Sesión cerrada correctamente! Hasta pronto {nombre}",
   lostCxMsg: "Se ha perdido la conexión con la base de datos!",
 
-  models: {
-    administration: "Administración",
-    bearing: "Porte",
-    bearings: "Portes",
-    carrier: "Transportista",
-    carriers: "Transportistas",
-    client: "Cliente",
-    clients: "Clientes",
-    group: "Grupo",
-    groups: "Grupos",
-    home: "Inicio",
-    person: "Persona",
-    persons: "Personas",
-    user: "Usuario",
-    users: "Usuarios",
-    history: "Histórico",
-    validationtasks: "Tareas de validación",
-  },
+  // models: {
+  //   administration: "Administración",
+  //   bearing: "Porte",
+  //   bearings: "Portes",
+  //   carrier: "Transportista",
+  //   carriers: "Transportistas",
+  //   client: "Cliente",
+  //   clients: "Clientes",
+  //   group: "Grupo",
+  //   groups: "Grupos",
+  //   rol: "Rol",
+  //   roles: "Roles",
+  //   permission: "Permiso",
+  //   permissions: "Permisos",
+  //   form: "Formulario",
+  //   forms: "Formularios",
+  //   field: "Atributo",
+  //   fields: "Atributos",
+  //   home: "Inicio",
+  //   person: "Persona",
+  //   persons: "Personas",
+  //   user: "Usuario",
+  //   users: "Usuarios",
+  //   history: "Histórico",
+  //   validationtasks: "Tareas de validación",
+  // },
   newsNofifications: "Tienes notificaciones sin leer",
   notifications: {
     saveWork: "Texto guardado a su almacenamiento local",
@@ -293,4 +309,5 @@ export default {
     noChanges: "No han ocurrido modificaciones",
   },
   welcome: "Bienvenido ",
+
 };

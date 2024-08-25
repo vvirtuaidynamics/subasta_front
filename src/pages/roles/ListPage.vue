@@ -18,14 +18,14 @@
 
 <script setup>
 import TableComponent from "components/shared/crud/table/TableComponent.vue";
-import { $t } from "src/services/i18n";
+import {$t} from "src/services/i18n";
 
 defineOptions({
   name: "ListPage",
 });
 
 const name = "group";
-const label_plural = $t("models.groups");
+const label_plural = $t("models.roles");
 const label_singular = $t("models.group");
 const to_str = null;
 const icon = "mdi-account-multiple-outline";

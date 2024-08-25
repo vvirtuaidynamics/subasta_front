@@ -34,7 +34,6 @@ export default {
   height: "Height",
 
   avatarEditorModalTitle: "Crop or edit your avatar",
-
   modelLabel: "Model",
   modelPlural: "Models",
   modelAppLabel: "Aplication",
@@ -49,7 +48,6 @@ export default {
   modelProvinciaPlural: "Provincias",
   modelMunicipioLabel: "Municipio",
   modelMunicipioPlural: "Municipios",
-
   login: "Login",
   loginTip: "Click on the button for login",
   home: "Go to home",
@@ -59,18 +57,24 @@ export default {
   fullscreenBtn: "fullscreen mode",
   enable: "Enable",
   disable: "Disable",
-
   labelUrlImage: "Image URL.",
   labelInsertImage: "Insert image",
   labelInsertUrlImage: "Input the image url.",
   labelGoHome: "Go to home page",
-
   myaccount: "My account",
   rols: {
     root: "Administrator",
     seller: "Seller",
   },
-
+  date: {
+    days: 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_'),
+    daysShort: 'Sun_Mon_Tue_Wed_Thu_Fri_Sat'.split('_'),
+    months: 'January_February_March_April_May_June_July_August_September_October_November_December'.split('_'),
+    monthsShort: 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_'),
+    firstDayOfWeek: 0, // 0-6, 0 - Sunday, 1 Monday, ...
+    format24h: false,
+    pluralDay: 'days'
+  },
   fields: {
     identity: "Username or Email",
     date: "Date",
@@ -91,6 +95,7 @@ export default {
     industry: "Industry",
     last_name: "Last name",
     name: "Name",
+    surname: "Name",
     note: "note",
     password: "password",
     password_confirm: "confirm password",
@@ -185,9 +190,13 @@ export default {
     reset: "Reset",
     restoreWindow: "Restore",
     retry: "Retry",
+    form: "Form",
+    forms: "Forms",
+    field: "Field",
+    fields: "Fields",
     rol: "Rol",
-    rolCaption: "Rols of user",
-    rols: "Rols",
+    rolCaption: "Roles of user",
+    roles: "Roles",
     rotate: "Rotate",
     save: "Save",
     saveAndAddOther: "Save and add other",
@@ -224,24 +233,32 @@ export default {
   logoutMsg: "Logout success! Godbye ${nombre}",
   lostCxMsg: "Lost conection with database api service!",
 
-  models: {
-    administration: "Administration",
-    bearing: "bearing",
-    bearings: "Bearings",
-    carrier: "Carrier",
-    carriers: "Carriers",
-    client: "Client",
-    clients: "Clients",
-    group: "Group",
-    groups: "Groups",
-    home: "Home",
-    person: "Person",
-    persons: "Persons",
-    user: "User",
-    users: "Users",
-    history: "History",
-    validationtasks: "Validation tasks",
-  },
+  // models: {
+  //   administration: "Administration",
+  //   bearing: "bearing",
+  //   bearings: "Bearings",
+  //   carrier: "Carrier",
+  //   carriers: "Carriers",
+  //   client: "Client",
+  //   clients: "Clients",
+  //   group: "Group",
+  //   groups: "Groups",
+  //   home: "Home",
+  //   person: "Person",
+  //   persons: "Persons",
+  //   rol: "Rol",
+  //   roles: "Roles",
+  //   permission: "Permission",
+  //   permissions: "Permissions",
+  //   form: "Form",
+  //   forms: "Forms",
+  //   field: "Field",
+  //   fields: "Fields",
+  //   user: "User",
+  //   users: "Users",
+  //   history: "History",
+  //   validationtasks: "Validation tasks",
+  // },
   newsNofifications: "You have an unread notifications",
   notifications: {
     saveWork: "The text have been save to your local storage",
@@ -290,4 +307,5 @@ export default {
   alerts: {
     noChanges: "No modifications have occurred",
   },
+
 };

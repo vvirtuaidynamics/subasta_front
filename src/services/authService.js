@@ -38,7 +38,7 @@ export default function authService() {
   };
 
   const config = () => {
-    
+
   }
 
   const register = async () => {

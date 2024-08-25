@@ -23,7 +23,8 @@
         </q-scroll-area>
       </q-card-section>
       <q-separator/>
-      <q-card-actions align="right" style="height: 60px; max-height: 60px; min-height: 60px">
+      <q-card-actions class="q-gutter q-gutter-x-md" align="right"
+                      style="height: 60px; max-height: 60px; min-height: 60px">
         <q-btn flat :label="$t('labels.cancel')" color="negative" v-close-popup/>
         <q-btn v-for="(action, index) in actions" :key="index" flat :label="$t(action.label)" color="primary"
                @click="action.handler ?? null"/>
@@ -69,10 +70,15 @@ const props = defineProps({
 
   actions: {
     type: Array,
-    default: () => [{
-      action: 'submit', label: 'labels.accept', handler: () => {
-      }
-    }]
+    default: () => [
+      {
+        action: 'submit',
+        label: 'labels.accept',
+        handler: () => {
+
+        }
+
+      }]
   }
 })
 

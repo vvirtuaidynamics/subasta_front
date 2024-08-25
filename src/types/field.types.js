@@ -3,7 +3,7 @@ import dataTypes from "src/types/data.types"
 
 export default function useField() {
 
-  function field(name, type, props) {
+  function Field(name, type, props) {
     return {
       name: name,
       type: type,
@@ -11,9 +11,9 @@ export default function useField() {
     }
   }
 
-  return {
-    field,
-    dataTypes
 
+  return {
+    Field,
+    dataTypes
   }
 }
