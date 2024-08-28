@@ -125,8 +125,9 @@ defineExpose({
 
 <template>
   <q-input ref="refInput" v-model="modelInputValue" :rules="fieldRules" class="full-width"
-           readonly v-bind="fieldOptions"
+           readonly :v-bind="fieldOptions" :label="label"
            @click="datePop=!datePop"
+
   >
     <template v-slot:append>
       <q-icon name="event" class="cursor-pointer">
