@@ -37,7 +37,7 @@ export default {
     "No se puede enviar el formulario, existen errores de validación",
   width: "Ancho",
   height: "Alto",
-  avatarEditorModalTitle: "Recortar o editar el avatar",
+  avatarEditorModalTitle: "Recortar o editar imagen",
   modelLabel: "Modelo",
   modelPlural: "Modelos",
   modelAppLabel: "Aplicacion",

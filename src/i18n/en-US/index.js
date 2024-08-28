@@ -33,7 +33,7 @@ export default {
   width: "Width",
   height: "Height",
 
-  avatarEditorModalTitle: "Crop or edit your avatar",
+  avatarEditorModalTitle: "Crop or edit image",
   modelLabel: "Model",
   modelPlural: "Models",
   modelAppLabel: "Aplication",
