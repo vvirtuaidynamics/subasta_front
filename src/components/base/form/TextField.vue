@@ -1,9 +1,9 @@
 <template>
   <q-input
-    :ref="refEl"
-    :name="props.name"
-    :label="props.label"
-    :readonly="props.readonly"
+    ref="refEl"
+    :name="name"
+    :label="label"
+    :readonly="readonly"
     :rules="rules"
     hide-bottom-space
     lazy-rules
@@ -13,11 +13,11 @@
     class="full-width"
     @update:model-value="(val) => update(val)"
   >
-    <template #append v-if="props.options && props.options?.appendIcon">
-      <q-icon :name="props.options?.appendIcon"/>
+    <template #append v-if="options && options?.appendIcon">
+      <q-icon :name="options?.appendIcon"/>
     </template>
-    <template #prepend v-if="props.options && props.options?.prependIcon">
-      <q-icon :name="props.options?.prependIcon"/>
+    <template #prepend v-if="options && options?.prependIcon">
+      <q-icon :name="options?.prependIcon"/>
     </template>
     <template #loading="props" v-if="props.data && props.data['loading']">
       <q-spinner-facebook color="info"/>
@@ -56,7 +56,7 @@ const props = defineProps({
 
 const emits = defineEmits(["update", "error"]);
 
-const refEl = ref();
+const refEl = ref(null);
 let textValue = ref("");
 const rules = ref([]);
 const fieldOptions = {...forms.text, ...props.options};
@@ -95,8 +95,13 @@ const myRules = (val, rules) => {
 function reset() {
   textValue.value = "";
   emits("update", textValue.value);
-  resetValidation();
+  refEl.value[0].resetValidation();
 }
+
+function validate() {
+  refEl.value[0].validate();
+}
+
 
 function update(val) {
   textValue.value = val;
@@ -112,6 +117,7 @@ watch(() => props.modelValue, (newValue) => {
 })
 
 defineExpose({
+  validate,
   reset,
   value,
 });
