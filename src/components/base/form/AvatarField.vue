@@ -50,7 +50,13 @@ const props = defineProps({
   default_image: {
     type: String,
     //default: 'icon:fas fa-user-tie'
-    default: 'img:/images/avatar.png' //img:  || icon: icon_name
+    default: 'icon:fas fa-image' //img:  || icon: icon_name
+  },
+  options: {
+    type: Object,
+    default: () => {
+
+    }
   }
 })
 const isShowModal = ref(false)
@@ -60,27 +66,32 @@ const default_avatar = reactive({
   key: props.default_image.split(':')[0],
   value: props.default_image.split(':')[1]
 })
-
+const cropAspectRatio = ref(1 / 1)
 const filePicker = ref(null)
 const fileOriginal = ref(null)
 const result = reactive({
-  dataURL: '',
-  blobURL: '',
+  base64: '',
+  blob: '',
+  width: 0,
+  height: 0,
   file: null,
 })
 
 const $emits = defineEmits(['update'])
 
 function filePickerClick() {
-  if (!result.dataURL || result.dataURL === '') filePicker.value.pickFiles();
+  if (!result.base64 || result.base64 === '') filePicker.value.pickFiles();
   else selectFile()
 }
 
 function filePickerClear() {
-  fileOriginal.value = null
-  result.file = null
-  result.blobURL = ''
-  result.dataURL = ''
+  fileOriginal.value = null;
+  result.file = null;
+  result.blob = '';
+  result.width = 0;
+  result.height = 0;
+  result.base64 = '';
+  emitUpdate()
 }
 
 
@@ -111,7 +122,6 @@ async function fetchImage() {
       if (process.env.NODE_ENV !== 'production')
         console.log('fetchImage error: ', e)
     }
-
   }
 }
 
@@ -123,104 +133,126 @@ function rotate(pos = false) {
     cropper.rotate(-90);
 }
 
-/**
- * The ready event passed to Cropper.js
- */
 function ready() {
-  if (process.env.NODE_ENV !== 'production')
-    console.log('Cropper is ready.')
+  // if (process.env.NODE_ENV !== 'production')
+  //   console.log('Cropper is ready.')
 }
 
 function handleClose() {
-  if (process.env.NODE_ENV !== 'production')
-    console.log('Dialog close.')
+  // if (process.env.NODE_ENV !== 'production')
+  //   console.log('Dialog close.')
+  emitUpdate()
+
 }
 
 function handleClick() {
-  if (!result.dataURL || result.dataURL === '') filePickerClick()
+  if (props.editable && (!result.base64 || result.base64 === '')) filePickerClick()
   else selectFile()
 }
 
-function loadFile() {
-  result.dataURL = ''
-  result.blobURL = ''
-  if (!result.file) return
-  const reader = new FileReader()
-  reader.readAsDataURL(result.file)
-  reader.onload = () => {
-    result.dataURL = String(reader.result)
+function emitUpdate() {
+  // console.log('emit update!')
+  $emits('update', result)
+}
+
+function getDimensions() {
+  if (result.base64) {
+    const img = new Image();
+    img.src = result.base64;
+    img.onload = (e) => {
+      result.width = img.naturalWidth;
+      result.height = img.naturalHeight;
+    }
   }
+}
+
+function loadFile() {
+  result.base64 = '';
+  result.blob = '';
+  if (!result.file) return;
+  const reader = new FileReader();
+  reader.readAsDataURL(result.file)
+  reader.onload = (e) => {
+    result.base64 = reader.result;
+    getDimensions();
+  }
+
 
 }
 
-function selectFile() {
-  result.dataURL = ''
-  result.blobURL = ''
-  if (!result.file) return
-  const reader = new FileReader()
-  reader.readAsDataURL(result.file)
-  reader.onload = () => {
-    result.dataURL = String(reader.result)
-    isShowModal.value = true
-  }
+function selectFile(file) {
+  result.base64 = '';
+  result.blob = '';
+  if (file)
+    result.file = file;
+  if (!fileOriginal.value) fileOriginal.value = result.file
 
+  if (!result.file) return;
+  const reader = new FileReader();
+  reader.readAsDataURL(result.file);
+  reader.onload = () => {
+    result.base64 = String(reader.result);
+    isShowModal.value = true;
+    getDimensions();
+  }
 }
 
 async function getResult() {
-  if (!cropper) return
-  const base64 = cropper.getDataURL()
-  const blob = await cropper.getBlob()
-  if (!blob) return
+  if (!cropper) return;
+  const base64 = cropper.getDataURL();
+  const blob = await cropper.getBlob();
+  if (!blob) return;
   const cropFile = await cropper.getFile(
     {
-      fileName: props.name,
+      fileName: result.file.name ?? props.name,
     }
   )
-  if (process.env.NODE_ENV !== 'production')
-    console.log({base64, blob, file: cropFile})
-  result.dataURL = base64
-  result.file = cropFile
-  result.blobURL = URL.createObjectURL(blob)
-  $emits('update', {base64, blob, file: result.file});
-  isShowModal.value = false
+  result.base64 = base64;
+  result.file = cropFile;
+  result.blob = URL.createObjectURL(blob);
+  getDimensions();
+  isShowModal.value = false;
 }
 
-watch(() => result.file, (newValue, oldValue) => {
-  if (newValue) loadFile();
-  if (!fileOriginal.value) fileOriginal.value = newValue
-  if (process.env.NODE_ENV !== 'production')
-    console.log('file: ', {newValue});
-  $emits('update', {base64: result.base64, blob: result.blob, file: result.file});
-
+defineExpose({
+  filePickerClear,
 })
 
 onBeforeMount(async () => {
   if (props.modelValue) {
-    result.dataURL = await fetchImage()
+    result.base64 = await fetchImage()
   }
 
 })
 onMounted(async () => {
-  if (process.env.NODE_ENV !== 'production')
-    console.log('AvatarField Mounted!');
-
+  // if (process.env.NODE_ENV !== 'production')
+  //   console.log('AvatarField Mounted!');
+  if (props.options?.cropAspectRatio) {
+    cropAspectRatio.value = props.options?.cropAspectRatio
+  }
 })
 </script>
 
 <template>
 
   <div :class="`${props.display}`">
-    <q-file id="filePicker" ref="filePicker" class="hidden" v-model="result.file" :accept="props.accept"></q-file>
-    <q-avatar :square="props.square" :size="`${props.size}px`" :class="props.classAvatar"
+    <q-file id="filePicker" ref="filePicker" class="hidden" v-model="result.file" :accept="props.accept"
+            @update:model-value="(file)=>selectFile(file)"
+    ></q-file>
+    <q-avatar :square="props.square" :size="`${props.size}px`" class="cursor-pointer" :class="props.classAvatar"
               :style="`${props.square? 'border-radius: 15px': ''};`">
-      <q-icon v-if="default_avatar.key==='icon' && (!result.dataURL || result.dataURL ==='' )"
-              :name="default_avatar.value" :size="`${size-60}px`"/>
-      <q-img fit="cover" v-if="default_avatar.key==='img' && (!result.dataURL || result.dataURL ==='')"
-             :src="result.dataURL && result.dataURL !=='' ? result.dataURL :  default_avatar.value"
-
+      <q-icon v-if="default_avatar.key==='icon' && (!result.base64 || result.base64 ==='' )"
+              :name="default_avatar.value" :size="`${size-60}px`"
+              @click="handleClick"
       />
-      <q-img fit="cover" v-if="(result.dataURL && result.dataURL !=='')"
-             :src=" result.dataURL"
+      <q-img fit="cover" class="cursor-pointer"
+             v-if="default_avatar.key==='img' && (!result.base64 || result.base64 ==='')"
+             :src="result.base64 && result.base64 !=='' ? result.base64 :  default_avatar.value"
+             @click="handleClick"
+      />
+      <q-img fit="cover" class="cursor-pointer" v-if="(result.base64 && result.base64 !=='')"
+             :src=" result.base64"
+             @click="handleClick"
 
       />
 
@@ -397,15 +429,16 @@ onMounted(async () => {
                                  :boxStyle="{
                     width: 'calc( 100% - 100)',
                     height: '100%',
+
                     borderRadius: '15px',
                     backgroundColor: '#f8f8f8',
                     margin: '0px',
                   }"
-                                 :img="result.dataURL"
+                                 :img="result.base64"
                                  :options="{
                     viewMode: 2,
                     dragMode: 'crop',
-                    aspectRatio: 1/1 ,
+                    aspectRatio: cropAspectRatio ,
                   }"
                                  @ready="ready"
               />
