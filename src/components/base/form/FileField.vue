@@ -5,13 +5,15 @@
     :label="label"
     :multiple="multi_files"
     :clearable="clearable"
+    class="full-width"
     :class="file_icons.length <= 1 ? '' : 'hidden'"
     :dense="dense"
     @update:model-value="updateIcons"
     @clear="onClear"
+    :v-bind="fieldOptions"
   >
     <template v-slot:prepend v-if="file_icons.length > 0">
-      <q-icon :name="file_icons[0]" />
+      <q-icon :name="file_icons[0]"/>
     </template>
     <template v-slot:append>
       <q-icon
@@ -21,10 +23,11 @@
         @click="modelRef.pickFiles()"
       >
         <q-tooltip-component :title="$t('file.select')"
-      /></q-icon>
+        />
+      </q-icon>
     </template>
   </q-file>
-  <q-list dense v-if="model?.length > 1">
+  <q-list dense v-if="model?.length > 1" class="full-width">
     <q-item>
       <q-item-section v-if="label">
         {{ label }}
@@ -49,12 +52,12 @@
     </q-item>
     <q-item v-for="(f, index) in model" :key="`file-${index}`">
       <q-item-section avatar style="min-width: 10px; padding-right: 2px">
-        <q-icon :name="file_icons[index]" size="xs" />
+        <q-icon :name="file_icons[index]" size="xs"/>
       </q-item-section>
       <q-item-section>
         <q-item-label lines="1">
           {{ f.name }}
-          <q-tooltip-component :title="f.name" />
+          <q-tooltip-component :title="f.name"/>
         </q-item-label>
       </q-item-section>
       <q-item-section thumbnail>
@@ -84,11 +87,12 @@
   />
 </template>
 <script setup>
-import { ref, onMounted, watch } from "vue";
-import { useQuasar } from "quasar";
+import {ref, onMounted, watch} from "vue";
+import {useQuasar} from "quasar";
 import QBtnComponent from "../QBtnComponent.vue";
 import QTooltipComponent from "../QTooltipComponent.vue";
-import { $t } from "src/services/i18n";
+import {$t} from "src/services/i18n";
+import {forms} from "src/config/theme/forms";
 
 defineOptions({
   name: "FileField",
@@ -135,6 +139,10 @@ const multi_files = ref(false);
 const change_file_index = ref(null);
 const file_icons = ref([]);
 const $q = useQuasar();
+const rules = ref([])
+
+const fieldOptions = {...forms.text, ...props.options};
+const fieldRules = {...rules.value, ...(props.options?.rules ?? [])};
 
 onMounted(() => {
   multi_files.value = props.multiple;
@@ -198,9 +206,9 @@ const getIconFromFile = (f) => {
   return f.type.indexOf("video/") === 0
     ? "movie"
     : f.type.indexOf("image/") === 0
-    ? "photo"
-    : f.type.indexOf("audio/") === 0
-    ? "audiotrack"
-    : "insert_drive_file";
+      ? "photo"
+      : f.type.indexOf("audio/") === 0
+        ? "audiotrack"
+        : "insert_drive_file";
 };
 </script>
